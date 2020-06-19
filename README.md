@@ -1,2 +1,2 @@
-# MIDAS-Viz
+# Electrum
 Visualization platform for exploring MIDAS data
