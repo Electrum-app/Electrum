@@ -1,10 +1,10 @@
 /*
-Metaboverse
-Metaboverse is designed for analysis of metabolic networks
-https://github.com/Metaboverse/Metaboverse/
-alias: metaboverse
+Electrum
+Dynamic exploration of MIDAS protein-metabolite interaction data
+https://github.com/j-berg/Electrum/
+alias: electrum
 
-Copyright (C) 2019 Jordan A. Berg
+Copyright (C) 2020 Jordan A. Berg
 Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
 
 This program is free software: you can redistribute it and/or modify it under
@@ -15,7 +15,6 @@ version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
@@ -32,7 +31,10 @@ class MIDASgraph{
     this.complexes = {};
     this.nodes = [];
     this.links = [];
+    let all_values = [];
     let added_nodes = [];
+    let node_lookup = {};
+    let indexer = 0;
 
     for (let connection in this.graphData) {
       if (connection !== 'columns') {
@@ -53,6 +55,7 @@ class MIDASgraph{
           this.graphData[connection]['HMDB_ID_metabolite'];
         let common_metabolite_name =
           this.graphData[connection]['Common_metabolite_name'];
+        all_values.push(Math.abs(log_fc_c));
 
         // ID string cleaning
         protein = protein.replace(/\s/g, '');
@@ -87,6 +90,8 @@ class MIDASgraph{
             'hmdb_metabolite_id': "",
           });
           added_nodes.push(protein);
+          node_lookup[protein] = indexer;
+          indexer += 1;
         }
         // Add metabolite node info if doesn't exist
         if (!added_nodes.includes(metabolite)) {
@@ -103,41 +108,31 @@ class MIDASgraph{
             'hmdb_metabolite_id': hmdb_metabolite_id,
           });
           added_nodes.push(metabolite);
+          node_lookup[metabolite] = indexer;
+          indexer += 1;
         }
 
         // Add link info and weights
-        this.links.push({
-          "source": {
-            'id': protein,
-            'display_name': protein_name,
-            'type': "protein",
-            'complex': protein_complex,
-            'uniprot_id': uniprot_id,
-            'protein_name': protein_name,
-            'gene_name': gene_name,
-            'metabolite_name': "",
-            'common_metabolite_name': "",
-            'hmdb_metabolite_id': "",
-          },
-          "target": {
-            'id': metabolite,
-            'display_name': metabolite_name,
-            'type': "metabolite",
-            'complex': "",
-            'uniprot_id': "",
-            'protein_name': "",
-            'gene_name': "",
-            'metabolite_name': metabolite_name,
-            'common_metabolite_name': common_metabolite_name,
-            'hmdb_metabolite_id': hmdb_metabolite_id,
-          },
-          "corrected_fold_change": log_fc_c,
-          "fold_change": log_fc,
-          "q_value": q_value,
-          "p_value": p_value
-        });
+        this.links.push(
+          {
+            "source": this.nodes[node_lookup[protein]],
+            "target": this.nodes[node_lookup[metabolite]],
+            "metadata": {
+              "corrected_fold_change": log_fc_c,
+              "fold_change": log_fc,
+              "q_value": q_value,
+              "p_value": p_value
+            }
+          }
+        );
       }
     }
+
+    // Get absolute max
+    this.abs_max = Math.max(...all_values);
+
+    // Make colormap
+    let cmap = drawColormap(this.abs_max)
 
     // extract unique elements for each complex
     for (let complex in this.complexes) {
@@ -145,16 +140,13 @@ class MIDASgraph{
     }
 
     // Graph
-    console.log(this.nodes)
-    console.log(this.links)
-
     var simulation = d3
       .forceSimulation(this.nodes)
       .force("link", d3.forceLink(this.links)
         .id(d => d.id)
         .distance(40)
         .strength(1))
-      .force("charge", d3.forceManyBody().strength(-1000))
+      .force("charge", d3.forceManyBody().strength(-10000))
       .force("center", d3.forceCenter(_width / 2, _height / 2))
       .alphaTarget(0.01)
       .alphaMin(0.1)
@@ -176,63 +168,60 @@ class MIDASgraph{
       .on("dblclick.zoom", null)
       .append("g");
 
-      svg_viewer
-        .append("defs")
-        .selectAll("marker")
-        .data([
-          "protein",
-          "metabolite"
-        ])
-        .enter()
-        .append("marker")
-        .attr("id", function(d) {
-          return d.id;
-        })
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 15.7)
-        .attr("refY", -0.18)
-        .attr("markerWidth", 6)
-        .attr("markerHeight", 6)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0, -5L10, 0L0, 5");
+    svg_viewer
+      .append("defs")
+      .selectAll("marker")
+      .data([
+        "protein",
+        "metabolite"
+      ])
+      .enter()
+      .append("marker")
+      .attr("id", function(d) {
+        return d.id;
+      })
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 15.7)
+      .attr("refY", -0.18)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0, -5L10, 0L0, 5");
 
-
-      var link = svg_viewer
-          .append("g")
-          .selectAll("path")
-          .data(this.links)
-          .enter()
-          .append("path")
-          .attr("class", function(d) {
-            return "link.interaction";
-          })
-          .attr("marker-end", function(d) {
-            return "url(#reaction)";
-          });
-
-      var node = svg_viewer
-        .selectAll(".node")
-        .data(this.nodes)
-        .enter()
+    var link = svg_viewer
         .append("g")
-        .attr("class", "node")
-        .attr("id", function(d) {return d.id})
-        .style("--node_color", function(d) {
-          if (d.type === "protein") {
-            return "grey";
-          } else {
-            return "white"
-          }
+        .selectAll("path")
+        .data(this.links)
+        .enter()
+        .append("path")
+        .attr("class", function(d) {
+          return "link interaction";
         })
-        .call(
-          d3
-            .drag()
-            .subject(dragsubject)
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended)
-        );
+        .style("--link_color", function(d) {
+          let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+          console.log()
+          return cmap[_val];
+        })
+        .attr("stroke-width", function(d) {
+          return (-1 * Math.log(d.metadata.q_value)) / 12;
+        });
+
+    var node = svg_viewer
+      .selectAll(".node")
+      .data(this.nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .attr("id", function(d) {return d.id})
+      .call(
+        d3
+          .drag()
+          .subject(dragsubject)
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended)
+      );
 
     var circle = node.append(function(d) {
         if (d.type === "protein") {
@@ -258,7 +247,6 @@ class MIDASgraph{
 
     simulation.on("tick", tick);
 
-
     // Draw curved edges
     function tick() {
       link
@@ -276,23 +264,17 @@ class MIDASgraph{
 
       var dx = d.target.x - d.source.x;
       var dy = d.target.y - d.source.y;
-      var dr = Math.sqrt(dx * dx + dy * dy);
 
-      /*return (
+      return (
         "M" +
         d.source.x +
         "," +
         d.source.y +
-        "A" +
-        dr +
-        "," +
-        dr +
-        " 0 0,1 " +
+        "A0,0 0 0,1 " +
         d.target.x +
         "," +
         d.target.y
       );
-      */
     }
 
     function transform(d) {
