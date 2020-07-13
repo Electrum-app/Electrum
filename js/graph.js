@@ -20,7 +20,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 var _width = window.innerWidth;
-var _height = window.innerHeight - 75;
+var _height = window.innerHeight * 1.2;
 
 class MIDASgraph{
 
@@ -79,7 +79,7 @@ class MIDASgraph{
         if (!added_nodes.includes(protein)) {
           this.nodes.push({
             'id': protein,
-            'display_name': protein_name,
+            'display_name': protein,
             'type': "protein",
             'complex': protein_complex,
             'uniprot_id': uniprot_id,
@@ -127,6 +127,30 @@ class MIDASgraph{
         );
       }
     }
+
+    console.log(added_nodes)
+    for (let p in protein_coordinates) {
+      if (!added_nodes.includes(p)) {
+        this.nodes.push({
+          'id': p,
+          'display_name': p,
+          'type': "other_protein",
+          'complex': "",
+          'uniprot_id': p,
+          'protein_name': p,
+          'gene_name': p,
+          'metabolite_name': "",
+          'common_metabolite_name': "",
+          'hmdb_metabolite_id': "",
+        });
+        added_nodes.push(p);
+        node_lookup[p] = indexer;
+        indexer += 1;
+      }
+    }
+
+
+
 
     // Get absolute max
     this.abs_max = Math.max(...all_values);
@@ -221,10 +245,24 @@ class MIDASgraph{
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended)
-      );
+      )
 
-    var circle = node.append(function(d) {
-        if (d.type === "protein") {
+
+    console.log(protein_coordinates)
+    console.log(this.nodes)
+    console.log(node)
+
+    node.each(function(d) {
+      console.log(d)
+      if (d.type === "protein" || d.type === "other_protein") {
+        d.fx = protein_coordinates[d.id][0] * 100;
+        d.fy = protein_coordinates[d.id][1] * 100;
+      }
+    });
+
+    var circle = node
+      .append(function(d) {
+        if (d.type === "protein" || d.type === "other_protein") {
           return document.createElementNS(
             "http://www.w3.org/2000/svg", "rect");
         } else {
@@ -237,13 +275,21 @@ class MIDASgraph{
     var text = node
         .append("text")
         .html(function(d) {
-          return (
-            "<tspan dx='16' y='.31em' style='font-weight: bold;'>"
-            + d.display_name
-            + "</tspan>"
-          );
-
-        });
+          if (d.type === "protein" || d.type === "other_protein") {
+            return (
+              "<tspan dx='46' y='.31em' style='font-weight: bold; z-index: 1000;'>"
+              + d.display_name
+              + "</tspan>"
+            );
+          } else {
+            return (
+              "<tspan dx='32' y='.31em' style='font-weight: bold; z-index: 1000;'>"
+              + d.display_name
+              + "</tspan>"
+            );
+          }
+        }
+      );
 
     simulation.on("tick", tick);
 
@@ -286,24 +332,30 @@ class MIDASgraph{
     }
 
     function dragstarted() {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d3.event.subject.fx = d3.event.subject.x;
-      d3.event.subject.fy = d3.event.subject.y;
+      if (d3.event.subject.type === "metabolite") {
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        d3.event.subject.fx = d3.event.subject.x;
+        d3.event.subject.fy = d3.event.subject.y;
+      }
     }
 
     function dragged() {
-      d3.event.subject.fx = d3.event.x;
-      d3.event.subject.fy = d3.event.y;
+      if (d3.event.subject.type === "metabolite") {
+        d3.event.subject.fx = d3.event.x;
+        d3.event.subject.fy = d3.event.y;
+      }
     }
 
     function dragended() {
-      if (!d3.event.active)
-        simulation
-          .alphaTarget(0.05)
-          .alphaMin(0.06)
-          .velocityDecay(0.7);
-      d3.event.subject.fx = null;
-      d3.event.subject.fy = null;
+      if (d3.event.subject.type === "metabolite") {
+        if (!d3.event.active)
+          simulation
+            .alphaTarget(0.05)
+            .alphaMin(0.06)
+            .velocityDecay(0.7);
+        d3.event.subject.fx = null;
+        d3.event.subject.fy = null;
+      }
     }
 
     function drawLink(d) {

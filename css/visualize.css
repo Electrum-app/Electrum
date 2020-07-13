@@ -63,13 +63,13 @@ path.hull {
 
 .node text {
   display: none;
-  font: 12px sans-serif;
+  font: 32px sans-serif;
   text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
 }
 
 .node:hover text {
   display: inline;
-  font: 12px sans-serif;
+  font: 32px sans-serif;
   text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
 }
 
