@@ -26,6 +26,5 @@ function determineWidth(input) {
   } else {
     var mod_selection = input;
   }
-
   return mod_selection;
 }

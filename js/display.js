@@ -20,41 +20,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 const selector = "#graph";
 
-// Static [x,y] coordinates for query proteins
-const protein_coordinates = {
-  "ACC": [],
-  "ACSS2A-c203": [],
-  "ALDOAconc": [],
-  "CS": [],
-  "DHTKD1r": [],
-  "E1": [],
-  "E2": [],
-  "E3": [],
-  "ENO1": [],
-  "ENO2": [],
-  "FBPase-L": [],
-  "FBPase-M": [],
-  "FH": [],
-  "GAPDH": [],
-  "GCK": [],
-  "IDH1": [],
-  "IDH2": [],
-  "IDH3A2BG": [],
-  "IDH3AB": [],
-  "IDH3AG": [],
-  "LDHA": [],
-  "LDHB": [],
-  "MDH1": [],
-  "MDH2": [],
-  "PFKP": [],
-  "PGAM1": [],
-  "PGK1": [],
-  "PHGDH": [],
-  "PKM2": [],
-  "PYK": [],
-  "TPI": [],
-}
-
 // MAIN --> Change URL to HTTPS URL when data is public
 let data_url = "_data\\CCM-MIDAS.txt"
 
