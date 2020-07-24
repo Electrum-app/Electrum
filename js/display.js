@@ -21,14 +21,11 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 const selector = "#graph";
 
 // MAIN --> Change URL to HTTPS URL when data is public
-let data_url = "_data\\CCM-MIDAS.txt"
+let data_url = "_data/CCM-MIDAS.txt"
 
 d3.tsv(data_url)
   .then(function(data) {
-      // data is now whole data set
-      // draw chart in here!
       let midasGraph = new MIDASgraph(data);
   })
   .catch(function(error){
-     // handle error
   })

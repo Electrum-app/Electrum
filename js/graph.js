@@ -21,6 +21,9 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 var _width = window.innerWidth;
 var _height = window.innerHeight * 1.2;
+var scale = 0.1;
+var zoomWidth = (_width-scale*_width)/2;
+var zoomHeight = (_height-scale*_height)/2.7;
 
 class MIDASgraph{
 
@@ -128,7 +131,6 @@ class MIDASgraph{
       }
     }
 
-    console.log(added_nodes)
     for (let p in protein_coordinates) {
       if (!added_nodes.includes(p)) {
         this.nodes.push({
@@ -149,9 +151,6 @@ class MIDASgraph{
       }
     }
 
-
-
-
     // Get absolute max
     this.abs_max = Math.max(...all_values);
 
@@ -168,10 +167,10 @@ class MIDASgraph{
       .forceSimulation(this.nodes)
       .force("link", d3.forceLink(this.links)
         .id(d => d.id)
-        .distance(40)
+        .distance(4000)
         .strength(1))
-      .force("charge", d3.forceManyBody().strength(-10000))
-      .force("center", d3.forceCenter(_width / 2, _height / 2))
+      .force("charge", d3.forceManyBody().strength(-100))
+      .force("center", d3.forceCenter(_width / 2, _height / 1.2))
       .alphaTarget(0.01)
       .alphaMin(0.1)
       .velocityDecay(0.7);
@@ -179,6 +178,7 @@ class MIDASgraph{
     var forceX = d3.forceX(_width / 2).strength(0.015);
     var forceY = d3.forceY(_height / 2).strength(0.015);
 
+    //d3.zoom().translate([zoomWidth,zoomHeight]).scale(scale);
     var svg_viewer = d3
       .select(selector)
       .append("svg")
@@ -219,6 +219,9 @@ class MIDASgraph{
         .data(this.links)
         .enter()
         .append("path")
+        .attr("id", function(d) {
+          return d.source.id + "\," + d.target.id
+        })
         .attr("class", function(d) {
           return "link interaction";
         })
@@ -228,7 +231,7 @@ class MIDASgraph{
           return cmap[_val];
         })
         .attr("stroke-width", function(d) {
-          return (-1 * Math.log(d.metadata.q_value)) / 12;
+          return ((-1 * Math.log(d.metadata.q_value)) / 12) + 5;
         });
 
     var node = svg_viewer
@@ -247,16 +250,89 @@ class MIDASgraph{
           .on("end", dragended)
       )
 
+    var removed_nodes = [];
+    node.on("click", function(d) {
+      if (d.type === "protein") {
+        console.log(node.data(this.nodes))
+        update(d.id, node.data(this.nodes));
+      }
+    })
 
-    console.log(protein_coordinates)
-    console.log(this.nodes)
-    console.log(node)
+    // add or remove metabolite nodes and edges based on user selection
+
+    function update(p, d) {
+      // add element info that tells if displayed or not
+      // check if this should be added or removed, add or remove the particular element
+      let _metabolite = [];
+      d3.selectAll("path").filter(function(){
+        if (d3.select(this).attr("id") !== null) {
+          if (d3.select(this).attr("id").includes(p) === true) {
+          _metabolite.push(d3.select(this).attr("id").split(",")[1]);
+
+          }
+        }
+      });
+
+      let remove_indices = [];
+      let add_indices = []
+      for (let node in d) {
+        if (_metabolite.includes(d[node].id)) {
+          remove_indices.push(node);
+        }
+
+        for (let removed in removed_nodes) {
+
+          if (removed[removed].id === d[node].id) {
+            add_indices.push(removed);
+          }
+        }
+      }
+
+      console.log(_metabolite)
+      console.log(remove_indices)
+      console.log(add_indices)
+      let keep_nodes = [];
+
+      for (let i in d) {
+        if (remove_indices.includes(i)) {
+
+        }
+      }
+
+
+      node =
+
+        node.enter().insert("circle", ".cursor")
+            .attr("class", "node")
+            .attr("r", 5)
+            .on("mousedown", mousedownNode);
+
+        node.exit()
+            .remove();
+
+        link = link.data(links);
+
+        link.enter().insert("line", ".node")
+            .attr("class", "link");
+        link.exit()
+            .remove();
+
+        force.start();
+        */
+
+
+
+
+
+
+
+
+    }
 
     node.each(function(d) {
-      console.log(d)
       if (d.type === "protein" || d.type === "other_protein") {
         d.fx = protein_coordinates[d.id][0] * 100;
-        d.fy = protein_coordinates[d.id][1] * 100;
+        d.fy = protein_coordinates[d.id][1] * 100 - 1000;
       }
     });
 
@@ -270,26 +346,43 @@ class MIDASgraph{
             "http://www.w3.org/2000/svg", "circle");
         }
       })
-      .attr("id", function(d) {return d.id});
+      .attr("id", function(d) {return d.id})
+      .on("mouseover", function(d){
+        if (d.type === "protein") {
+          d3.select(this).style("fill", "orange");
+        }
+      }).on("mouseout", function(d){
+        if (d.type === "protein") {
+          d3.select(this).style("fill", "grey");
+        }
+      });
 
     var text = node
-        .append("text")
-        .html(function(d) {
-          if (d.type === "protein" || d.type === "other_protein") {
+      .append("text")
+      .raise()
+      .html(function(d) {
+        if (d.type === "protein" || d.type === "other_protein") {
+          if (protein_coordinates[d.id][2] === 1) {
             return (
-              "<tspan dx='46' y='.31em' style='font-weight: bold; z-index: 1000;'>"
-              + d.display_name
+              "<tspan dx='46' y='.31em' style='font-weight: bold;'>"
+              + d.display_name.split("_")[0]
               + "</tspan>"
             );
           } else {
             return (
-              "<tspan dx='32' y='.31em' style='font-weight: bold; z-index: 1000;'>"
-              + d.display_name
+              "<tspan dx='-46' y='.31em' style='font-weight: bold; text-anchor: end;'>"
+              + d.display_name.split("_")[0]
               + "</tspan>"
             );
           }
+        } else {
+          return (
+            "<tspan dx='32' y='.31em' style='font-weight: bold;'>"
+            + d.display_name
+            + "</tspan>"
+          );
         }
-      );
+      });
 
     simulation.on("tick", tick);
 
@@ -301,9 +394,6 @@ class MIDASgraph{
         .attr("transform", transform);
       text
         .attr("transform", transform);
-      //hull
-      //  .data(convexHulls(new_nodes, new_links, getGroup, offset))
-      //  .attr("d", drawCluster);
     }
 
     function linkArc(d) {
@@ -373,8 +463,5 @@ class MIDASgraph{
 
 
 }
-
-
-
 
 //Use hulls for complexes
