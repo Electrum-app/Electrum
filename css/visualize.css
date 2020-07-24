@@ -57,12 +57,9 @@ path.hull {
   fill: black;
 }
 
-.node:hover rect {
-  fill: green;
-}
 
 .node text {
-  display: none;
+  display: inline;
   font: 32px sans-serif;
   text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
 }
@@ -72,6 +69,8 @@ path.hull {
   font: 32px sans-serif;
   text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
 }
+
+tspan {z-index:100;}
 
 .cell {
   fill: none;

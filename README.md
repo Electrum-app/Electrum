@@ -6,3 +6,4 @@ To test:
 
 In Chrome:
 `http://localhost:5050/`
+`Ctrl+F5` to clear cache
