@@ -29,230 +29,147 @@ class MIDASgraph{
 
    constructor(graph_data){
 
-    function initializeData(graphData) {
+    // Set constructor keys
+    this.graphData = graph_data;
+    this.complexes = {};
+    this.nodes = [];
+    this.links = [];
+    let all_values = [];
+    let added_nodes = [];
+    let node_lookup = {};
+    let indexer = 0;
 
-      let complexes = {};
-      let node_list = [];
-      let link_list = [];
-      let all_values = [];
-      let added_nodes = [];
-      let node_lookup = {};
-      let indexer = 0;
+    for (let connection in this.graphData) {
+      if (connection !== 'columns') {
 
-      for (let connection in graphData) {
-        if (connection !== 'columns') {
+        // Get some basic information
+        let protein = this.graphData[connection]['Query_protein'];
+        let metabolite = this.graphData[connection]['KEGG_ID_metabolite'];
+        let log_fc_c = this.graphData[connection]['log2_abundance_corrected'];
+        let log_fc = this.graphData[connection]['log2_abundance'];
+        let q_value = this.graphData[connection]['q_value'];
+        let p_value = this.graphData[connection]['p_value'];
+        let protein_complex = this.graphData[connection]['Protein_complex'];
+        let uniprot_id = this.graphData[connection]['Uniprot_ID'];
+        let protein_name = this.graphData[connection]['Protein_name'];
+        let gene_name = this.graphData[connection]['Gene_ID'];
+        let metabolite_name = this.graphData[connection]['Metabolite'];
+        let hmdb_metabolite_id =
+          this.graphData[connection]['HMDB_ID_metabolite'];
+        let common_metabolite_name =
+          this.graphData[connection]['Common_metabolite_name'];
+        all_values.push(Math.abs(log_fc_c));
 
-          // Get some basic information
-          let protein = graphData[connection]['Query_protein'];
-          let metabolite = graphData[connection]['KEGG_ID_metabolite'];
-          let log_fc_c = graphData[connection]['log2_abundance_corrected'];
-          let log_fc = graphData[connection]['log2_abundance'];
-          let q_value = graphData[connection]['q_value'];
-          let p_value = graphData[connection]['p_value'];
-          let protein_complex = graphData[connection]['Protein_complex'];
-          let uniprot_id = graphData[connection]['Uniprot_ID'];
-          let protein_name = graphData[connection]['Protein_name'];
-          let gene_name = graphData[connection]['Gene_ID'];
-          let metabolite_name = graphData[connection]['Metabolite'];
-          let hmdb_metabolite_id =
-            graphData[connection]['HMDB_ID_metabolite'];
-          let common_metabolite_name =
-            graphData[connection]['Common_metabolite_name'];
-          all_values.push(Math.abs(log_fc_c));
+        // ID string cleaning
+        protein = protein.replace(/\s/g, '');
+        metabolite = metabolite.replace(/\s/g, '');
 
-          // ID string cleaning
-          protein = protein.replace(/\s/g, '');
-          metabolite = metabolite.replace(/\s/g, '');
+        // Skip blank components
+        if ((protein === "") | (metabolite === "")) {
+          continue;
+        }
 
-          // Skip blank components
-          if ((protein === "") | (metabolite === "")) {
-            continue;
-          }
-
-          // Add protein to complex info if not added and not blank
-          if (protein_complex !== "") {
-            if (protein_complex in complexes) {
-              complexes[protein_complex].push(protein);
-            } else {
-              complexes[protein_complex] = [protein];
-            }
-          }
-
-          // Add protein node info if doesn't exist
-          if (!added_nodes.includes(protein)) {
-            node_list.push({
-              'id': protein,
-              'display_name': protein,
-              'type': "protein",
-              'complex': protein_complex,
-              'uniprot_id': uniprot_id,
-              'protein_name': protein_name,
-              'gene_name': gene_name,
-              'metabolite_name': "",
-              'common_metabolite_name': "",
-              'hmdb_metabolite_id': "",
-            });
-            added_nodes.push(protein);
-            node_lookup[protein] = indexer;
-            indexer += 1;
+        // Add protein to complex info if not added and not blank
+        if (protein_complex !== "") {
+          if (protein_complex in this.complexes) {
+            this.complexes[protein_complex].push(protein);
+          } else {
+            this.complexes[protein_complex] = [protein];
           }
         }
-      }
 
-      for (let p in protein_coordinates) {
-        if (!added_nodes.includes(p)) {
-          node_list.push({
-            'id': p,
-            'display_name': p,
-            'type': "other_protein",
-            'complex': "",
-            'uniprot_id': p,
-            'protein_name': p,
-            'gene_name': p,
+        // Add protein node info if doesn't exist
+        if (!added_nodes.includes(protein)) {
+          this.nodes.push({
+            'id': protein,
+            'display_name': protein,
+            'type': "protein",
+            'complex': protein_complex,
+            'uniprot_id': uniprot_id,
+            'protein_name': protein_name,
+            'gene_name': gene_name,
             'metabolite_name': "",
             'common_metabolite_name': "",
             'hmdb_metabolite_id': "",
           });
-          added_nodes.push(p);
-          node_lookup[p] = indexer;
+          added_nodes.push(protein);
+          node_lookup[protein] = indexer;
           indexer += 1;
         }
+        // Add metabolite node info if doesn't exist
+        if (!added_nodes.includes(metabolite)) {
+          this.nodes.push({
+            'id': metabolite,
+            'display_name': metabolite_name,
+            'type': "metabolite",
+            'complex': "",
+            'uniprot_id': "",
+            'protein_name': "",
+            'gene_name': "",
+            'metabolite_name': metabolite_name,
+            'common_metabolite_name': common_metabolite_name,
+            'hmdb_metabolite_id': hmdb_metabolite_id,
+          });
+          added_nodes.push(metabolite);
+          node_lookup[metabolite] = indexer;
+          indexer += 1;
+        }
+
+        // Add link info and weights
+        this.links.push(
+          {
+            "source": this.nodes[node_lookup[protein]],
+            "target": this.nodes[node_lookup[metabolite]],
+            "metadata": {
+              "corrected_fold_change": log_fc_c,
+              "fold_change": log_fc,
+              "q_value": q_value,
+              "p_value": p_value
+            }
+          }
+        );
       }
-
-      // Get absolute max
-      let abs_max = Math.max(...all_values);
-
-      // Make colormap
-      let cmap = drawColormap(abs_max)
-
-      // extract unique elements for each complex
-      for (let complex in complexes) {
-        complexes[complex] = [...new Set(complexes[complex])];
-      }
-
-      return {
-        "nodes": node_list,
-        "links": link_list,
-        "abs_max": abs_max,
-        "cmap": cmap,
-        "complexes": complexes,
-        "node_lookup": node_lookup
-      };
     }
 
-    function updateData(data, selected_protein, nodes, links) {
-
-      // Get connections from data
-      let complexes = {};
-      let node_list = [];
-      let link_list = [];
-      let all_values = [];
-      let added_nodes = [];
-      let node_lookup = {};
-      let indexer = 0;
-
-      for (let connection in data) {
-        if (connection !== 'columns') {
-
-          // Get some basic information
-          let protein = data[connection]['Query_protein'];
-          let metabolite = data[connection]['KEGG_ID_metabolite'];
-          let log_fc_c = data[connection]['log2_abundance_corrected'];
-          let log_fc = data[connection]['log2_abundance'];
-          let q_value = data[connection]['q_value'];
-          let p_value = data[connection]['p_value'];
-          let protein_complex = data[connection]['Protein_complex'];
-          let uniprot_id = data[connection]['Uniprot_ID'];
-          let protein_name = data[connection]['Protein_name'];
-          let gene_name = data[connection]['Gene_ID'];
-          let metabolite_name = data[connection]['Metabolite'];
-          let hmdb_metabolite_id =
-            data[connection]['HMDB_ID_metabolite'];
-          let common_metabolite_name =
-            data[connection]['Common_metabolite_name'];
-          all_values.push(Math.abs(log_fc_c));
-
-          // ID string cleaning
-          protein = protein.replace(/\s/g, '');
-          metabolite = metabolite.replace(/\s/g, '');
-
-          // Skip blank components
-          if ((protein === "") | (metabolite === "")) {
-            continue;
-          }
-
-          if (protein === selected_protein) {
-            if (!added_nodes.includes(protein)) {
-              node_list.push({
-                'id': protein,
-                'display_name': protein,
-                'type': "protein",
-                'complex': protein_complex,
-                'uniprot_id': uniprot_id,
-                'protein_name': protein_name,
-                'gene_name': gene_name,
-                'metabolite_name': "",
-                'common_metabolite_name': "",
-                'hmdb_metabolite_id': "",
-              });
-              added_nodes.push(protein);
-              node_lookup[protein] = indexer;
-              indexer += 1;
-            }
-          }
-          if (protein === selected_protein) {
-            if (!added_nodes.includes(metabolite)) {
-              node_list.push({
-                'id': metabolite,
-                'display_name': metabolite_name,
-                'type': "metabolite",
-                'complex': "",
-                'uniprot_id': "",
-                'protein_name': "",
-                'gene_name': "",
-                'metabolite_name': metabolite_name,
-                'common_metabolite_name': common_metabolite_name,
-                'hmdb_metabolite_id': hmdb_metabolite_id,
-              });
-              added_nodes.push(metabolite);
-              node_lookup[metabolite] = indexer;
-              indexer += 1;
-            }
-            // Add link info and weights
-            link_list.push(
-              {
-                "source": node_list[node_lookup[protein]],
-                "target": node_list[node_lookup[metabolite]],
-                "metadata": {
-                  "corrected_fold_change": log_fc_c,
-                  "fold_change": log_fc,
-                  "q_value": q_value,
-                  "p_value": p_value
-                }
-              }
-            )
-          }
-        }
+    for (let p in protein_coordinates) {
+      if (!added_nodes.includes(p)) {
+        this.nodes.push({
+          'id': p,
+          'display_name': p,
+          'type': "other_protein",
+          'complex': "",
+          'uniprot_id': p,
+          'protein_name': p,
+          'gene_name': p,
+          'metabolite_name': "",
+          'common_metabolite_name': "",
+          'hmdb_metabolite_id': "",
+        });
+        added_nodes.push(p);
+        node_lookup[p] = indexer;
+        indexer += 1;
       }
-      // add to nodes and links
-      console.log(node_list)
-      console.log(link_list)
-      console.log(nodes)
+    }
 
+    // Get absolute max
+    this.abs_max = Math.max(...all_values);
 
-      console.log('===')
+    // Make colormap
+    let cmap = drawColormap(this.abs_max)
+
+    // extract unique elements for each complex
+    for (let complex in this.complexes) {
+      this.complexes[complex] = [...new Set(this.complexes[complex])];
     }
 
     // Graph
-    let initData = initializeData(graph_data);
-
     var simulation = d3
-      .forceSimulation(initData.nodes)
-      .force("link", d3.forceLink()
+      .forceSimulation(this.nodes)
+      .force("link", d3.forceLink(this.links)
         .id(d => d.id)
-        .distance(400)
+        .distance(4000)
         .strength(1))
-      .force("charge", d3.forceManyBody().strength(-5000))
+      .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(_width / 2, _height / 1.2))
       .alphaTarget(0.01)
       .alphaMin(0.1)
@@ -261,6 +178,7 @@ class MIDASgraph{
     var forceX = d3.forceX(_width / 2).strength(0.015);
     var forceY = d3.forceY(_height / 2).strength(0.015);
 
+    //d3.zoom().translate([zoomWidth,zoomHeight]).scale(scale);
     var svg_viewer = d3
       .select(selector)
       .append("svg")
@@ -298,6 +216,7 @@ class MIDASgraph{
     var link = svg_viewer
         .append("g")
         .selectAll("path")
+        .data(this.links)
         .enter()
         .append("path")
         .attr("id", function(d) {
@@ -312,12 +231,12 @@ class MIDASgraph{
           return cmap[_val];
         })
         .attr("stroke-width", function(d) {
-          return ((-1 * Math.log(d.metadata.q_value)) / 100) + 5;
+          return ((-1 * Math.log(d.metadata.q_value)) / 12) + 5;
         });
 
     var node = svg_viewer
       .selectAll(".node")
-      .data(initData.nodes)
+      .data(this.nodes)
       .enter()
       .append("g")
       .attr("class", "node")
@@ -331,9 +250,88 @@ class MIDASgraph{
           .on("end", dragended)
       )
 
+    var removed_nodes = [];
+    node.on("click", function(d) {
+      if (d.type === "protein") {
+        console.log(node.data(this.nodes))
+        update(d.id, node.data(this.nodes));
+      }
+    })
+
+    // add or remove metabolite nodes and edges based on user selection
+
+    function update(p, d) {
+      // add element info that tells if displayed or not
+      // check if this should be added or removed, add or remove the particular element
+      let _metabolite = [];
+      d3.selectAll("path").filter(function(){
+        if (d3.select(this).attr("id") !== null) {
+          if (d3.select(this).attr("id").includes(p) === true) {
+          _metabolite.push(d3.select(this).attr("id").split(",")[1]);
+
+          }
+        }
+      });
+
+      let remove_indices = [];
+      let add_indices = []
+      for (let node in d) {
+        if (_metabolite.includes(d[node].id)) {
+          remove_indices.push(node);
+        }
+
+        for (let removed in removed_nodes) {
+
+          if (removed[removed].id === d[node].id) {
+            add_indices.push(removed);
+          }
+        }
+      }
+
+      console.log(_metabolite)
+      console.log(remove_indices)
+      console.log(add_indices)
+      let keep_nodes = [];
+
+      for (let i in d) {
+        if (remove_indices.includes(i)) {
+
+        }
+      }
+
+
+      node =
+
+        node.enter().insert("circle", ".cursor")
+            .attr("class", "node")
+            .attr("r", 5)
+            .on("mousedown", mousedownNode);
+
+        node.exit()
+            .remove();
+
+        link = link.data(links);
+
+        link.enter().insert("line", ".node")
+            .attr("class", "link");
+        link.exit()
+            .remove();
+
+        force.start();
+        
+
+
+
+
+
+
+
+
+    }
+
     node.each(function(d) {
       if (d.type === "protein" || d.type === "other_protein") {
-        d.fx = protein_coordinates[d.id][0] * (_width / 9) - (_width / 20);
+        d.fx = protein_coordinates[d.id][0] * 100;
         d.fy = protein_coordinates[d.id][1] * 100 - 1000;
       }
     });
@@ -348,29 +346,14 @@ class MIDASgraph{
             "http://www.w3.org/2000/svg", "circle");
         }
       })
-      .attr("id", function(d) {
-        return d.id;
-      })
-      .attr("class", function(d) {
-        return d.type;
-      })
-      .style("fill", function(d) {
+      .attr("id", function(d) {return d.id})
+      .on("mouseover", function(d){
         if (d.type === "protein") {
-          return "orange"
+          d3.select(this).style("fill", "orange");
         }
-      })
-      .on("click", function(d) {
+      }).on("mouseout", function(d){
         if (d.type === "protein") {
-          // Unhighlight last protein and highlight selected protein
-          d3.selectAll(".other_protein").style("fill", "grey")
-          d3.selectAll(".protein").style("fill", "orange")
-          d3.select('rect#' + d.id).style("fill", "red")
-
-          // clear all metabolite nodes
-          d3.selectAll("circle").remove();
-
-          // add nodes and links for connected components
-          updateData(graph_data, d.id, node, link);
+          d3.select(this).style("fill", "grey");
         }
       });
 
@@ -381,20 +364,20 @@ class MIDASgraph{
         if (d.type === "protein" || d.type === "other_protein") {
           if (protein_coordinates[d.id][2] === 1) {
             return (
-              "<tspan dx='-20px' y='-2.9em' style='font-weight: bold;'>"
+              "<tspan dx='46' y='.31em' style='font-weight: bold;'>"
               + d.display_name.split("_")[0]
               + "</tspan>"
             );
           } else {
             return (
-              "<tspan dx='-40px' y='-2.9em' style='font-weight: bold; text-anchor: end;'>"
+              "<tspan dx='-46' y='.31em' style='font-weight: bold; text-anchor: end;'>"
               + d.display_name.split("_")[0]
               + "</tspan>"
             );
           }
         } else {
           return (
-            "<tspan dx='-32px' y='-2.9em' style='font-weight: bold;'>"
+            "<tspan dx='32' y='.31em' style='font-weight: bold;'>"
             + d.display_name
             + "</tspan>"
           );
@@ -420,9 +403,9 @@ class MIDASgraph{
 
       return (
         "M" +
-        (d.source.x - 30) +
+        d.source.x +
         "," +
-        (d.source.y - 33) +
+        d.source.y +
         "A0,0 0 0,1 " +
         d.target.x +
         "," +
@@ -464,41 +447,21 @@ class MIDASgraph{
         d3.event.subject.fy = null;
       }
     }
-  }
+
+    function drawLink(d) {
+      context.moveTo(d.source.x, d.source.y);
+      context.lineTo(d.target.x, d.target.y);
+    }
+
+    function drawNode(d) {
+      context.moveTo(d.x + 3, d.y);
+      context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
+    }
+
+   }
+
+
+
 }
 
 //Use hulls for complexes
-// Add metabolite node info if doesn't exist
-/*
-if (!added_nodes.includes(metabolite)) {
-  this.nodes.push({
-    'id': metabolite,
-    'display_name': metabolite_name,
-    'type': "metabolite",
-    'complex': "",
-    'uniprot_id': "",
-    'protein_name': "",
-    'gene_name': "",
-    'metabolite_name': metabolite_name,
-    'common_metabolite_name': common_metabolite_name,
-    'hmdb_metabolite_id': hmdb_metabolite_id,
-  });
-  added_nodes.push(metabolite);
-  node_lookup[metabolite] = indexer;
-  indexer += 1;
-}
-
-// Add link info and weights
-this.links.push(
-  {
-    "source": this.nodes[node_lookup[protein]],
-    "target": this.nodes[node_lookup[metabolite]],
-    "metadata": {
-      "corrected_fold_change": log_fc_c,
-      "fold_change": log_fc,
-      "q_value": q_value,
-      "p_value": p_value
-    }
-  }
-);
-*/
