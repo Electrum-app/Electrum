@@ -404,7 +404,6 @@ class MIDASgraph{
             return that.initData.cmap[_val];
           })
           .attr("stroke-width", function(d) {
-            console.log(d.metadata.q_value)
             let _weight = ((-1 * Math.log(d.metadata.q_value)) / 10) + 1;
             if (_weight > 6) {
               _weight = 6;
