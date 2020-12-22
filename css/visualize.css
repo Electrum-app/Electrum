@@ -19,6 +19,17 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+div_edge.tooltip, div_protein.tooltip {
+    position: absolute;
+    text-align: left;
+    padding: 7px;
+    font: 12px sans-serif;
+
+    border: 2px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
 path.hull {
   fill: none;
   fill-opacity: 0.3;
