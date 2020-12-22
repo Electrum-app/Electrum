@@ -304,6 +304,19 @@ class MIDASgraph{
             }
           })
             .style("visibility", "visible");
+
+
+          // run metabolite structural analysis here
+
+          //
+
+          //
+
+          //
+
+          //
+
+
         } else if (d.type === "metabolite") {
           current_metabolite = d.id;
 
