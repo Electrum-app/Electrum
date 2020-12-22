@@ -196,7 +196,6 @@ class MIDASgraph{
 
     var svg_viewer = d3
       .select(selector)
-      .attr("id", "links_group");
       .append("svg")
       .attr("width", _width - 5)
       .attr("height", _height - 80)
@@ -267,15 +266,45 @@ class MIDASgraph{
       )
       .on("click", function(d) {
         if (d.type === "protein") {
-          if (current_selection.has(d.id)) {
-            console.log('already there')
-            current_selection.delete(d.id);
-          } else {
-            current_selection.add(d.id);
-            update(d.id, node.data(this.nodes), current_selection);
-            d3.select("#links_group").remove();
-            d3.select("#nodes_group").remove();
-          }
+
+
+          d3.select("rect#" + d.id)
+            .style("background-color", "red");
+
+
+
+          node.filter(function (d) {
+            if (d.type !== "protein" && d.type !== "other_protein") {
+              return d;
+            }
+          })
+            .style("visibility", "hidden");
+          link.filter(function (d) {return d;})
+            .style("visibility", "hidden");
+
+          //get all links
+          let get_metabolites = [];
+          link.filter(function (l) {
+            if (l.source.id === d.id) {
+              get_metabolites.push(l.target.id)
+              return l;
+            }
+          })
+            .style("visibility", "visible");
+          link.filter(function (ll) {
+            if (get_metabolites.includes(ll.target.id)) {
+              return ll;
+            }
+          })
+            .style("visibility", "visible");
+
+          // get all interacting metabolites and their links
+          node.filter(function (n) {
+            if (n.type === "metabolite" && get_metabolites.includes(n.id)) {
+              return n;
+            }
+          })
+            .style("visibility", "visible");
         }
       })
 
@@ -285,6 +314,14 @@ class MIDASgraph{
         d.fy = coordinates[d.id][1] * 100 - 1000;
       }
     });
+    node.filter(function (d) {
+      if (d.type !== "protein" && d.type !== "other_protein") {
+        return d;
+      }
+    })
+      .style("visibility", "hidden");
+    link.filter(function (d) {return d;})
+      .style("visibility", "hidden");
 
     var circle = node
       .append(function(d) {
@@ -297,13 +334,22 @@ class MIDASgraph{
         }
       })
       .attr("id", function(d) {return d.id})
+      .style("fill", function(d) {
+        if (d.type === "protein") {
+          return "orange"
+        } else if (d.type === "other_protein") {
+          return "grey"
+        }
+      })
       .on("mouseover", function(d){
         if (d.type === "protein") {
-          d3.select(this).style("fill", "orange");
+          d3.select(this).style("fill", "red");
         }
       }).on("mouseout", function(d){
-        if (d.type === "protein") {
+        if (d.type === "other_protein") {
           d3.select(this).style("fill", "grey");
+        } else if (d.type === "protein") {
+          d3.select(this).style("fill", "orange");
         }
       });
 
