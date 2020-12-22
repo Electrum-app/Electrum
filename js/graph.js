@@ -22,8 +22,8 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 var _width = window.innerWidth;
 var _height = window.innerHeight * 1.2;
 var scale = 0.1;
-var zoomWidth = (_width-scale*_width)/2;
-var zoomHeight = (_height-scale*_height)/2.7;
+var zoomWidth = (_width-scale*_width) / 2;
+var zoomHeight = (_height-scale*_height) / 2.7;
 var current_protein = "";
 var current_metabolite = "";
 
@@ -172,15 +172,22 @@ class MIDASgraph{
     }
   }
 
-
-
-
   draw_graph() {
 
     var cmap = this.cmap;
     var coordinates = this.coordinates;
     var current_selection = this.current_selection;
     var that = this;
+
+    // All tooltip code adapted from:
+    //https://bl.ocks.org/d3noob/a22c42db65eb00d4e369
+    var div_edge = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+    var div_protein = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
     var simulation = d3
       .forceSimulation(this.nodes)
@@ -250,6 +257,32 @@ class MIDASgraph{
         .attr("stroke-width", function(d) {
           let _weight = ((-1 * Math.log(d.metadata.q_value)) / 12) + 5;
           return _weight;
+        })
+        .on("mouseover", function(d) {
+          // show label tooltip
+          let _target = d.source.id;
+          let _metabolite = d.target.display_name;
+          let _fold_change = parseFloat(d.metadata.corrected_fold_change).toFixed(2);
+          let _q_value = parseFloat(d.metadata.q_value).toExponential(2);
+          let _display_string = (""
+            + "<b>Protein:</b> " + _target + "<br>"
+            + "<b>Metabolite:</b> " + _metabolite + "<br>"
+            + "<b>log<sub>2</sub>(Fold Change):</b> " + _fold_change + "<br>"
+            + "<b>q-value:</b> " + _q_value
+          )
+          div_edge.transition()
+            .duration(100)
+            .style("opacity", .9);
+          div_edge
+            .html(_display_string)
+              .style("left", (d3.event.pageX + 10) + "px")
+              .style("top", (d3.event.pageY - 5) + "px");
+        })
+        .on("mouseout", function(d) {
+          // remove label tooltip
+          div_edge.transition()
+            .duration(500)
+            .style("opacity", 0);
         });
 
     var node = svg_viewer
@@ -305,28 +338,11 @@ class MIDASgraph{
           })
             .style("visibility", "visible");
 
-
-          // run metabolite structural analysis here
-
-          //
-
-          //
-
-          //
-
-          //
-
-
         } else if (d.type === "metabolite") {
           current_metabolite = d.id;
-
           let _id = d.id;
           let _name = d.display_name;
           let _other = d.common_metabolite_name;
-
-          console.log(_id)
-          console.log(_name)
-          console.log(_other)
 
           // reset other Metaboverse NN
           // get this metabolite's Metaboverse NN
@@ -339,7 +355,8 @@ class MIDASgraph{
 
           // probably need to add all this in nodes and links at start and just give special IDs to be able to hide and show when selected
 
-          //
+          // use a tooltip for result display like this: https://www.d3-graph-gallery.com/graph/interactivity_tooltip.html
+          // example #2
 
 
 
@@ -355,14 +372,6 @@ class MIDASgraph{
             d3.select("rect#" + that.nodes[n].id).style("fill", "grey");
           }
         }
-
-        // Pop up metabolite analysis side-panel for these metabolites
-
-        //
-
-        //
-
-
       })
 
     node.each(function(d) {
@@ -371,14 +380,6 @@ class MIDASgraph{
         d.fy = coordinates[d.id][1] * 100 - 1000;
       }
     });
-    node.filter(function (d) {
-      if (d.type !== "protein" && d.type !== "other_protein") {
-        return d;
-      }
-    })
-      .style("visibility", "hidden");
-    link.filter(function (d) {return d;})
-      .style("visibility", "hidden");
 
     var circle = node
       .append(function(d) {
@@ -401,6 +402,35 @@ class MIDASgraph{
       .on("mouseover", function(d){
         if (d.type === "protein") {
           d3.select(this).style("fill", "red");
+          let _display_string = "<b>Metabolite Structure Results:</b><br>...";
+
+          // Pop up metabolite analysis side-panel for these metabolites
+
+          //
+
+          //
+
+
+          div_protein.transition()
+            .duration(100)
+            .style("opacity", .9);
+          div_protein
+            .html(_display_string)
+              .style("left", (d3.event.pageX + 10) + "px")
+              .style("top", (d3.event.pageY - 5) + "px");
+        } else if (d.type === "metabolite") {
+          let _display_string = (""
+            + "<b>Name:</b> " + d.display_name + "<br>"
+            + "<b>Other name:</b> " + d.common_metabolite_name + "<br>"
+            + "<b>KEGG ID:</b> " + d.id
+          );
+          div_protein.transition()
+            .duration(100)
+            .style("opacity", .9);
+          div_protein
+            .html(_display_string)
+              .style("left", (d3.event.pageX + 10) + "px")
+              .style("top", (d3.event.pageY - 5) + "px");
         }
       }).on("mouseout", function(d){
         if (d.id === current_protein) {
@@ -410,6 +440,9 @@ class MIDASgraph{
         } else if (d.type === "protein") {
           d3.select(this).style("fill", "orange");
         }
+        div_protein.transition()
+          .duration(500)
+          .style("opacity", 0);
       });
 
     var text = node
@@ -439,7 +472,43 @@ class MIDASgraph{
         }
       });
 
+    showNodes()
     simulation.on("tick", tick);
+    setTimeout(delayDisappear, 1000);
+
+    function delayDisappear() {
+      node.filter(function (d) {
+        if (d.type !== "protein" && d.type !== "other_protein") {
+          return d;
+        }
+      })
+        .transition().duration(5000).style("opacity", 0);
+      link.filter(function (d) {return d;})
+        .transition().duration(5000).style("opacity", 0);
+      setTimeout(hideNodes, 5000);
+    }
+
+    function hideNodes() {
+      node.filter(function (d) {
+        if (d.type !== "protein" && d.type !== "other_protein") {
+          return d;
+        }
+      })
+        .style("visibility", "hidden");
+      link.filter(function (d) {return d;})
+        .style("visibility", "hidden");
+    }
+
+    function showNodes() {
+      node.filter(function (d) {
+        if (d.type !== "protein" && d.type !== "other_protein") {
+          return d;
+        }
+      })
+        .style("visibility", "visible");
+      link.filter(function (d) {return d;})
+        .style("visibility", "visible");
+    }
 
     // Draw curved edges
     function tick() {
@@ -449,6 +518,7 @@ class MIDASgraph{
         .attr("transform", transform);
       text
         .attr("transform", transform);
+
     }
 
     function linkArc(d) {
@@ -512,28 +582,5 @@ class MIDASgraph{
       context.moveTo(d.x + 3, d.y);
       context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
     }
-
-    function update(id, nodes, selections) {
-      console.log(id)
-      console.log(nodes)
-      console.log(selections)
-
-
-
-
-
-
-    }
   }
 }
-
-
-
-
-
-/*
-
-
-
-
-*/

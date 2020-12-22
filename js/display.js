@@ -22,6 +22,7 @@ const selector = "#graph";
 
 // MAIN --> Change URL to HTTPS URL when data is public
 let data_url = "_data/CCM-MIDAS.txt"
+let database_url = "_data/HSA_electrum.mvdb"
 
 d3.tsv(data_url)
   .then(function(data) {
