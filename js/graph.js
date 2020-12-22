@@ -310,9 +310,11 @@ class MIDASgraph{
               return d;
             }
           })
-            .style("visibility", "hidden");
+            .style("visibility", "hidden")
+            .style("opacity", 1);
           link.filter(function (d) {return d;})
-            .style("visibility", "hidden");
+            .style("visibility", "hidden")
+            .style("opacity", 1);
 
           //get all links
           let get_metabolites = [];
@@ -322,13 +324,15 @@ class MIDASgraph{
               return l;
             }
           })
-            .style("visibility", "visible");
+            .style("visibility", "visible")
+            .style("opacity", 1);
           link.filter(function (ll) {
             if (get_metabolites.includes(ll.target.id)) {
               return ll;
             }
           })
-            .style("visibility", "visible");
+            .style("visibility", "visible")
+            .style("opacity", 1);
 
           // get all interacting metabolites and their links
           node.filter(function (n) {
@@ -336,7 +340,8 @@ class MIDASgraph{
               return n;
             }
           })
-            .style("visibility", "visible");
+            .style("visibility", "visible")
+            .style("opacity", 1);
 
         } else if (d.type === "metabolite") {
           current_metabolite = d.id;
@@ -482,10 +487,10 @@ class MIDASgraph{
           return d;
         }
       })
-        .transition().duration(5000).style("opacity", 0);
+        .transition().duration(3000).style("opacity", 0);
       link.filter(function (d) {return d;})
-        .transition().duration(5000).style("opacity", 0);
-      setTimeout(hideNodes, 5000);
+        .transition().duration(3000).style("opacity", 0);
+      setTimeout(hideNodes, 3000);
     }
 
     function hideNodes() {
@@ -494,9 +499,11 @@ class MIDASgraph{
           return d;
         }
       })
-        .style("visibility", "hidden");
+        .style("visibility", "hidden")
+        .style("opacity", 1);
       link.filter(function (d) {return d;})
-        .style("visibility", "hidden");
+        .style("visibility", "hidden")
+        .style("opacity", 1);
     }
 
     function showNodes() {
@@ -505,9 +512,11 @@ class MIDASgraph{
           return d;
         }
       })
-        .style("visibility", "visible");
+        .style("visibility", "visible")
+        .style("opacity", 1);
       link.filter(function (d) {return d;})
-        .style("visibility", "visible");
+        .style("visibility", "visible")
+        .style("opacity", 1);
     }
 
     // Draw curved edges
