@@ -24,6 +24,8 @@ var _height = window.innerHeight * 1.2;
 var scale = 0.1;
 var zoomWidth = (_width-scale*_width)/2;
 var zoomHeight = (_height-scale*_height)/2.7;
+var current_protein = "";
+var current_metabolite = "";
 
 class MIDASgraph{
 
@@ -178,12 +180,13 @@ class MIDASgraph{
     var cmap = this.cmap;
     var coordinates = this.coordinates;
     var current_selection = this.current_selection;
+    var that = this;
 
     var simulation = d3
       .forceSimulation(this.nodes)
       .force("link", d3.forceLink(this.links)
         .id(d => d.id)
-        .distance(4000)
+        .distance(2250)
         .strength(1))
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(_width / 2, _height / 1.2))
@@ -265,13 +268,9 @@ class MIDASgraph{
           .on("end", dragended)
       )
       .on("click", function(d) {
+
         if (d.type === "protein") {
-
-
-          d3.select("rect#" + d.id)
-            .style("background-color", "red");
-
-
+          current_protein = d.id;
 
           node.filter(function (d) {
             if (d.type !== "protein" && d.type !== "other_protein") {
@@ -305,7 +304,32 @@ class MIDASgraph{
             }
           })
             .style("visibility", "visible");
+        } else if (d.type === "metabolite") {
+          current_metabolite = d.id;
+          console.log(current_metabolite)
+          // reset other Metaboverse NN
+          // get this metabolite's Metaboverse NN
+
         }
+
+        // reset protein shading
+        for (let n in that.nodes) {
+          if (current_protein === that.nodes[n].id) {
+            d3.select("rect#" + that.nodes[n].id).style("fill", "red");
+          } else if (current_protein !== that.nodes[n].id && "protein" === that.nodes[n].type) {
+            d3.select("rect#" + that.nodes[n].id).style("fill", "orange");
+          } else if (current_protein !== that.nodes[n].id && "other_protein" === that.nodes[n].type) {
+            d3.select("rect#" + that.nodes[n].id).style("fill", "grey");
+          }
+        }
+
+        // Pop up metabolite analysis side-panel for these metabolites
+
+        //
+
+        //
+
+
       })
 
     node.each(function(d) {
@@ -346,7 +370,9 @@ class MIDASgraph{
           d3.select(this).style("fill", "red");
         }
       }).on("mouseout", function(d){
-        if (d.type === "other_protein") {
+        if (d.id === current_protein) {
+          d3.select(this).style("fill", "red");
+        } else if (d.type === "other_protein") {
           d3.select(this).style("fill", "grey");
         } else if (d.type === "protein") {
           d3.select(this).style("fill", "orange");
