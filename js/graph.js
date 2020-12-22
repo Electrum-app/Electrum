@@ -306,9 +306,29 @@ class MIDASgraph{
             .style("visibility", "visible");
         } else if (d.type === "metabolite") {
           current_metabolite = d.id;
-          console.log(current_metabolite)
+
+          let _id = d.id;
+          let _name = d.display_name;
+          let _other = d.common_metabolite_name;
+
+          console.log(_id)
+          console.log(_name)
+          console.log(_other)
+
           // reset other Metaboverse NN
           // get this metabolite's Metaboverse NN
+
+          // find metabolite species_id
+          // find all reactions species_id
+            // show inputs, outputs, modifiers using Metaboverse notation
+          // find all pathways for the reactions and use as hulls
+          // label hulls
+
+          // probably need to add all this in nodes and links at start and just give special IDs to be able to hide and show when selected
+
+          //
+
+
 
         }
 
