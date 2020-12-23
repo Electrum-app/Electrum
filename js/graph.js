@@ -53,7 +53,7 @@ class MIDASgraph{
       if (connection !== 'columns') {
         // Get some basic information
         let protein = this.graphData[connection]['Query_protein'];
-        let metabolite = this.graphData[connection]['KEGG_ID_metabolite'];
+        let metabolite = this.graphData[connection]['KEGG_ID'];
         let log_fc_c = this.graphData[connection]['log2_abundance_corrected'];
         let log_fc = this.graphData[connection]['log2_abundance'];
         let q_value = this.graphData[connection]['q_value'];
@@ -64,7 +64,7 @@ class MIDASgraph{
         let gene_name = this.graphData[connection]['Gene_ID'];
         let metabolite_name = this.graphData[connection]['Metabolite'];
         let hmdb_metabolite_id =
-          this.graphData[connection]['HMDB_ID_metabolite'];
+          this.graphData[connection]['HMDB_ID'];
         let common_metabolite_name =
           this.graphData[connection]['Common_metabolite_name'];
         all_values.push(Math.abs(log_fc_c));
@@ -105,6 +105,7 @@ class MIDASgraph{
           node_lookup[protein] = indexer;
           indexer += 1;
         }
+
         // Add metabolite node info if doesn't exist
         if (!added_nodes.includes(metabolite)) {
           this.nodes.push({
@@ -173,7 +174,7 @@ class MIDASgraph{
   }
 
   draw_graph() {
-
+    console.log(this)
     var cmap = this.cmap;
     var coordinates = this.coordinates;
     var current_selection = this.current_selection;
@@ -200,7 +201,7 @@ class MIDASgraph{
       .alphaTarget(0.01)
       .alphaMin(0.1)
       .velocityDecay(0.7);
-
+    console.log("1")
     var forceX = d3.forceX(_width / 2).strength(0.015);
     var forceY = d3.forceY(_height / 2).strength(0.015);
 
@@ -216,7 +217,7 @@ class MIDASgraph{
       )
       .on("dblclick.zoom", null)
       .append("g");
-
+    console.log("2")
     svg_viewer
       .append("defs")
       .selectAll("marker")
@@ -237,7 +238,7 @@ class MIDASgraph{
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0, -5L10, 0L0, 5");
-
+    console.log("3")
     var link = svg_viewer
         .append("g")
         .selectAll("path")
@@ -284,7 +285,7 @@ class MIDASgraph{
             .duration(500)
             .style("opacity", 0);
         });
-
+    console.log("4")
     var node = svg_viewer
       .selectAll(".node")
       .data(this.nodes)
@@ -378,14 +379,17 @@ class MIDASgraph{
           }
         }
       })
-
+    console.log("5")
     node.each(function(d) {
       if (d.type === "protein" || d.type === "other_protein") {
+        console.log(d.type)
+        console.log(d.id)
+        console.log(coordinates[d.id])
         d.fx = coordinates[d.id][0] * 100;
         d.fy = coordinates[d.id][1] * 100 - 1000;
       }
     });
-
+    console.log("6")
     var circle = node
       .append(function(d) {
         if (d.type === "protein" || d.type === "other_protein") {
@@ -449,7 +453,7 @@ class MIDASgraph{
           .duration(500)
           .style("opacity", 0);
       });
-
+    console.log("9")
     var text = node
       .append("text")
       .raise()
@@ -476,7 +480,7 @@ class MIDASgraph{
           );
         }
       });
-
+    console.log("11")
     showNodes()
     simulation.on("tick", tick);
     setTimeout(delayDisappear, 1000);

@@ -21,12 +21,25 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 const selector = "#graph";
 
 // MAIN --> Change URL to HTTPS URL when data is public
-let data_url = "_data/CCM-MIDAS.txt"
-let database_url = "_data/HSA_electrum.mvdb"
+let data_url = "_data/20201218_Combined_MIDAS-CCM.txt";
+//let database_url = "_data/HSA_electrum.mvdb";
+
+// add drop-down menu and selection determines input data table for construction
+/*
+Promise.all([
+  d3.tsv(data_url),
+  d3.json(database_url)
+]).then(function(data) {
+  console.log(data)
+    let midasGraph = new MIDASgraph(data);
+  })
+  .catch(function(error){
+  });
+*/
 
 d3.tsv(data_url)
   .then(function(data) {
       let midasGraph = new MIDASgraph(data);
-  })
-  .catch(function(error){
-  })
+    })
+    .catch(function(error){
+    });

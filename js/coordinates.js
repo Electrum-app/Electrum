@@ -35,16 +35,16 @@ const protein_coordinates = {
   "PFKL":[3,8,0,4],
   "PFKP":[4,8,1,4],
 
-  "FBPase-L":[7,7,1,5],
-  "FBPase-M":[7,8,1,5],
+  "FBP1":[7,7,1,5],
+  "FBP2":[7,8,1,5],
 
-  "ALDOAconc": [4,10,0,6], //ALDOAconc?
-  "ALDOBconc":[3,11,0,6],
-  "ALDOCconc":[4,11,1,6],
+  "ALDOA": [4,10,0,6], //ALDOAconc?
+  "ALDOB":[3,11,0,6],
+  "ALDOC":[4,11,1,6],
 
   "GAPDH":[4,13,0,7],
 
-  "TPI":[7,12,1,8], //TPI1
+  "TPI1":[7,12,1,8], //TPI1
 
   "PGK1":[4,15,0,9],
   "PGK2":[4,16,0,9],
@@ -92,9 +92,9 @@ const protein_coordinates = {
   "IDH1": [11,43,0,24], // Not in same complex?
   "IDH2": [11,44,0,24],
 
-  "IDH3A2BG": [14,43,1,25],
-  "IDH3AB": [14,44,0,25],
-  "IDH3AG": [15,44,1,25],
+  "IDH3a2bg": [14,43,1,25],
+  "IDH3ab": [14,44,0,25],
+  "IDH3ag": [15,44,1,25],
 
   "OGDH": [8,47,0,26],
   "DLST_b": [9,47,1,26],
@@ -116,9 +116,9 @@ const protein_coordinates = {
   "MDH2": [1,38,0,30],
 
   // Others?
-  "E1": [14,24,0,31],
-  "E2": [15,24,1,31],
-  "E3": [14,25,0,31],
+  "E1-PDH": [14,24,0,31],
+  "E2-PDH": [15,24,1,31],
+  "E3-PDH": [14,25,0,31],
 }
 
 const protein_links = {}
