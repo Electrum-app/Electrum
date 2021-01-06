@@ -19,7 +19,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 // Static [x,y] coordinates for query proteins
-const protein_coordinates = {
+const ccm_coordinates = {
   "HK1":[3,2,0,0],
   "HK2":[4,2,1,0],
   "HK3":[3,3,0,0],
@@ -121,4 +121,6 @@ const protein_coordinates = {
   "E3-PDH": [14,25,0,31],
 }
 
-const protein_links = {}
+const pathway_dictionary = {
+  "Central Carbon Metabolism": ccm_coordinates,
+};
