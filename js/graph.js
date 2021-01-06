@@ -26,20 +26,63 @@ var zoomWidth = (_width-scale*_width) / 2;
 var zoomHeight = (_height-scale*_height) / 2.7;
 var current_protein = "";
 var current_metabolite = "";
+var use_absolute_values = true;
 
 class MIDASgraph{
 
    constructor(graph_data){
     // Set constructor keys
     this.graphData = graph_data;
-    this.coordinates = protein_coordinates;
     this.init_data();
-    this.draw_graph(); // update within this function
+    // create drop-down menu
+    this.pathways = Object.keys(pathway_dictionary);
+    this.pathway_dictionary = pathway_dictionary;
+    this.menu_selector = "menu";
+    this.make_menu();
+    let that = this;
+    d3.select("#menu").on("change", function() {
+      draw_graph(that)
+    });
+    d3.select("#toggle_absolute_values").on("click", function() {
+      if (use_absolute_values === true) {
+        use_absolute_values = false;
+      } else {
+        use_absolute_values = true;
+      }
+      draw_graph(that)
+    });
   }
 
   // other functions
+  make_menu() {
+    var menu_list = [];
+    var sorted_pathways = this.pathways.sort();
+    var sorted_proteins = this.proteins.sort();
+    menu_list.push("Select a pathway or protein...");
+    menu_list.push("---------------------------------------");
+    menu_list.push("Pathways:");
+    for (let _pathway in sorted_pathways) {
+      menu_list.push(sorted_pathways[_pathway]);
+    }
+    menu_list.push("---------------------------------------");
+    menu_list.push("Proteins:");
+    for (let _protein in sorted_proteins) {
+      menu_list.push(sorted_proteins[_protein]);
+    }
+    // Generate drop-down menu for species select
+    var menu = [];
+    menu = document.getElementById(this.menu_selector);
+    for (var i = 0; i < menu_list.length; i++) {
+      var option = document.createElement("option");
+      option.innerHTML = menu_list[i];
+      option.value = menu_list[i];
+      menu.appendChild(option);
+    }
+  }
+
   init_data() {
     this.complexes = {};
+    this.proteins = [];
     this.nodes = [];
     this.links = [];
     this.current_selection = new Set(); // Currently selected proteins & metabolites
@@ -89,6 +132,7 @@ class MIDASgraph{
 
         // Add protein node info if doesn't exist
         if (!added_nodes.includes(protein)) {
+          this.proteins.push(protein);
           this.nodes.push({
             'id': protein,
             'display_name': protein,
@@ -141,26 +185,6 @@ class MIDASgraph{
       }
     }
 
-    for (let p in this.coordinates) {
-      if (!added_nodes.includes(p)) {
-        this.nodes.push({
-          'id': p,
-          'display_name': p,
-          'type': "other_protein",
-          'complex': "",
-          'uniprot_id': p,
-          'protein_name': p,
-          'gene_name': p,
-          'metabolite_name': "",
-          'common_metabolite_name': "",
-          'hmdb_metabolite_id': "",
-        });
-        added_nodes.push(p);
-        node_lookup[p] = indexer;
-        indexer += 1;
-      }
-    }
-
     // Get absolute max
     this.abs_max = Math.max(...all_values);
 
@@ -172,13 +196,41 @@ class MIDASgraph{
       this.complexes[complex] = [...new Set(this.complexes[complex])];
     }
   }
+}
 
-  draw_graph() {
-    console.log(this)
-    var cmap = this.cmap;
-    var coordinates = this.coordinates;
-    var current_selection = this.current_selection;
-    var that = this;
+function draw_graph(data) {
+
+    var that = data;
+    var cmap = that.cmap;
+    let _nodes;
+    let _links;
+    let coordinates;
+    let _distances;
+    let selection = document.getElementById("menu").value;
+    if (selection in that.pathway_dictionary) {
+      _nodes = that.nodes;
+      _links = that.links;
+      coordinates = that.pathway_dictionary[selection];
+      _distances = 2250;
+      let _node_ids = [];
+      for (let _n in _nodes) {
+        _node_ids.push(_nodes[_n].id);
+      }
+    } else if (that.proteins.includes(selection)) {
+      _links = that.links.filter(link => link.source.id === selection)
+      // get the nodes with the links
+      let _metabolites = [];
+      for (let _m in _links) {_metabolites.push(_links[_m].target.id)}
+      _nodes = that.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
+      coordinates = {};
+      coordinates[selection] = [6,20,1,24];
+      _distances = 1150;
+    } else {
+      console.log("Did not select a protein or pathway")
+      return
+    }
+
+    d3.selectAll("#svg_viewer_id").remove(); // reset graph
 
     // All tooltip code adapted from:
     //https://bl.ocks.org/d3noob/a22c42db65eb00d4e369
@@ -191,23 +243,29 @@ class MIDASgraph{
     .style("opacity", 0);
 
     var simulation = d3
-      .forceSimulation(this.nodes)
-      .force("link", d3.forceLink(this.links)
+      .forceSimulation(_nodes)
+      .force("link", d3.forceLink(_links)
         .id(d => d.id)
-        .distance(2250)
+        .distance(_distances)
         .strength(1))
-      .force("charge", d3.forceManyBody().strength(-100))
+      .force("collide", d3.forceCollide().radius(d => d.r*4).iterations(3))
+      .force("charge", d3.forceManyBody().strength(-350))
       .force("center", d3.forceCenter(_width / 2, _height / 1.2))
       .alphaTarget(0.01)
       .alphaMin(0.1)
-      .velocityDecay(0.7);
-    console.log("1")
+      //.velocityDecay(0.7);
+
     var forceX = d3.forceX(_width / 2).strength(0.015);
     var forceY = d3.forceY(_height / 2).strength(0.015);
+
+    var _width_factor = _width / 2.5
+    var _height_factor = _height / 5.5
+    var _scale_factor = _height / 6500
 
     var svg_viewer = d3
       .select(selector)
       .append("svg")
+      .attr("id", "svg_viewer_id")
       .attr("width", _width - 5)
       .attr("height", _height - 80)
       .call(
@@ -216,8 +274,9 @@ class MIDASgraph{
         })
       )
       .on("dblclick.zoom", null)
-      .append("g");
-    console.log("2")
+      .append("g")
+      .attr("transform", "translate(" + _width_factor + "," + _height_factor + ") scale(" + _scale_factor + "," + _scale_factor + ")");
+
     svg_viewer
       .append("defs")
       .selectAll("marker")
@@ -238,11 +297,11 @@ class MIDASgraph{
       .attr("orient", "auto")
       .append("path")
       .attr("d", "M0, -5L10, 0L0, 5");
-    console.log("3")
+
     var link = svg_viewer
         .append("g")
         .selectAll("path")
-        .data(this.links)
+        .data(_links)
         .enter()
         .append("path")
         .attr("id", function(d) {
@@ -253,6 +312,9 @@ class MIDASgraph{
         })
         .style("--link_color", function(d) {
           let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+          if (use_absolute_values === true) {
+            _val = Math.abs(_val);
+          }
           return cmap[_val];
         })
         .attr("stroke-width", function(d) {
@@ -285,10 +347,10 @@ class MIDASgraph{
             .duration(500)
             .style("opacity", 0);
         });
-    console.log("4")
+
     var node = svg_viewer
       .selectAll(".node")
-      .data(this.nodes)
+      .data(_nodes)
       .enter()
       .append("g")
       .attr("class", "node")
@@ -369,27 +431,24 @@ class MIDASgraph{
         }
 
         // reset protein shading
-        for (let n in that.nodes) {
-          if (current_protein === that.nodes[n].id) {
-            d3.select("rect#" + that.nodes[n].id).style("fill", "red");
-          } else if (current_protein !== that.nodes[n].id && "protein" === that.nodes[n].type) {
-            d3.select("rect#" + that.nodes[n].id).style("fill", "orange");
-          } else if (current_protein !== that.nodes[n].id && "other_protein" === that.nodes[n].type) {
-            d3.select("rect#" + that.nodes[n].id).style("fill", "grey");
+        for (let n in _nodes) {
+          if (current_protein === _nodes[n].id) {
+            d3.select("rect#" + _nodes[n].id).style("fill", "red");
+          } else if (current_protein !== _nodes[n].id && "protein" === _nodes[n].type) {
+            d3.select("rect#" + _nodes[n].id).style("fill", "orange");
+          } else if (current_protein !== _nodes[n].id && "other_protein" === _nodes[n].type) {
+            d3.select("rect#" + _nodes[n].id).style("fill", "grey");
           }
         }
       })
-    console.log("5")
+
     node.each(function(d) {
       if (d.type === "protein" || d.type === "other_protein") {
-        console.log(d.type)
-        console.log(d.id)
-        console.log(coordinates[d.id])
         d.fx = coordinates[d.id][0] * 100;
         d.fy = coordinates[d.id][1] * 100 - 1000;
       }
     });
-    console.log("6")
+
     var circle = node
       .append(function(d) {
         if (d.type === "protein" || d.type === "other_protein") {
@@ -453,7 +512,7 @@ class MIDASgraph{
           .duration(500)
           .style("opacity", 0);
       });
-    console.log("9")
+
     var text = node
       .append("text")
       .raise()
@@ -480,10 +539,12 @@ class MIDASgraph{
           );
         }
       });
-    console.log("11")
+
     showNodes()
     simulation.on("tick", tick);
-    setTimeout(delayDisappear, 1000);
+    if (selection in that.pathway_dictionary) {
+      setTimeout(delayDisappear, 1000);
+    }
 
     function delayDisappear() {
       node.filter(function (d) {
@@ -596,4 +657,3 @@ class MIDASgraph{
       context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
     }
   }
-}

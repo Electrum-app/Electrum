@@ -21,7 +21,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 const selector = "#graph";
 
 // MAIN --> Change URL to HTTPS URL when data is public
-let data_url = "_data/20201218_Combined_MIDAS-CCM.txt";
+let data_url = "_data/MIDAS-latest.txt";
 //let database_url = "_data/HSA_electrum.mvdb";
 
 // add drop-down menu and selection determines input data table for construction

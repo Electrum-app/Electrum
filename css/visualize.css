@@ -109,47 +109,6 @@ tspan {z-index:100;}
   display: inline-block;
 }
 
-#superPathwayMenu {
-  font: 16px sans-serif;
-  margin-left: 260;
-  margin-top: 35px;
-}
-
-#pathwayMenu {
-  font: 16px sans-serif;
-  margin-left: 260;
-  margin-top: 0px;
-}
-
-#kNN_button {
-  border-radius: 5px;
-}
-
-#hub_button {
-  border-radius: 5px;
-}
-
-.arrow {
-  width: 18px;
-}
-
-.line {
-  margin-top: 14px;
-  width: 8px;
-  background: var(--arrow_color);
-  height: 3px;
-  float: left;
-}
-
-.line2 {
-  margin-top: 14px;
-  width: 16px;
-  border: 0 none;
-  border-bottom: 3px #4c4cff;
-  height: 0px;
-  float: left;
-}
-
 .point {
   margin-top: 10px;
   width: 0;
@@ -164,40 +123,34 @@ div {
   display: inline-block;
 }
 
-.sidebar {
-  height: 100%;
-  width: 225px;
-  position: fixed;
-  top: 38px;
-  left: 0;
+#menu {
+  font: 16px sans-serif;
+  margin-left: 35px;
+  margin-top: 55px;
+}
+
+#toggle_absolute_values {
+  font: 12px sans-serif;
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+#input_distances {
+  font: 12px sans-serif;
+}
+
+#input_distances_box {
+  font: 12px sans-serif;
+  margin-left: 15px;
   background-color: lightgrey;
-  overflow-x: hidden;
-  padding-top: 20px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-#displayValue {
-  height: 20px;
-  width: 24px;
   border-style: solid;
-  border-width: thin;
-  background-color: white;
-  stroke: black;
-  border-radius: 50%;
-  text-align: center;
-  padding-top: 6px;
-  padding-right: 1px;
-}
-
-#conn_value_button {
-  border-radius: 5px;
-}
-
-#conn_stat_button {
-  border-radius: 5px;
-}
-
-#play_button {
-  border-radius: 5px;
+  border-color: grey;
+  border-width: 1px;
+  border-radius: 3px;
+  padding-bottom: 1px;
+  padding-top: 1px;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-top: 55px;
+  height: 20px;
 }
