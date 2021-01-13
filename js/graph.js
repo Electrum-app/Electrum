@@ -4,7 +4,7 @@ Dynamic exploration of MIDAS protein-metabolite interaction data
 https://github.com/j-berg/Electrum/
 alias: electrum
 
-Copyright (C) 2020 Jordan A. Berg
+Copyright (C) 2020-2021 Jordan A. Berg
 Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
 
 This program is free software: you can redistribute it and/or modify it under
@@ -27,13 +27,18 @@ var zoomHeight = (_height-scale*_height) / 2.7;
 var current_protein = "";
 var current_metabolite = "";
 var use_absolute_values = true;
+var _hmdb_url = "https://hmdb.ca/metabolites/"
 
 class MIDASgraph{
 
    constructor(graph_data){
     // Set constructor keys
-    this.graphData = graph_data;
+    this.graphData = graph_data[0];
+    this.metaboverseData = graph_data[1];
+    console.log(this.metaboverseData)
     this.init_data();
+    this.init_reactions();
+
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
     this.pathway_dictionary = pathway_dictionary;
@@ -80,9 +85,16 @@ class MIDASgraph{
     }
   }
 
+  init_reactions() {
+
+
+
+  }
+
   init_data() {
     this.complexes = {};
     this.proteins = [];
+
     this.nodes = [];
     this.links = [];
     this.current_selection = new Set(); // Currently selected proteins & metabolites
@@ -318,7 +330,7 @@ function draw_graph(data) {
           return cmap[_val];
         })
         .attr("stroke-width", function(d) {
-          let _weight = ((-1 * Math.log(d.metadata.q_value)) / 12) + 5;
+          let _weight = ((-1 * Math.log(d.metadata.q_value)) / 18) + 10;
           return _weight;
         })
         .on("mouseover", function(d) {
@@ -363,6 +375,12 @@ function draw_graph(data) {
           .on("drag", dragged)
           .on("end", dragended)
       )
+      .on("dblclick", function(d) {
+        if (d.type === "metabolite") {
+          let _hmdb_id = d.hmdb_metabolite_id;
+          window.open(_hmdb_url + _hmdb_id, '_blank');
+        }
+      })
       .on("click", function(d) {
 
         if (d.type === "protein") {
@@ -411,6 +429,7 @@ function draw_graph(data) {
           let _id = d.id;
           let _name = d.display_name;
           let _other = d.common_metabolite_name;
+
 
           // reset other Metaboverse NN
           // get this metabolite's Metaboverse NN
@@ -490,6 +509,7 @@ function draw_graph(data) {
           let _display_string = (""
             + "<b>Name:</b> " + d.display_name + "<br>"
             + "<b>Other name:</b> " + d.common_metabolite_name + "<br>"
+            + "<b>HMDB ID:</b> " + d.hmdb_metabolite_id + "<br>"
             + "<b>KEGG ID:</b> " + d.id
           );
           div_protein.transition()
