@@ -513,6 +513,7 @@ function draw_graph(data) {
 
             _items += 1;
           }
+          modal_body.innerHTML += "<br><br><br>"
 
           // display div
 
