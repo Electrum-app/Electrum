@@ -27,6 +27,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   <link rel="shortcut icon" href="#" />
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/modal.css">
   <link rel="stylesheet" href="css/visualize.css">
 
   <script src="js/jquery/jquery.min.js"></script>
@@ -58,7 +59,21 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
         <button id="toggle_absolute_values">Toggle Absolute Values</button>
       </div>
     </div>
-    <div id="graph" align="center"></div>
+    <div id="graph" align="center">
+
+    </div>
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h3>Biological Pathways & Reactions</h3>
+        </div>
+        <div id="modal-fill" class="modal-body">
+        </div>
+      </div>
+    </div>
+    <script src="js/modal.js"></script>
 
   </body>
 

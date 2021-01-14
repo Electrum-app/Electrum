@@ -28,6 +28,7 @@ var current_protein = "";
 var current_metabolite = "";
 var use_absolute_values = true;
 var _hmdb_url = "https://hmdb.ca/metabolites/"
+var _reactome_url = "https://reactome.org/content/detail/"
 
 class MIDASgraph{
 
@@ -35,9 +36,17 @@ class MIDASgraph{
     // Set constructor keys
     this.graphData = graph_data[0];
     this.metaboverseData = graph_data[1];
+    this.complexes = {};
+    this.proteins = [];
+    this.nodes = [];
+    this.links = [];
+    this.current_selection = new Set();
+    this.all_values = [];
+    this.added_nodes = [];
+    this.node_lookup = {};
+    this.indexer = 0;
     console.log(this.metaboverseData)
     this.init_data();
-    this.init_reactions();
 
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
@@ -85,24 +94,7 @@ class MIDASgraph{
     }
   }
 
-  init_reactions() {
-
-
-
-  }
-
   init_data() {
-    this.complexes = {};
-    this.proteins = [];
-
-    this.nodes = [];
-    this.links = [];
-    this.current_selection = new Set(); // Currently selected proteins & metabolites
-
-    let all_values = [];
-    let added_nodes = [];
-    let node_lookup = {};
-    let indexer = 0;
 
     for (let connection in this.graphData) {
       if (connection !== 'columns') {
@@ -122,7 +114,7 @@ class MIDASgraph{
           this.graphData[connection]['HMDB_ID'];
         let common_metabolite_name =
           this.graphData[connection]['Common_metabolite_name'];
-        all_values.push(Math.abs(log_fc_c));
+        this.all_values.push(Math.abs(log_fc_c));
 
         // ID string cleaning
         protein = protein.replace(/\s/g, '');
@@ -143,12 +135,13 @@ class MIDASgraph{
         }
 
         // Add protein node info if doesn't exist
-        if (!added_nodes.includes(protein)) {
+        if (!this.added_nodes.includes(protein)) {
           this.proteins.push(protein);
           this.nodes.push({
             'id': protein,
             'display_name': protein,
             'type': "protein",
+            'sub_type': "",
             'complex': protein_complex,
             'uniprot_id': uniprot_id,
             'protein_name': protein_name,
@@ -156,18 +149,20 @@ class MIDASgraph{
             'metabolite_name': "",
             'common_metabolite_name': "",
             'hmdb_metabolite_id': "",
+            'degree': ""
           });
-          added_nodes.push(protein);
-          node_lookup[protein] = indexer;
-          indexer += 1;
+          this.added_nodes.push(protein);
+          this.node_lookup[protein] = this.indexer;
+          this.indexer += 1;
         }
 
         // Add metabolite node info if doesn't exist
-        if (!added_nodes.includes(metabolite)) {
+        if (!this.added_nodes.includes(metabolite)) {
           this.nodes.push({
             'id': metabolite,
             'display_name': metabolite_name,
             'type': "metabolite",
+            'sub_type': "",
             'complex': "",
             'uniprot_id': "",
             'protein_name': "",
@@ -175,22 +170,25 @@ class MIDASgraph{
             'metabolite_name': metabolite_name,
             'common_metabolite_name': common_metabolite_name,
             'hmdb_metabolite_id': hmdb_metabolite_id,
+            'degree': ""
           });
-          added_nodes.push(metabolite);
-          node_lookup[metabolite] = indexer;
-          indexer += 1;
+          this.added_nodes.push(metabolite);
+          this.node_lookup[metabolite] = this.indexer;
+          this.indexer += 1;
         }
 
         // Add link info and weights
         this.links.push(
           {
-            "source": this.nodes[node_lookup[protein]],
-            "target": this.nodes[node_lookup[metabolite]],
+            "source": this.nodes[this.node_lookup[protein]],
+            "target": this.nodes[this.node_lookup[metabolite]],
             "metadata": {
               "corrected_fold_change": log_fc_c,
               "fold_change": log_fc,
               "q_value": q_value,
-              "p_value": p_value
+              "p_value": p_value,
+              "type": "core",
+              "sub_type": ""
             }
           }
         )
@@ -198,7 +196,7 @@ class MIDASgraph{
     }
 
     // Get absolute max
-    this.abs_max = Math.max(...all_values);
+    this.abs_max = Math.max(...this.all_values);
 
     // Make colormap
     this.cmap = drawColormap(this.abs_max)
@@ -218,21 +216,25 @@ function draw_graph(data) {
     let _links;
     let coordinates;
     let _distances;
+
     let selection = document.getElementById("menu").value;
     if (selection in that.pathway_dictionary) {
-      _nodes = that.nodes;
-      _links = that.links;
+      let _selector_ids = that.pathway_dictionary[selection];
+      _links = that.links.filter(link => link.source.id in _selector_ids)
+      let _metabolites = [];
+      for (let _m in _links) {
+        _metabolites.push(_links[_m].target.id)
+      }
+      _nodes = that.nodes.filter(node => node.id in _selector_ids || _metabolites.includes(node.id))
       coordinates = that.pathway_dictionary[selection];
       _distances = 2250;
-      let _node_ids = [];
-      for (let _n in _nodes) {
-        _node_ids.push(_nodes[_n].id);
-      }
     } else if (that.proteins.includes(selection)) {
       _links = that.links.filter(link => link.source.id === selection)
       // get the nodes with the links
       let _metabolites = [];
-      for (let _m in _links) {_metabolites.push(_links[_m].target.id)}
+      for (let _m in _links) {
+        _metabolites.push(_links[_m].target.id)
+      }
       _nodes = that.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
       coordinates = {};
       coordinates[selection] = [6,20,1,24];
@@ -241,6 +243,9 @@ function draw_graph(data) {
       console.log("Did not select a protein or pathway")
       return
     }
+
+    console.log(_nodes)
+    console.log(_links)
 
     d3.selectAll("#svg_viewer_id").remove(); // reset graph
 
@@ -293,13 +298,17 @@ function draw_graph(data) {
       .append("defs")
       .selectAll("marker")
       .data([
+        "core",
         "protein",
-        "metabolite"
+        "metabolite",
+        "reactant",
+        "product",
+        "modifier"
       ])
       .enter()
       .append("marker")
       .attr("id", function(d) {
-        return d.id;
+        return d;
       })
       .attr("viewBox", "0 -5 10 10")
       .attr("refX", 15.7)
@@ -323,41 +332,60 @@ function draw_graph(data) {
           return "link interaction";
         })
         .style("--link_color", function(d) {
-          let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
-          if (use_absolute_values === true) {
-            _val = Math.abs(_val);
+          if (d.metadata.type === "core") {
+            let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+            if (use_absolute_values === true) {
+              _val = Math.abs(_val);
+            }
+            return cmap[_val];
+          } else {
+            if (d.metadata.type === "reactant" || d.metadata.type === "product") {
+              return "rgb(128,128,128)";
+            } else if (d.metadata.sub_type === "catalyst") {
+              return "rgb(0,100,0)";
+            } else if (d.metadata.sub_type === "inhibitor") {
+              return "rgb(255,0,0)";
+            }
           }
-          return cmap[_val];
+
         })
         .attr("stroke-width", function(d) {
-          let _weight = ((-1 * Math.log(d.metadata.q_value)) / 18) + 10;
-          return _weight;
+          if (d.metadata.type === "core") {
+            let _weight = ((-1 * Math.log(d.metadata.q_value)) / 18) + 10;
+            return _weight;
+          } else {
+            return 10;
+          }
         })
         .on("mouseover", function(d) {
           // show label tooltip
-          let _target = d.source.id;
-          let _metabolite = d.target.display_name;
-          let _fold_change = parseFloat(d.metadata.corrected_fold_change).toFixed(2);
-          let _q_value = parseFloat(d.metadata.q_value).toExponential(2);
-          let _display_string = (""
-            + "<b>Protein:</b> " + _target + "<br>"
-            + "<b>Metabolite:</b> " + _metabolite + "<br>"
-            + "<b>log<sub>2</sub>(Fold Change):</b> " + _fold_change + "<br>"
-            + "<b>q-value:</b> " + _q_value
-          )
-          div_edge.transition()
-            .duration(100)
-            .style("opacity", .9);
-          div_edge
-            .html(_display_string)
-              .style("left", (d3.event.pageX + 10) + "px")
-              .style("top", (d3.event.pageY - 5) + "px");
+          if (d.metadata.type === "core") {
+            let _target = d.source.id;
+            let _metabolite = d.target.display_name;
+            let _fold_change = parseFloat(d.metadata.corrected_fold_change).toFixed(2);
+            let _q_value = parseFloat(d.metadata.q_value).toExponential(2);
+            let _display_string = (""
+              + "<b>Protein:</b> " + _target + "<br>"
+              + "<b>Metabolite:</b> " + _metabolite + "<br>"
+              + "<b>log<sub>2</sub>(Fold Change):</b> " + _fold_change + "<br>"
+              + "<b>q-value:</b> " + _q_value
+            )
+            div_edge.transition()
+              .duration(100)
+              .style("opacity", .9);
+            div_edge
+              .html(_display_string)
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY - 5) + "px");
+          }
         })
         .on("mouseout", function(d) {
           // remove label tooltip
-          div_edge.transition()
-            .duration(500)
-            .style("opacity", 0);
+          if (d.metadata.type === "core") {
+            div_edge.transition()
+              .duration(500)
+              .style("opacity", 0);
+          }
         });
 
     var node = svg_viewer
@@ -426,27 +454,71 @@ function draw_graph(data) {
 
         } else if (d.type === "metabolite") {
           current_metabolite = d.id;
-          let _id = d.id;
-          let _name = d.display_name;
-          let _other = d.common_metabolite_name;
+          let modal_body = document.getElementById('modal-fill');
+          modal_body.innerHTML = '<br><br><br><br><b>Selected Metabolite: <span class="metabolite-name"><i>' + d.display_name + '</i></span></b><br>';
 
+          let _data = that.metaboverseData.neighbors_dictionary[d.id];
+          let _pathways = _data.pathways;
+          let _reactions = _data.reactions;
+          let _reactome = _data.reactome_reactions;
 
-          // reset other Metaboverse NN
-          // get this metabolite's Metaboverse NN
+          let _pathway_dictionary = that.metaboverseData.pathway_dictionary;
+          let _reaction_database = that.metaboverseData.reaction_database;
+          let _reactome_mapper = that.metaboverseData.reactome_mapper;
 
-          // find metabolite species_id
-          // find all reactions species_id
-            // show inputs, outputs, modifiers using Metaboverse notation
-          // find all pathways for the reactions and use as hulls
-          // label hulls
+          // TO DO:
+          // Display pathway names
+            // Indent any reactions in both list and pathway list
+          // Click pathway or reaction to open page
+          // Hover over a reaction shows notes
+          // Dynamically add space up to 1/3 of page for pathway/reaction listings
+          let _pathway_names = [];
+          let _pathway_dict = {};
+          for (let _pathway in _pathways) {
+            let _this_pathway = _pathways[_pathway];
+            let _this_name = _pathway_dictionary[_this_pathway].name;
+            _pathway_names.push(_this_name);
+            _pathway_dict[_this_name] = _this_pathway;
+          }
 
-          // probably need to add all this in nodes and links at start and just give special IDs to be able to hide and show when selected
+          let _items;
+          _pathway_names = _pathway_names.sort();
+          for (let _pathway in _pathway_names) {
+            let _this_pathway = _pathway_dict[_pathway_names[_pathway]];
+            let _this_name = _pathway_dictionary[_this_pathway].name;
+            let _this_reactions = _pathway_dictionary[_this_pathway].reactions;
+            modal_body.innerHTML += "<br>&emsp;";
+            modal_body.innerHTML += "<i><b><a href=\"" + _reactome_url + _this_pathway + "\" target=\"_blank\">" + _this_name + "</a></b></i>";
 
-          // use a tooltip for result display like this: https://www.d3-graph-gallery.com/graph/interactivity_tooltip.html
-          // example #2
+            let _reaction_names = [];
+            let _reaction_dict = {};
+            for (let _reaction in _reactions) {
+              if (_this_reactions.includes(_reactions[_reaction])) {
+                let _this_reaction = _reactions[_reaction];
+                let _reaction_name = _reaction_database[_this_reaction].name;
+                _reaction_names.push(_reaction_name);
+                _reaction_dict[_reaction_name] = _this_reaction;
+              }
+            }
 
+            _reaction_names = _reaction_names.sort();
+            for (let _reaction in _reaction_names) {
+              let _this_reaction = _reaction_dict[_reaction_names[_reaction]];
+              let _reaction_name = _reaction_database[_this_reaction].name;
+              let _reaction_id = _reaction_database[_this_reaction].reactome;
+              modal_body.innerHTML += "<br>&emsp;&emsp;<b>></b>&ensp;";
+              modal_body.innerHTML += "<a href=\"" + _reactome_url + _reaction_id + "\" target=\"_blank\">" + _reaction_name + "</a>";
+              _items += 1;
+            }
 
+            _items += 1;
+          }
 
+          // display div
+
+          let _temp_height = (_items * 12) + 120;
+          modal_body.style.height = _temp_height;
+          modal.style.display = "block";
         }
 
         // reset protein shading
@@ -468,9 +540,28 @@ function draw_graph(data) {
       }
     });
 
+    /*
+    .append(function(d) {
+      console.log(d.type)
+      if (d.type === "protein" || d.type === "other_protein") {
+        return document.createElementNS(
+          "http://www.w3.org/2000/svg", "rect");
+      } else if (d.type === "reaction") {
+        console.log(d)
+        return d3.symbolStar;
+      } else {
+        return document.createElementNS(
+          "http://www.w3.org/2000/svg", "circle");
+      }
+    })
+    */
+
     var circle = node
       .append(function(d) {
         if (d.type === "protein" || d.type === "other_protein") {
+          return document.createElementNS(
+            "http://www.w3.org/2000/svg", "rect");
+        } else if (d.type === "reaction") {
           return document.createElementNS(
             "http://www.w3.org/2000/svg", "rect");
         } else {
@@ -478,7 +569,8 @@ function draw_graph(data) {
             "http://www.w3.org/2000/svg", "circle");
         }
       })
-      .attr("id", function(d) {return d.id})
+      .attr("id", function(d) {
+        return d.id})
       .style("fill", function(d) {
         if (d.type === "protein") {
           return "orange"
@@ -619,7 +711,8 @@ function draw_graph(data) {
 
       var dx = d.target.x - d.source.x;
       var dy = d.target.y - d.source.y;
-
+      //console.log(d)
+      //console.log(dx)
       return (
         "M" +
         d.source.x +
@@ -641,7 +734,7 @@ function draw_graph(data) {
     }
 
     function dragstarted() {
-      if (d3.event.subject.type === "metabolite") {
+      if (d3.event.subject.type !== "protein") {
         if (!d3.event.active) simulation.alphaTarget(0.3).restart();
         d3.event.subject.fx = d3.event.subject.x;
         d3.event.subject.fy = d3.event.subject.y;
@@ -649,14 +742,14 @@ function draw_graph(data) {
     }
 
     function dragged() {
-      if (d3.event.subject.type === "metabolite") {
+      if (d3.event.subject.type !== "protein") {
         d3.event.subject.fx = d3.event.x;
         d3.event.subject.fy = d3.event.y;
       }
     }
 
     function dragended() {
-      if (d3.event.subject.type === "metabolite") {
+      if (d3.event.subject.type !== "protein") {
         if (!d3.event.active)
           simulation
             .alphaTarget(0.05)
