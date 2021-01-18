@@ -149,6 +149,7 @@ def __main__():
     """
     """
 
+    print('Reading user variables...')
     # define user variables
     if len(sys.argv) != 2:
         raise Exception('Incorrect number of variables.')
