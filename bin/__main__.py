@@ -11,8 +11,8 @@ import itertools
 import xml.etree.ElementTree as et
 import numpy as np
 import pandas as pd
-import cudf
-import cugraph
+#import cudf
+#import cugraph
 import networkx as nx
 from pysmiles import read_smiles
 
@@ -155,6 +155,8 @@ def __main__():
     if os.path.isdir(sys.argv[1]) == False:
         raise Exception('Specified output directory does not exist')
     OUTPUT = sys.argv[1] # output directory
+    if OUTPUT[-1] != os.path.sep:
+        OUTPUT += os.path.sep
 
     # Get HMDB database information
     print('Reading HMDB data...')
@@ -187,7 +189,7 @@ def __main__():
 
 
 def __test__():
-    OUTPUT = '/home/jordan/Desktop/'
+    OUTPUT = '/home/jordan/Desktop'
 
 if __name__ == '__main__':
     __main__()
