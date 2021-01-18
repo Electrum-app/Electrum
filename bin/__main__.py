@@ -150,6 +150,7 @@ def __main__():
     """
 
     print('Reading user variables...')
+    print(sys.argv)
     # define user variables
     if len(sys.argv) != 2:
         raise Exception('Incorrect number of variables.')
@@ -193,4 +194,5 @@ def __test__():
     OUTPUT = '/home/jordan/Desktop'
 
 if __name__ == '__main__':
+    print('Executing script...')
     __main__()
