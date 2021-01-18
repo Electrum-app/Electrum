@@ -92,14 +92,14 @@ def get_graphs(
         smiles):
     """Build metabolite graph from SMILES string
     """
-    print(smiles)
+
     graph = read_smiles(smiles, explicit_hydrogen=True)
     for n in graph.nodes():
         del graph.nodes()[n]['aromatic']
         del graph.nodes()[n]['charge']
     for n in graph.edges():
         del graph.edges()[n]['order']
-    print(type(graph))
+
     return graph
 
 def get_subgraphs(
@@ -112,7 +112,6 @@ def get_subgraphs(
     for nb_nodes in range(2, graph.number_of_nodes() + 1):
         for SG in (graph.subgraph(selected_nodes) \
         for selected_nodes in itertools.combinations(graph, nb_nodes)):
-            print(counter)
             counter += 1
             if nx.is_connected(SG):
                 all_connected_subgraphs.append(SG)
@@ -168,6 +167,7 @@ def __main__():
     print('Building graphical database of HMDB metabolites...')
     database = build_database(
         hmdb_contents=hmdb)
+
     print('getting graphs...')
     showtime()
     database["graph"] = np.frompyfunc(get_graphs,1,1)(database["smiles"])

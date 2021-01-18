@@ -47,6 +47,6 @@ cd $SCRDIR
 
 # Run python script
 echo "+ Running scripts..."
-python $SCRDIR/bin/__main__.py $SCRDIR/output
+python -u $SCRDIR/bin/__main__.py $SCRDIR/output
 
 echo "+ Processing complete..."
