@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --time=168:00:00
 #SBATCH --nodes=1
-#SBATCH -o /uufs/chpc.utah.edu/common/home/u0690617/slurmjob-%j
+#SBATCH -o /uufs/chpc.utah.edu/common/home/u0690617/slurm_output/slurmjob-%j
 #SBATCH --account=rutter-gpu-np
 #SBATCH --partition=rutter-gpu-np
 #SBATCH --gres=gpu:2080ti:4
@@ -30,13 +30,14 @@ source activate substructure
 
 # Set instance variables
 HOME=/uufs/chpc.utah.edu/common/home/u0690617
-SCRUSER=/scratch/general/lustre/u0690617
+SCRDIR=/scratch/general/lustre/$USER/$SLURM_JOBID
+mkdir -p $SCRDIR
 cd $SCRDIR
-mkdir -r $SCRDIR/output
+mkdir -p $SCRDIR/output
 
 # Get main script
-mkdir -r $SCRDIR/bin
-cp $HOME/Electrum/bin/__main__.py $SCRDIR/bin
+mkdir -p $SCRDIR/bin
+cp $HOME/programs/Electrum/bin/__main__.py $SCRDIR/bin
 
 # Download HDMB database
 cd $SCRDIR
