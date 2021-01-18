@@ -23,7 +23,8 @@ nvidia-smi -L
 # conda create -n substructure
 # conda activate substructure
 # conda install -c nvidia -c rapidsai -c numba -c conda-forge -c defaults cugraph cudatoolkit=11.0
-# conda install python networkx pysmiles numpy pandas requests
+# conda install python networkx numpy pandas requests pip
+# python -m pip install pysmiles
 source /uufs/chpc.utah.edu/common/home/u0690617/miniconda3/etc/profile.d/conda.sh
 source activate substructure
 
