@@ -102,7 +102,7 @@ def get_chunks(
     for _c in range(processes):
         # If the last chunk, get the remainder of the GTF
         #   dataframe
-        if y == processes - 1:
+        if _c == processes - 1:
             new_chunk = data.loc[start:]
         else:
             end = start + batch  # Set tentative end of next chunk
