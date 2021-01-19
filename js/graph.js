@@ -29,6 +29,11 @@ var current_metabolite = "";
 var use_absolute_values = true;
 var _hmdb_url = "https://hmdb.ca/metabolites/"
 var _reactome_url = "https://reactome.org/content/detail/"
+var q_threshold = 0.1;
+var timer = 0;
+var delay = 200;
+var prevent = false;
+
 
 class MIDASgraph{
 
@@ -45,7 +50,7 @@ class MIDASgraph{
     this.added_nodes = [];
     this.node_lookup = {};
     this.indexer = 0;
-    console.log(this.metaboverseData)
+
     this.init_data();
 
     // create drop-down menu
@@ -116,82 +121,84 @@ class MIDASgraph{
           this.graphData[connection]['Common_metabolite_name'];
         this.all_values.push(Math.abs(log_fc_c));
 
-        // ID string cleaning
-        protein = protein.replace(/\s/g, '');
-        metabolite = metabolite.replace(/\s/g, '');
+        if (q_value <= q_threshold) {
+          // ID string cleaning
+          protein = protein.replace(/\s/g, '');
+          metabolite = metabolite.replace(/\s/g, '');
 
-        // Skip blank components
-        if ((protein === "") | (metabolite === "")) {
-          continue;
-        }
-
-        // Add protein to complex info if not added and not blank
-        if (protein_complex !== "") {
-          if (protein_complex in this.complexes) {
-            this.complexes[protein_complex].push(protein);
-          } else {
-            this.complexes[protein_complex] = [protein];
+          // Skip blank components
+          if ((protein === "") | (metabolite === "")) {
+            continue;
           }
-        }
 
-        // Add protein node info if doesn't exist
-        if (!this.added_nodes.includes(protein)) {
-          this.proteins.push(protein);
-          this.nodes.push({
-            'id': protein,
-            'display_name': protein,
-            'type': "protein",
-            'sub_type': "",
-            'complex': protein_complex,
-            'uniprot_id': uniprot_id,
-            'protein_name': protein_name,
-            'gene_name': gene_name,
-            'metabolite_name': "",
-            'common_metabolite_name': "",
-            'hmdb_metabolite_id': "",
-            'degree': ""
-          });
-          this.added_nodes.push(protein);
-          this.node_lookup[protein] = this.indexer;
-          this.indexer += 1;
-        }
-
-        // Add metabolite node info if doesn't exist
-        if (!this.added_nodes.includes(metabolite)) {
-          this.nodes.push({
-            'id': metabolite,
-            'display_name': metabolite_name,
-            'type': "metabolite",
-            'sub_type': "",
-            'complex': "",
-            'uniprot_id': "",
-            'protein_name': "",
-            'gene_name': "",
-            'metabolite_name': metabolite_name,
-            'common_metabolite_name': common_metabolite_name,
-            'hmdb_metabolite_id': hmdb_metabolite_id,
-            'degree': ""
-          });
-          this.added_nodes.push(metabolite);
-          this.node_lookup[metabolite] = this.indexer;
-          this.indexer += 1;
-        }
-
-        // Add link info and weights
-        this.links.push(
-          {
-            "source": this.nodes[this.node_lookup[protein]],
-            "target": this.nodes[this.node_lookup[metabolite]],
-            "metadata": {
-              "corrected_fold_change": log_fc_c,
-              "fold_change": log_fc,
-              "q_value": q_value,
-              "p_value": p_value,
-              "type": "core",
-              "sub_type": ""
+          // Add protein to complex info if not added and not blank
+          if (protein_complex !== "") {
+            if (protein_complex in this.complexes) {
+              this.complexes[protein_complex].push(protein);
+            } else {
+              this.complexes[protein_complex] = [protein];
             }
           }
-        )
+
+          // Add protein node info if doesn't exist
+          if (!this.added_nodes.includes(protein)) {
+            this.proteins.push(protein);
+            this.nodes.push({
+              'id': protein,
+              'display_name': protein,
+              'type': "protein",
+              'sub_type': "",
+              'complex': protein_complex,
+              'uniprot_id': uniprot_id,
+              'protein_name': protein_name,
+              'gene_name': gene_name,
+              'metabolite_name': "",
+              'common_metabolite_name': "",
+              'hmdb_metabolite_id': "",
+              'degree': ""
+            });
+            this.added_nodes.push(protein);
+            this.node_lookup[protein] = this.indexer;
+            this.indexer += 1;
+          }
+
+          // Add metabolite node info if doesn't exist
+          if (!this.added_nodes.includes(metabolite)) {
+            this.nodes.push({
+              'id': metabolite,
+              'display_name': metabolite_name,
+              'type': "metabolite",
+              'sub_type': "",
+              'complex': "",
+              'uniprot_id': "",
+              'protein_name': "",
+              'gene_name': "",
+              'metabolite_name': metabolite_name,
+              'common_metabolite_name': common_metabolite_name,
+              'hmdb_metabolite_id': hmdb_metabolite_id,
+              'degree': ""
+            });
+            this.added_nodes.push(metabolite);
+            this.node_lookup[metabolite] = this.indexer;
+            this.indexer += 1;
+          }
+
+          // Add link info and weights
+          this.links.push(
+            {
+              "source": this.nodes[this.node_lookup[protein]],
+              "target": this.nodes[this.node_lookup[metabolite]],
+              "metadata": {
+                "corrected_fold_change": log_fc_c,
+                "fold_change": log_fc,
+                "q_value": q_value,
+                "p_value": p_value,
+                "type": "core",
+                "sub_type": ""
+              }
+            }
+          )
+        }
       }
     }
 
@@ -404,134 +411,140 @@ function draw_graph(data) {
           .on("end", dragended)
       )
       .on("dblclick", function(d) {
+        clearTimeout(timer);
+        prevent = true;
         if (d.type === "metabolite") {
           let _hmdb_id = d.hmdb_metabolite_id;
           window.open(_hmdb_url + _hmdb_id, '_blank');
         }
       })
       .on("click", function(d) {
+        timer = setTimeout(function() {
+          if (!prevent) {
+            if (d.type === "protein") {
+              current_protein = d.id;
 
-        if (d.type === "protein") {
-          current_protein = d.id;
+              node.filter(function (d) {
+                if (d.type !== "protein" && d.type !== "other_protein") {
+                  return d;
+                }
+              })
+                .style("visibility", "hidden")
+                .style("opacity", 1);
+              link.filter(function (d) {return d;})
+                .style("visibility", "hidden")
+                .style("opacity", 1);
 
-          node.filter(function (d) {
-            if (d.type !== "protein" && d.type !== "other_protein") {
-              return d;
+              //get all links
+              let get_metabolites = [];
+              link.filter(function (l) {
+                if (l.source.id === d.id) {
+                  get_metabolites.push(l.target.id)
+                  return l;
+                }
+              })
+                .style("visibility", "visible")
+                .style("opacity", 1);
+              link.filter(function (ll) {
+                if (get_metabolites.includes(ll.target.id)) {
+                  return ll;
+                }
+              })
+                .style("visibility", "visible")
+                .style("opacity", 1);
+
+              // get all interacting metabolites and their links
+              node.filter(function (n) {
+                if (n.type === "metabolite" && get_metabolites.includes(n.id)) {
+                  return n;
+                }
+              })
+                .style("visibility", "visible")
+                .style("opacity", 1);
+
+            } else if (d.type === "metabolite") {
+              current_metabolite = d.id;
+              let modal_body = document.getElementById('modal-fill');
+              modal_body.innerHTML = '<br><br><br><br><b>Selected Metabolite: <span class="metabolite-name"><i>' + d.display_name + '</i></span></b><br>';
+
+              let _data = that.metaboverseData.neighbors_dictionary[d.id];
+              let _pathways = _data.pathways;
+              let _reactions = _data.reactions;
+              let _reactome = _data.reactome_reactions;
+              
+              let _pathway_dictionary = that.metaboverseData.pathway_dictionary;
+              let _reaction_database = that.metaboverseData.reaction_database;
+              let _reactome_mapper = that.metaboverseData.reactome_mapper;
+
+              // TO DO:
+              // Display pathway names
+                // Indent any reactions in both list and pathway list
+              // Click pathway or reaction to open page
+              // Hover over a reaction shows notes
+              // Dynamically add space up to 1/3 of page for pathway/reaction listings
+              let _pathway_names = [];
+              let _pathway_dict = {};
+              for (let _pathway in _pathways) {
+                let _this_pathway = _pathways[_pathway];
+                let _this_name = _pathway_dictionary[_this_pathway].name;
+                _pathway_names.push(_this_name);
+                _pathway_dict[_this_name] = _this_pathway;
+              }
+
+              let _items;
+              _pathway_names = _pathway_names.sort();
+              for (let _pathway in _pathway_names) {
+                let _this_pathway = _pathway_dict[_pathway_names[_pathway]];
+                let _this_name = _pathway_dictionary[_this_pathway].name;
+                let _this_reactions = _pathway_dictionary[_this_pathway].reactions;
+                modal_body.innerHTML += "<br>&emsp;";
+                modal_body.innerHTML += "<i><b><a href=\"" + _reactome_url + _this_pathway + "\" target=\"_blank\">" + _this_name + "</a></b></i>";
+
+                let _reaction_names = [];
+                let _reaction_dict = {};
+                for (let _reaction in _reactions) {
+                  if (_this_reactions.includes(_reactions[_reaction])) {
+                    let _this_reaction = _reactions[_reaction];
+                    let _reaction_name = _reaction_database[_this_reaction].name;
+                    _reaction_names.push(_reaction_name);
+                    _reaction_dict[_reaction_name] = _this_reaction;
+                  }
+                }
+
+                _reaction_names = _reaction_names.sort();
+                for (let _reaction in _reaction_names) {
+                  let _this_reaction = _reaction_dict[_reaction_names[_reaction]];
+                  let _reaction_name = _reaction_database[_this_reaction].name;
+                  let _reaction_id = _reaction_database[_this_reaction].reactome;
+                  modal_body.innerHTML += "<br>&emsp;&emsp;<b>></b>&ensp;";
+                  modal_body.innerHTML += "<a href=\"" + _reactome_url + _reaction_id + "\" target=\"_blank\">" + _reaction_name + "</a>";
+                  _items += 1;
+                }
+
+                _items += 1;
+              }
+              modal_body.innerHTML += "<br><br><br>"
+
+              // display div
+
+              let _temp_height = (_items * 12) + 120;
+              modal_body.style.height = _temp_height;
+              modal.style.display = "block";
             }
-          })
-            .style("visibility", "hidden")
-            .style("opacity", 1);
-          link.filter(function (d) {return d;})
-            .style("visibility", "hidden")
-            .style("opacity", 1);
 
-          //get all links
-          let get_metabolites = [];
-          link.filter(function (l) {
-            if (l.source.id === d.id) {
-              get_metabolites.push(l.target.id)
-              return l;
-            }
-          })
-            .style("visibility", "visible")
-            .style("opacity", 1);
-          link.filter(function (ll) {
-            if (get_metabolites.includes(ll.target.id)) {
-              return ll;
-            }
-          })
-            .style("visibility", "visible")
-            .style("opacity", 1);
-
-          // get all interacting metabolites and their links
-          node.filter(function (n) {
-            if (n.type === "metabolite" && get_metabolites.includes(n.id)) {
-              return n;
-            }
-          })
-            .style("visibility", "visible")
-            .style("opacity", 1);
-
-        } else if (d.type === "metabolite") {
-          current_metabolite = d.id;
-          let modal_body = document.getElementById('modal-fill');
-          modal_body.innerHTML = '<br><br><br><br><b>Selected Metabolite: <span class="metabolite-name"><i>' + d.display_name + '</i></span></b><br>';
-
-          let _data = that.metaboverseData.neighbors_dictionary[d.id];
-          let _pathways = _data.pathways;
-          let _reactions = _data.reactions;
-          let _reactome = _data.reactome_reactions;
-
-          let _pathway_dictionary = that.metaboverseData.pathway_dictionary;
-          let _reaction_database = that.metaboverseData.reaction_database;
-          let _reactome_mapper = that.metaboverseData.reactome_mapper;
-
-          // TO DO:
-          // Display pathway names
-            // Indent any reactions in both list and pathway list
-          // Click pathway or reaction to open page
-          // Hover over a reaction shows notes
-          // Dynamically add space up to 1/3 of page for pathway/reaction listings
-          let _pathway_names = [];
-          let _pathway_dict = {};
-          for (let _pathway in _pathways) {
-            let _this_pathway = _pathways[_pathway];
-            let _this_name = _pathway_dictionary[_this_pathway].name;
-            _pathway_names.push(_this_name);
-            _pathway_dict[_this_name] = _this_pathway;
-          }
-
-          let _items;
-          _pathway_names = _pathway_names.sort();
-          for (let _pathway in _pathway_names) {
-            let _this_pathway = _pathway_dict[_pathway_names[_pathway]];
-            let _this_name = _pathway_dictionary[_this_pathway].name;
-            let _this_reactions = _pathway_dictionary[_this_pathway].reactions;
-            modal_body.innerHTML += "<br>&emsp;";
-            modal_body.innerHTML += "<i><b><a href=\"" + _reactome_url + _this_pathway + "\" target=\"_blank\">" + _this_name + "</a></b></i>";
-
-            let _reaction_names = [];
-            let _reaction_dict = {};
-            for (let _reaction in _reactions) {
-              if (_this_reactions.includes(_reactions[_reaction])) {
-                let _this_reaction = _reactions[_reaction];
-                let _reaction_name = _reaction_database[_this_reaction].name;
-                _reaction_names.push(_reaction_name);
-                _reaction_dict[_reaction_name] = _this_reaction;
+            // reset protein shading
+            for (let n in _nodes) {
+              if (current_protein === _nodes[n].id) {
+                d3.select("rect#" + _nodes[n].id).style("fill", "red");
+              } else if (current_protein !== _nodes[n].id && "protein" === _nodes[n].type) {
+                d3.select("rect#" + _nodes[n].id).style("fill", "orange");
+              } else if (current_protein !== _nodes[n].id && "other_protein" === _nodes[n].type) {
+                d3.select("rect#" + _nodes[n].id).style("fill", "grey");
               }
             }
-
-            _reaction_names = _reaction_names.sort();
-            for (let _reaction in _reaction_names) {
-              let _this_reaction = _reaction_dict[_reaction_names[_reaction]];
-              let _reaction_name = _reaction_database[_this_reaction].name;
-              let _reaction_id = _reaction_database[_this_reaction].reactome;
-              modal_body.innerHTML += "<br>&emsp;&emsp;<b>></b>&ensp;";
-              modal_body.innerHTML += "<a href=\"" + _reactome_url + _reaction_id + "\" target=\"_blank\">" + _reaction_name + "</a>";
-              _items += 1;
-            }
-
-            _items += 1;
           }
-          modal_body.innerHTML += "<br><br><br>"
-
-          // display div
-
-          let _temp_height = (_items * 12) + 120;
-          modal_body.style.height = _temp_height;
-          modal.style.display = "block";
-        }
-
-        // reset protein shading
-        for (let n in _nodes) {
-          if (current_protein === _nodes[n].id) {
-            d3.select("rect#" + _nodes[n].id).style("fill", "red");
-          } else if (current_protein !== _nodes[n].id && "protein" === _nodes[n].type) {
-            d3.select("rect#" + _nodes[n].id).style("fill", "orange");
-          } else if (current_protein !== _nodes[n].id && "other_protein" === _nodes[n].type) {
-            d3.select("rect#" + _nodes[n].id).style("fill", "grey");
-          }
-        }
+          prevent = false;
+        }, delay);
       })
 
     node.each(function(d) {
