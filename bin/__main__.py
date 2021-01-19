@@ -8,11 +8,11 @@ import io
 import requests
 import zipfile
 import itertools
+import multiprocessing
+from multiprocessing import cpu_count, Pool
 import xml.etree.ElementTree as et
 import numpy as np
 import pandas as pd
-#import cudf
-#import cugraph
 import networkx as nx
 from pysmiles import read_smiles
 
@@ -88,6 +88,56 @@ def build_database(
 
     return database
 
+def get_chunks(
+        data,
+        processes):
+
+    _index_length = len(data.index.tolist())
+    if processes > _index_length:
+        processes = _index_length
+
+    chunks = [] # Initialize chunk storage
+    start = 0 # Get first start coordinate for chunk
+    batch = round(len(data.index) / processes)
+    for _c in range(processes):
+        # If the last chunk, get the remainder of the GTF
+        #   dataframe
+        if y == processes - 1:
+            new_chunk = data.loc[start:]
+        else:
+            end = start + batch  # Set tentative end of next chunk
+
+            if end > len(data.index) - 1:
+                # If end of dataframe, end there
+                end = len(data.index) - 1
+
+        # Parse out current chunk
+        new_chunk = data.loc[start:end]
+        # End coordinate for last chunk to start with next
+        start = end + 1
+        if new_chunk.empty == False:
+            chunks.append(new_chunk)
+
+    return chunks
+
+def run_chunks(
+        func,
+        chunks):
+    """Run a given function on chunks
+    """
+
+    # Remove any empty dataframes
+    cores = len(chunks) # Modify worker numbers
+    print('Spooling multiprocessing for %s chunks...' % cores)
+    chunks = [x for x in chunks if x is not None]
+    pool = Pool(cores) # Initialize workers
+    chunks = pool.map(func, chunks) # Run function on chunks
+    pool.close()
+    pool.join()
+    gc.collect()
+
+    return chunks
+
 def get_graphs(
         smiles):
     """Build metabolite graph from SMILES string
@@ -101,6 +151,14 @@ def get_graphs(
         del graph.edges()[n]['order']
 
     return graph
+
+def vec_graphs(
+        data,
+        output='graph',
+        input='smiles'):
+
+    data[output] = np.frompyfunc(get_graphs,1,1)(data[input])
+    return data
 
 def get_subgraphs(
         graph):
@@ -118,15 +176,29 @@ def get_subgraphs(
 
     return all_connected_subgraphs
 
+def vec_subgraphs(
+        data,
+        output='subgraphs',
+        input='graph'):
+
+    data[output] = np.frompyfunc(get_subgraphs,1,1)(data[input])
+    return data
+
 def parse_subgraphs(
-        database,
-        _this_index,
-        _this_graph):
+        data):
     """For each graph, parse whether it is a subgraph of any other graph and its
         subgraphs
     """
 
-
+    print(
+        'Processing a graph chunk for indices %s-%s...'
+        % (data.index[0], data.index[-1]))
+    data = vec_graphs(data)
+    print(
+        'Processing a subgraph chunk for indices %s-%s...'
+        % (data.index[0], data.index[-1]))
+    data = vec_subgraphs(data)
+    return data
 
 def write_output(
         _object,
@@ -168,20 +240,25 @@ def __main__():
     database = build_database(
         hmdb_contents=hmdb)
 
-    print('getting graphs...')
+    print('Processing graphs...')
     showtime()
-    database["graph"] = np.frompyfunc(get_graphs,1,1)(database["smiles"])
-    showtime()
-    print(database.shape)
-    print(database.head())
+    chunks = get_chunks(
+        data=database,
+        processes=cpu_count()-1)
+    database = None
+    chunks = run_chunks(
+        func=parse_subgraphs,
+        chunks=chunks)
+    if len(chunks) > 0:
+        database = pd.concat(chunks)
+        database = database.reset_index(drop=True)
+        chunks = None # Garbage management
+    else:
+        raise Exception('0 chunks of the original file remain')
 
-    print('--------------------')
-    print('getting subgraphs...')
+    print('Graph processing complete...')
     showtime()
-    database["subgraphs"] = np.frompyfunc(get_subgraphs,1,1)(database["graph"])
-    showtime()
-    print(database.shape)
-    print(database.head())
+
     # Search for other graphs in all sub-graphs of a given SMILES structure
 
 
