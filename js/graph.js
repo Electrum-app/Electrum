@@ -56,6 +56,7 @@ class MIDASgraph{
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
     this.pathway_dictionary = pathway_dictionary;
+    this.background_dictionary = background_dictionary;
     this.menu_selector = "menu";
     this.make_menu();
     let that = this;
@@ -303,6 +304,16 @@ function draw_graph(data) {
       .on("dblclick.zoom", null)
       .append("g")
       .attr("transform", "translate(" + _width_factor + "," + _height_factor + ") scale(" + _scale_factor + "," + _scale_factor + ")");
+
+    if (selection in that.background_dictionary) {
+      let _backgrounds = that.background_dictionary[selection];
+      svg_viewer
+        .append('svg:image')
+        .attr('xlink:href', _backgrounds.url)
+        .attr("height", _backgrounds.height)
+        .attr("x", _backgrounds.x_pos)
+        .attr("y", _backgrounds.y_pos);
+    }
 
     svg_viewer
       .append("defs")
@@ -656,20 +667,20 @@ function draw_graph(data) {
         if (d.type === "protein" || d.type === "other_protein") {
           if (coordinates[d.id][2] === 1) {
             return (
-              "<tspan dx='46' y='.31em' style='font-weight: bold;'>"
+              "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>"
               + d.display_name.split("_")[0]
               + "</tspan>"
             );
           } else {
             return (
-              "<tspan dx='-46' y='.31em' style='font-weight: bold; text-anchor: end;'>"
+              "<tspan dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>"
               + d.display_name.split("_")[0]
               + "</tspan>"
             );
           }
         } else {
           return (
-            "<tspan dx='32' y='.31em' style='font-weight: bold;'>"
+            "<tspan dx='32' y='.31em' style='font-size: 46px; font-weight: bold;'>"
             + d.display_name
             + "</tspan>"
           );
