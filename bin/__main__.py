@@ -200,6 +200,25 @@ def parse_subgraphs(
     data = vec_subgraphs(data)
     return data
 
+def compare_graphs(
+        graph,
+        subgraphs):
+    """Build metabolite graph from SMILES string
+    """
+
+    
+
+
+    return graph
+
+def vec_compare(
+        data,
+        output='graph',
+        input='smiles'):
+
+    data[output] = np.frompyfunc(get_graphs,1,1)(data[input])
+    return data
+
 def write_output(
         _object,
         output):

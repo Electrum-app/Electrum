@@ -206,7 +206,8 @@ class MIDASgraph{
     this.abs_max = Math.max(...this.all_values);
 
     // Make colormap
-    this.cmap = drawColormap(this.abs_max)
+    this.cmap = drawColormap(this.abs_max, "coolwarm")
+    this.cmap_greys = drawColormap(this.abs_max, "Greys")
 
     // extract unique elements for each complex
     for (let complex in this.complexes) {
@@ -219,6 +220,7 @@ function draw_graph(data) {
 
     var that = data;
     var cmap = that.cmap;
+    var cmap_greys = that.cmap_greys;
     let _nodes;
     let _links;
     let coordinates;
@@ -272,12 +274,13 @@ function draw_graph(data) {
         .id(d => d.id)
         .distance(_distances)
         .strength(1))
-      .force("collide", d3.forceCollide().radius(d => d.r*4).iterations(3))
+      .force("collide", d3.forceCollide().radius(d => d.r*5).iterations(1))
       .force("charge", d3.forceManyBody().strength(-350))
       .force("center", d3.forceCenter(_width / 2, _height / 1.2))
-      .alphaTarget(0.01)
-      .alphaMin(0.1)
-      //.velocityDecay(0.7);
+      //.alphaTarget(0.01)
+      //.alphaMin(0.1)
+      .alphaDecay(0.001)
+      .velocityDecay(0.7);
 
     var forceX = d3.forceX(_width / 2).strength(0.015);
     var forceY = d3.forceY(_height / 2).strength(0.015);
@@ -338,24 +341,6 @@ function draw_graph(data) {
         .attr("class", function(d) {
           return "link interaction";
         })
-        .style("--link_color", function(d) {
-          if (d.metadata.type === "core") {
-            let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
-            if (use_absolute_values === true) {
-              _val = Math.abs(_val);
-            }
-            return cmap[_val];
-          } else {
-            if (d.metadata.type === "reactant" || d.metadata.type === "product") {
-              return "rgb(128,128,128)";
-            } else if (d.metadata.sub_type === "catalyst") {
-              return "rgb(0,100,0)";
-            } else if (d.metadata.sub_type === "inhibitor") {
-              return "rgb(255,0,0)";
-            }
-          }
-
-        })
         .attr("stroke-width", function(d) {
           if (d.metadata.type === "core") {
             let _weight = ((-1 * Math.log(d.metadata.q_value)) / 18) + 10;
@@ -363,6 +348,9 @@ function draw_graph(data) {
           } else {
             return 10;
           }
+        })
+        .style("--link_color", function(d) {
+          return draw_color(d, that.abs_max, that.cmap)
         })
         .on("mouseover", function(d) {
           // show label tooltip
@@ -385,6 +373,22 @@ function draw_graph(data) {
                 .style("left", (d3.event.pageX + 10) + "px")
                 .style("top", (d3.event.pageY - 5) + "px");
           }
+          link
+            .filter(function (e) {return e;})
+            .style("--link_color", function(e) {
+              if (e === d) {
+                return draw_color(e, that.abs_max, that.cmap)
+              } else {
+                return draw_color(e, that.abs_max, that.cmap_greys)
+              }
+            })
+            .style("opacity", function(e) {
+              if (e === d) {
+                return 1;
+              } else {
+                return 0.1;
+              }
+            });
         })
         .on("mouseout", function(d) {
           // remove label tooltip
@@ -393,6 +397,11 @@ function draw_graph(data) {
               .duration(500)
               .style("opacity", 0);
           }
+          link
+            .filter(function (e) {return e;})
+            .style("--link_color", function(e) {
+              return draw_color(e, that.abs_max, that.cmap)
+            })
         });
 
     var node = svg_viewer
@@ -471,7 +480,7 @@ function draw_graph(data) {
               let _pathways = _data.pathways;
               let _reactions = _data.reactions;
               let _reactome = _data.reactome_reactions;
-              
+
               let _pathway_dictionary = that.metaboverseData.pathway_dictionary;
               let _reaction_database = that.metaboverseData.reaction_database;
               let _reactome_mapper = that.metaboverseData.reactome_mapper;
@@ -712,13 +721,32 @@ function draw_graph(data) {
 
     // Draw curved edges
     function tick() {
-      link
-        .attr("d", linkArc);
       circle
         .attr("transform", transform);
+      link
+        .attr("d", linkArc);
       text
         .attr("transform", transform);
 
+    }
+
+    function draw_color(d, abs_max, cmap) {
+      if (d.metadata.type === "core") {
+        let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+        let _mod_val = 1;
+        if (Math.abs(_val) >= abs_max) {
+          _mod_val = 0;
+        }
+        if (_val >= 0) {
+          _val = parseFloat(_val) + _mod_val;
+        } else {
+          _val = parseFloat(_val) - _mod_val;
+        }
+        if (use_absolute_values === true) {
+          _val = Math.abs(_val);
+        }
+        return cmap[_val];
+      }
     }
 
     function linkArc(d) {
