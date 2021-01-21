@@ -402,6 +402,7 @@ function draw_graph(data) {
             .style("--link_color", function(e) {
               return draw_color(e, that.abs_max, that.cmap)
             })
+            .style("opacity", 1);
         });
 
     var node = svg_viewer
