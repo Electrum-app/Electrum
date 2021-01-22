@@ -273,7 +273,7 @@ def __main__():
     if os.path.isfile(sys.argv[2]) == False:
         raise Exception('Specified MIDAS database file does not exist')
     OUTPUT = sys.argv[1] # output directory
-    MIDAS_DATA = sys.argv[1] # MIDAS database
+    MIDAS_DATA = sys.argv[2] # MIDAS database
     if OUTPUT[-1] != os.path.sep:
         OUTPUT += os.path.sep
 
