@@ -33,6 +33,7 @@ source activate substructure
 echo "+ Setting environment..."
 HOME=/uufs/chpc.utah.edu/common/home/u0690617
 SCRDIR=/scratch/general/lustre/$USER/$SLURM_JOBID
+ELECTRUM=$HOME/programs/Electrum
 mkdir -p $SCRDIR
 cd $SCRDIR
 mkdir -p $SCRDIR/output
@@ -47,6 +48,6 @@ cd $SCRDIR
 
 # Run python script
 echo "+ Running scripts..."
-python -u $SCRDIR/bin/__main__.py $SCRDIR/output
+python -u $SCRDIR/bin/__main__.py $SCRDIR/output $ELECTRUM/_data/MIDAS-latest.txt
 
 echo "+ Processing complete..."

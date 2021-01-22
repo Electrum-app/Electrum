@@ -8,6 +8,7 @@ import io
 import requests
 import zipfile
 import itertools
+from functools import partial
 import multiprocessing
 from multiprocessing import cpu_count, Pool
 import xml.etree.ElementTree as et
@@ -19,6 +20,10 @@ from pysmiles import read_smiles
 """Define globals
 """
 XML_TAG = '{http://www.hmdb.ca}'
+KEGG_FIELD = 'KEGG_ID'
+HMDB_FIELD = 'HMDB_ID'
+NAME_FIELD = 'Metabolite'
+COMMON_NAME_FIELD = 'Common_metabolite_name'
 
 """Functions
 """
@@ -68,7 +73,7 @@ def build_database(
     _len = get_xml_length(
         xml_object=hmdb_contents)
 
-    cols = ['id', 'name', 'smiles', 'graph', 'subgraphs', 'similarities']
+    cols = ['id', 'name', 'smiles', 'graph', 'similar_metabolites']
     database = pd.DataFrame(index=list(range(0, _len)), columns=cols)
 
     _index = 0
@@ -84,6 +89,7 @@ def build_database(
                 if y.tag == xml_tag + 'smiles':
                     database['smiles'][_index] = y.text
 
+            database['similar_metabolites'][_index] = []
             _index += 1
 
     return database
@@ -128,7 +134,7 @@ def run_chunks(
 
     # Remove any empty dataframes
     cores = len(chunks) # Modify worker numbers
-    print('Spooling multiprocessing for %s chunks...' % cores)
+    print('Spawning processing pools for %s chunks...' % cores)
     chunks = [x for x in chunks if x is not None]
     pool = Pool(cores) # Initialize workers
     chunks = pool.map(func, chunks) # Run function on chunks
@@ -160,6 +166,19 @@ def vec_graphs(
     data[output] = np.frompyfunc(get_graphs,1,1)(data[input])
     return data
 
+def parse_graphs(
+        data):
+    """For each graph, parse whether it is a subgraph of any other graph and its
+        subgraphs
+    """
+
+    print(
+        'Processing a graph chunk for indices %s-%s...'
+        % (data.index[0], data.index[-1]))
+    data = vec_graphs(data)
+
+    return data
+
 def get_subgraphs(
         graph):
     """Parse out all possible sub-graphs from a given graph
@@ -176,47 +195,27 @@ def get_subgraphs(
 
     return all_connected_subgraphs
 
-def vec_subgraphs(
-        data,
-        output='subgraphs',
-        input='graph'):
-
-    data[output] = np.frompyfunc(get_subgraphs,1,1)(data[input])
-    return data
-
-def parse_subgraphs(
-        data):
-    """For each graph, parse whether it is a subgraph of any other graph and its
-        subgraphs
-    """
-
-    print(
-        'Processing a graph chunk for indices %s-%s...'
-        % (data.index[0], data.index[-1]))
-    data = vec_graphs(data)
-    print(
-        'Processing a subgraph chunk for indices %s-%s...'
-        % (data.index[0], data.index[-1]))
-    data = vec_subgraphs(data)
-    return data
-
 def compare_graphs(
-        graph,
-        subgraphs):
+        data,
+        graph_dictionary,
+        total_metabolites,
+        graph_col=3,
+        output_col='similar_metabolites'):
     """Build metabolite graph from SMILES string
     """
+    global _counter
 
-    
+    for index, row in data.iterrows():
+        subgraphs = get_subgraphs(
+            graph=row[graph_col])
+        for _s in subgraphs:
+            for k, graph in graph_dictionary.items():
+                if nx.algorithms.isomorphism.could_be_isomorphic(_s, graph):
+                    data.at[index, output_col].append(k)
 
+        _counter += 1
+        print(str(_counter) + ' / ' + str(total_metabolites))
 
-    return graph
-
-def vec_compare(
-        data,
-        output='graph',
-        input='smiles'):
-
-    data[output] = np.frompyfunc(get_graphs,1,1)(data[input])
     return data
 
 def write_output(
@@ -225,7 +224,31 @@ def write_output(
     """
     """
 
-    _object.to_csv(output + 'output.txt', sep='\t')
+    _object.to_csv(
+        output + 'MIDAS_substructure_annotations.txt',
+        sep='\t')
+
+def read_table(
+        url,
+        delimiter='\t'):
+    """Read in MIDAS database file
+    """
+
+    try:
+        data = pd.read_csv(
+            url,
+            sep=delimiter,
+            index_col=None,
+            header=0)
+    except:
+        data = pd.read_csv(
+            url,
+            sep=delimiter,
+            index_col=None,
+            header=0,
+            encoding='cp1252')
+
+    return data
 
 def showtime():
     # datetime object containing current date and time
@@ -242,13 +265,20 @@ def __main__():
     print('Reading user variables...')
     print(sys.argv)
     # define user variables
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         raise Exception('Incorrect number of variables.')
     if os.path.isdir(sys.argv[1]) == False:
         raise Exception('Specified output directory does not exist')
+    if os.path.isfile(sys.argv[2]) == False:
+        raise Exception('Specified MIDAS database file does not exist')
     OUTPUT = sys.argv[1] # output directory
+    MIDAS_DATA = sys.argv[1] # MIDAS database
     if OUTPUT[-1] != os.path.sep:
         OUTPUT += os.path.sep
+
+    # Read MIDAS data
+    midas = read_table(
+        url=MIDAS_DATA)
 
     # Get HMDB database information
     print('Reading HMDB data...')
@@ -265,9 +295,48 @@ def __main__():
         data=database,
         processes=cpu_count()-1)
     database = None
+
+    # Get graphs for each HMDB metabolite
     chunks = run_chunks(
-        func=parse_subgraphs,
+        func=parse_graphs,
         chunks=chunks)
+    if len(chunks) == 0:
+        raise Exception("No chunks found")
+
+    # Make graph dictionary
+    # Compile outputs
+    if len(chunks) > 0:
+        database = pd.concat(chunks)
+        database = database.reset_index(drop=True)
+        chunks = None # Garbage management
+    else:
+        raise Exception('0 chunks of the original file remain')
+
+    graph_dictionary = dict(zip(
+        database['id'],
+        database['graph']))
+
+    # Make MIDAS list
+    targets = list(set(midas[[HMDB_FIELD]].tolist()))
+    database_copy = database.copy()
+    database_copy = database_copy[database_copy['id'].isin(targets)]
+
+    # Search for other graphs in all sub-graphs of a given SMILES structure
+    chunks = get_chunks(
+        data=database_copy,
+        processes=cpu_count()-1)
+    database = None
+    database_copy = None
+
+    partial_func = partial(
+        compare_graphs,
+        graph_dictionary=graph_dictionary,
+        total_metabolites=len(targets))
+    chunks = run_chunks(
+        func=partial_func,
+        chunks=chunks)
+
+    # Compile outputs
     if len(chunks) > 0:
         database = pd.concat(chunks)
         database = database.reset_index(drop=True)
@@ -278,17 +347,26 @@ def __main__():
     print('Graph processing complete...')
     showtime()
 
-    # Search for other graphs in all sub-graphs of a given SMILES structure
-
-
-    #write_output(
-    #    _object=database,
-    #    output=OUTPUT)
+    database.drop(
+        labels=['graph'],
+        axis=1,
+        inplace=True)
+    write_output(
+        _object=database,
+        output=OUTPUT)
 
 
 def __test__():
     OUTPUT = '/home/jordan/Desktop'
+    MIDAS_DATA = '/home/jordan/Desktop'
+
+    OUTPUT = 'C:\\Users\\jorda\\Desktop'
+    MIDAS_DATA = 'C:\\Users\\jorda\\Desktop\\projects\\Electrum\\_data\\MIDAS-latest.txt'
+
+    hmdb = contents
+    database = database.head(n=20)
 
 if __name__ == '__main__':
     print('Executing script...')
+    _counter = 0
     __main__()
