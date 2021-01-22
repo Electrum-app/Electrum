@@ -210,7 +210,7 @@ def compare_graphs(
             graph=row[graph_col])
         for _s in subgraphs:
             for k, graph in graph_dictionary.items():
-                if nx.algorithms.isomorphism.could_be_isomorphic(_s, graph):
+                if nx.algorithms.isomorphism.is_isomorphic(_s, graph):
                     data.at[index, output_col].append(k)
 
         _counter += 1
@@ -363,8 +363,26 @@ def __test__():
     OUTPUT = 'C:\\Users\\jorda\\Desktop'
     MIDAS_DATA = 'C:\\Users\\jorda\\Desktop\\projects\\Electrum\\_data\\MIDAS-latest.txt'
 
-    hmdb = contents
-    database = database.head(n=20)
+    database.head(n=10)
+    database_small = database.head(n=10)
+    database_small_c = database_small.copy()
+    database_small_c = vec_graphs(database_small_c)
+
+    graph_dictionary = dict(zip(
+        database_small_c['id'],
+        database_small_c['graph']))
+
+    # Make MIDAS list
+    targets = list(set(midas[HMDB_FIELD].tolist()))
+    database_c = database_small_c.head(n=3).copy()
+    # database_c = database_c[database_c['id'].isin(targets)]
+
+    database_c = compare_graphs(
+        database_c,
+        graph_dictionary,
+        len(targets),
+        graph_col=3,
+        output_col='similar_metabolites')
 
 if __name__ == '__main__':
     print('Executing script...')
