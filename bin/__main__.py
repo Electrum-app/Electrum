@@ -239,7 +239,8 @@ def read_table(
             url,
             sep=delimiter,
             index_col=None,
-            header=0)
+            header=0,
+            engine='python')
     except:
         data = pd.read_csv(
             url,
