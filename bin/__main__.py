@@ -4,6 +4,7 @@ from datetime import datetime
 
 import os
 import sys
+import gc
 import io
 import requests
 import zipfile
