@@ -97,11 +97,14 @@ def build_database(
 
 def get_chunks(
         data,
-        processes):
+        processes,
+        max_processes=24):
 
     _index_length = len(data.index.tolist())
     if processes > _index_length:
         processes = _index_length
+    if processes > max_processes:
+        processes = max_processes
 
     chunks = [] # Initialize chunk storage
     start = 0 # Get first start coordinate for chunk
@@ -176,6 +179,7 @@ def parse_graphs(
     print(
         'Processing a graph chunk for indices %s-%s...'
         % (data.index[0], data.index[-1]))
+    sys.stdout.flush()
     data = vec_graphs(data)
 
     return data
@@ -216,6 +220,7 @@ def compare_graphs(
 
         _counter += 1
         print(str(_counter) + ' / ' + str(total_metabolites))
+        sys.stdout.flush()
 
     return data
 
@@ -295,7 +300,8 @@ def __main__():
     showtime()
     chunks = get_chunks(
         data=database,
-        processes=cpu_count()-1)
+        processes=cpu_count()-1,
+        max_processes=cpu_count())
     database = None
 
     # Get graphs for each HMDB metabolite
