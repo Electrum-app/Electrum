@@ -319,7 +319,7 @@ def __main__():
         database['graph']))
 
     # Make MIDAS list
-    targets = list(set(midas[[HMDB_FIELD]].tolist()))
+    targets = list(set(midas[HMDB_FIELD].tolist()))
     database_copy = database.copy()
     database_copy = database_copy[database_copy['id'].isin(targets)]
 
