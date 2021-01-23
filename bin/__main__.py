@@ -319,9 +319,23 @@ def __main__():
         database['graph']))
 
     # Make MIDAS list
+    # HMDB0060444 -> HMDB0001058
+    # HMDB0015571 -> HMDB0000472
     targets = list(set(midas[HMDB_FIELD].tolist()))
+    _targets = ['HMDB0001058', 'HMDB0000472']
+    for _t in targets:
+        #_targets.append(_t)
+        _targets.append(str(_t).replace('HMDB', 'HMDB00'))
+    _drop = ['HMDB0060444', 'HMDB0015571']
+    _targets = [t for t in _targets if t not in _drop]
+
     database_copy = database.copy()
-    database_copy = database_copy[database_copy['id'].isin(targets)]
+    database_copy = database_copy[database_copy['id'].isin(_targets)]
+
+    _missing = [x for x in _targets if x not in database_copy['id'].tolist()]
+    print("Missing HMDB entries for the following MIDAS metabolites:")
+    for _mm in _missing:
+        print(_mm)
 
     # Search for other graphs in all sub-graphs of a given SMILES structure
     chunks = get_chunks(
