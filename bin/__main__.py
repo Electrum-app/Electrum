@@ -204,6 +204,7 @@ def compare_graphs(
         data,
         graph_dictionary,
         total_metabolites,
+        id_col=0,
         graph_col=3,
         output_col='similar_metabolites'):
     """Build metabolite graph from SMILES string
@@ -211,8 +212,15 @@ def compare_graphs(
     global _counter
 
     for index, row in data.iterrows():
+
+        print('Searching ' + str(row[id_col]))
+        sys.stdout.flush()
+
         subgraphs = get_subgraphs(
             graph=row[graph_col])
+        print('--> Processing %s subgraphs for %s...' %  (str(len(subgraphs)), str(row[id_col])))
+        sys.stdout.flush()
+
         for _s in subgraphs:
             for k, graph in graph_dictionary.items():
                 if nx.algorithms.isomorphism.is_isomorphic(_s, graph):
