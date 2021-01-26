@@ -423,7 +423,7 @@ class MIDASgraph{
       .classed("node", true)
       .attr("id", d=>d.id)
       .attr("transform", d => {
-        return "translate("+xScale(d.xcoord) + "," + yScale(d.ycoord)+")"})
+        return "trans  late("+xScale(d.xcoord) + "," + yScale(d.ycoord)+")"})
       .call(
         d3
           .drag()
