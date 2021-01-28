@@ -304,6 +304,8 @@ function make_nodes(node, current_protein, div_protein) {
         return "orange"
       } else if (d.type === "other_protein") {
         return "grey"
+      } else if (d.isomers !== "") {
+        return "lightgrey"
       }
     })
 
@@ -323,11 +325,12 @@ function make_nodes(node, current_protein, div_protein) {
             .style("top", (d3.event.pageY - 5) + "px");
         */
       } else if (d.type === "metabolite") {
-        let _display_string = (""
-          + "<b>Name:</b> " + d.display_name + "<br>"
-          + "<b>Isomeric to:</b> " + d.isomers + "<br>"
-          + "<b>HMDB ID:</b> " + d.hmdb_id + "<br>"
-        );
+        let _display_string = "";
+        _display_string += "<b>Name:</b> " + d.display_name + "<br>";
+        if (d.isomers !== "") {
+          _display_string += "<b>Isomeric to:</b> " + d.isomers + "<br>";
+        }
+        _display_string += "<b>HMDB ID:</b> " + d.hmdb_id + "<br>";
         div_protein.transition()
           .duration(100)
           .style("opacity", .9);
