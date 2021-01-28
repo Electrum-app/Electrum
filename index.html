@@ -34,9 +34,12 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   <script src="js/d3/d3.min.js"></script>
   <script src="js/coordinates.js"></script>
   <script src="js/backgrounds.js"></script>
+  <script src="js/proteins.js"></script>
+  <script src="js/metabolites.js"></script>
   <script src="js/js-colormaps.js"></script>
   <script src="js/display.js"></script>
   <script src="js/graph.js"></script>
+  <script src="js/draw.js"></script>
   <script src="js/utils.js"></script>
 
   <head>
@@ -56,8 +59,17 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
     <div id="menu_panel">
       <select id="menu"></select>
+      <br>
       <div title="Click to toggle on or off absolute values for fold changes.">
         <button id="toggle_absolute_values">Toggle Absolute Values</button>
+      </div>
+      <br>
+      <div title="Click to toggle on or off metabolite labels.">
+        <button id="toggle_labels">Toggle Metabolite Labels</button>
+      </div>
+      <br>
+      <div title="Click to toggle on or off all metabolites.">
+        <button id="toggle_all">Toggle All Metabolites</button>
       </div>
     </div>
     <div id="graph" align="center">

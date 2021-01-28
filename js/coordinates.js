@@ -38,9 +38,9 @@ const ccm_coordinates = {
   "FBP1":[12,10,1,5],
   "FBP2":[12,11,1,5],
 
-  "ALDOA": [6,13,0,6], //ALDOAconc?
-  "ALDOB":[6,14,0,6],
-  "ALDOC":[7,14,1,6],
+  "ALDOA": [5.5,13,0,6], //ALDOAconc?
+  "ALDOB":[5.5,14,0,6],
+  "ALDOC":[6.5,14,1,6],
 
   "GAPDH":[8,16.75,0,7],
 
