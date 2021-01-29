@@ -28,6 +28,8 @@ COMMON_NAME_FIELD = 'Common_metabolite_name'
 
 """Functions
 """
+
+
 def generate_hmdb(
         output,
         url='https://hmdb.ca/system/downloads/current/hmdb_metabolites.zip',
@@ -52,6 +54,7 @@ def generate_hmdb(
 
     return contents
 
+
 def get_xml_length(
         xml_object,
         xml_type='metabolite',
@@ -63,6 +66,7 @@ def get_xml_length(
             _index += 1
 
     return _index
+
 
 def build_database(
         hmdb_contents,
@@ -95,6 +99,7 @@ def build_database(
 
     return database
 
+
 def get_chunks(
         data,
         processes,
@@ -106,8 +111,8 @@ def get_chunks(
     if processes > max_processes:
         processes = max_processes
 
-    chunks = [] # Initialize chunk storage
-    start = 0 # Get first start coordinate for chunk
+    chunks = []  # Initialize chunk storage
+    start = 0  # Get first start coordinate for chunk
     batch = round(len(data.index) / processes)
     for _c in range(processes):
         # If the last chunk, get the remainder of the GTF
@@ -130,6 +135,7 @@ def get_chunks(
 
     return chunks
 
+
 def run_chunks(
         func,
         chunks):
@@ -137,16 +143,17 @@ def run_chunks(
     """
 
     # Remove any empty dataframes
-    cores = len(chunks) # Modify worker numbers
+    cores = len(chunks)  # Modify worker numbers
     print('Spawning processing pools for %s chunks...' % cores)
     chunks = [x for x in chunks if x is not None]
-    pool = Pool(cores) # Initialize workers
-    chunks = pool.map(func, chunks) # Run function on chunks
+    pool = Pool(cores)  # Initialize workers
+    chunks = pool.map(func, chunks)  # Run function on chunks
     pool.close()
     pool.join()
     gc.collect()
 
     return chunks
+
 
 def get_graphs(
         smiles):
@@ -162,13 +169,15 @@ def get_graphs(
 
     return graph
 
+
 def vec_graphs(
         data,
         output='graph',
         input='smiles'):
 
-    data[output] = np.frompyfunc(get_graphs,1,1)(data[input])
+    data[output] = np.frompyfunc(get_graphs, 1, 1)(data[input])
     return data
+
 
 def parse_graphs(
         data):
@@ -184,6 +193,7 @@ def parse_graphs(
 
     return data
 
+
 def get_subgraphs(
         graph):
     """Parse out all possible sub-graphs from a given graph
@@ -192,13 +202,14 @@ def get_subgraphs(
     counter = 0
     all_connected_subgraphs = []
     for nb_nodes in range(2, graph.number_of_nodes() + 1):
-        for SG in (graph.subgraph(selected_nodes) \
-        for selected_nodes in itertools.combinations(graph, nb_nodes)):
+        for SG in (graph.subgraph(selected_nodes)
+                   for selected_nodes in itertools.combinations(graph, nb_nodes)):
             counter += 1
             if nx.is_connected(SG):
                 all_connected_subgraphs.append(SG)
 
     return all_connected_subgraphs
+
 
 def compare_graphs(
         data,
@@ -218,7 +229,8 @@ def compare_graphs(
 
         subgraphs = get_subgraphs(
             graph=row[graph_col])
-        print('--> Processing %s subgraphs for %s...' %  (str(len(subgraphs)), str(row[id_col])))
+        print('--> Processing %s subgraphs for %s...' %
+              (str(len(subgraphs)), str(row[id_col])))
         sys.stdout.flush()
 
         for _s in subgraphs:
@@ -232,6 +244,7 @@ def compare_graphs(
 
     return data
 
+
 def write_output(
         _object,
         output):
@@ -241,6 +254,7 @@ def write_output(
     _object.to_csv(
         output + 'MIDAS_substructure_annotations.txt',
         sep='\t')
+
 
 def read_table(
         url,
@@ -265,6 +279,7 @@ def read_table(
 
     return data
 
+
 def showtime():
     # datetime object containing current date and time
     now = datetime.now()
@@ -272,6 +287,7 @@ def showtime():
     # dd/mm/YY H:M:S
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     print("--> ", dt_string)
+
 
 def __main__():
     """
@@ -286,8 +302,8 @@ def __main__():
         raise Exception('Specified output directory does not exist')
     if os.path.isfile(sys.argv[2]) == False:
         raise Exception('Specified MIDAS database file does not exist')
-    OUTPUT = sys.argv[1] # output directory
-    MIDAS_DATA = sys.argv[2] # MIDAS database
+    OUTPUT = sys.argv[1]  # output directory
+    MIDAS_DATA = sys.argv[2]  # MIDAS database
     if OUTPUT[-1] != os.path.sep:
         OUTPUT += os.path.sep
 
@@ -308,7 +324,7 @@ def __main__():
     showtime()
     chunks = get_chunks(
         data=database,
-        processes=cpu_count()-1,
+        processes=cpu_count() - 1,
         max_processes=cpu_count())
     database = None
 
@@ -324,7 +340,7 @@ def __main__():
     if len(chunks) > 0:
         database = pd.concat(chunks)
         database = database.reset_index(drop=True)
-        chunks = None # Garbage management
+        chunks = None  # Garbage management
     else:
         raise Exception('0 chunks of the original file remain')
 
@@ -338,7 +354,7 @@ def __main__():
     targets = list(set(midas[HMDB_FIELD].tolist()))
     _targets = ['HMDB0001058', 'HMDB0000472']
     for _t in targets:
-        #_targets.append(_t)
+        # _targets.append(_t)
         _targets.append(str(_t).replace('HMDB', 'HMDB00'))
     _drop = ['HMDB0060444', 'HMDB0015571']
     _targets = [t for t in _targets if t not in _drop]
@@ -354,7 +370,7 @@ def __main__():
     # Search for other graphs in all sub-graphs of a given SMILES structure
     chunks = get_chunks(
         data=database_copy,
-        processes=cpu_count()-1)
+        processes=cpu_count() - 1)
     database = None
     database_copy = None
 
@@ -370,7 +386,7 @@ def __main__():
     if len(chunks) > 0:
         database = pd.concat(chunks)
         database = database.reset_index(drop=True)
-        chunks = None # Garbage management
+        chunks = None  # Garbage management
     else:
         raise Exception('0 chunks of the original file remain')
 
@@ -413,6 +429,7 @@ def __test__():
         len(targets),
         graph_col=3,
         output_col='similar_metabolites')
+
 
 if __name__ == '__main__':
     print('Executing script...')

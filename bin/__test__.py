@@ -1,3 +1,8 @@
+import itertools
+from sklearn.cluster import AffinityPropagation
+import numpy as np
+import collections
+import community
 from pysmiles import read_smiles
 import networkx as nx
 
@@ -32,13 +37,8 @@ acetyl_coa = '	CC(=O)SCCNC(=O)CCNC(=O)[C@H](O)C(C)(C)COP(O)(=O)OP(O)(=O)OC[C@H]1
 G_acetyl_coa = read_smiles(acetyl_coa)
 nx.draw_networkx(G_acetyl_coa)
 
-GM = nx.algorithms.isomorphism.GraphMatcher(G_coa,G_acetyl_coa)
+GM = nx.algorithms.isomorphism.GraphMatcher(G_coa, G_acetyl_coa)
 GM.is_isomorphic()
-
-
-
-
-
 
 
 pyr = 'CC(=O)C(O)=O'
@@ -49,11 +49,10 @@ oxy = '[OH-]'
 G_oxy = read_smiles(oxy, explicit_hydrogen=True)
 nx.draw_networkx(G_oxy)
 
-GM = nx.algorithms.isomorphism.GraphMatcher(G_pyr,G_oxy)
+GM = nx.algorithms.isomorphism.GraphMatcher(G_pyr, G_oxy)
 GM.is_isomorphic()
 
-nx.algorithms.isomorphism.could_be_isomorphic(G_pyr,G_oxy)
-
+nx.algorithms.isomorphism.could_be_isomorphic(G_pyr, G_oxy)
 
 
 for n in G_pyr.nodes():
@@ -78,7 +77,6 @@ for n in G_pyr.edges:
     print(G_pyr.edges[n])
 
 
-
 for n in G_oxy.nodes():
     print(G_oxy.nodes()[n])
 
@@ -86,29 +84,22 @@ for n in G_oxy.edges():
     print(G_oxy.edges()[n])
 
 
-
-
-
 for x in G_pyr.subgraph():
     print(x)
 G_oxy
 
 
-import community
-import collections
-
 p_partition = community.best_partition(G_pyr)
 p_values = [p_partition.get(node) for node in G_pyr.nodes()]
-p_counter=collections.Counter(p_values)
+p_counter = collections.Counter(p_values)
 print(p_counter)
 p_sp = nx.spring_layout(G_pyr)
-nx.draw_networkx(G_pyr, pos=p_sp, with_labels=False, node_size=35, node_color=p_values)
+nx.draw_networkx(G_pyr, pos=p_sp, with_labels=False,
+                 node_size=35, node_color=p_values)
 # plt.axes('off')
 plt.show()
 
-import numpy as np
 
-from sklearn.cluster import AffinityPropagation
 mat = nx.to_numpy_matrix(G_pyr)
 af = AffinityPropagation(preference=-2, affinity="precomputed")
 lab = af.fit_predict(mat)
@@ -119,9 +110,6 @@ mat2 = nx.to_numpy_matrix(G_oxy)
 
 G_oxy in G_pyr
 
-
-import networkx as nx
-import itertools
 
 G = G_oxy
 all_connected_subgraphs = []
@@ -147,18 +135,12 @@ for nb_nodes in range(2, G.number_of_nodes() + 1):
             all_connected_subgraphs.append(_SG)
 
 
-
-
 for _sg in all_connected_subgraphs:
-    if nx.algorithms.isomorphism.could_be_isomorphic(_sg,SG):
+    if nx.algorithms.isomorphism.could_be_isomorphic(_sg, SG):
         nx.draw_networkx(_sg)
         break
     else:
         print('no match')
-
-
-
-
 
 
 """
