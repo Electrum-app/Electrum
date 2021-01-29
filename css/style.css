@@ -18,7 +18,6 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
 body,
 html {
   margin: 0;
@@ -214,8 +213,8 @@ a {
 }
 
 a:hover {
-  color:black;
-  text-decoration:none;
+  color: black;
+  text-decoration: none;
 }
 
 img {
@@ -335,12 +334,10 @@ img {
   border-radius: 50%;
 }
 
-
 .experimentName {
   border: 1px solid black;
   border-radius: 3px;
 }
-
 
 #dropDatabase {
   border-radius: 5px;
@@ -354,6 +351,7 @@ img {
   text-shadow: none;
   user-select: none;
 }
+
 #dropDatabase:active {
   background: #0080ff;
   text-shadow: none;

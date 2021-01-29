@@ -45,11 +45,11 @@ function draw_graph(data) {
   // All tooltip code adapted from:
   //https://bl.ocks.org/d3noob/a22c42db65eb00d4e369
   var div_edge = d3.select("body").append("div")
-  .attr("class", "tooltip")
-  .style("opacity", 0);
+    .attr("class", "tooltip")
+    .style("opacity", 0);
   var div_protein = d3.select("body").append("div")
-  .attr("class", "tooltip")
-  .style("opacity", 0);
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
   var _width = window.innerWidth;
   var _height = window.innerHeight * 1.2;
@@ -85,18 +85,18 @@ function draw_graph(data) {
 
   // Draw nodes (must happen after links are initialized)
   let node_outputs = init_nodes(
-      svg_viewer, that, link, _nodes,
-      coordinates, current_protein, current_metabolite,
-      timer, prevent);
+    svg_viewer, that, link, _nodes,
+    coordinates, current_protein, current_metabolite,
+    timer, prevent);
   node = node_outputs[0];
   current_protein = node_outputs[1];
   current_metabolite = node_outputs[2];
   node.call(
     d3.drag()
-      .subject(dragsubject)
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended)
+    .subject(dragsubject)
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended)
   )
   circle = make_nodes(that, node, current_protein, div_protein);
 
@@ -122,39 +122,45 @@ function draw_graph(data) {
 
   // Internal functions
   function delayDisappear() {
-    node.filter(function (d) {
-      if (d.type !== "protein" && d.type !== "other_protein") {
-        return d;
-      }
-    })
+    node.filter(function(d) {
+        if (d.type !== "protein" && d.type !== "other_protein") {
+          return d;
+        }
+      })
       .transition().duration(3000).style("opacity", 0);
-    link.filter(function (d) {return d;})
+    link.filter(function(d) {
+        return d;
+      })
       .transition().duration(3000).style("opacity", 0);
     setTimeout(hideNodes, 3000);
   }
 
   function hideNodes() {
-    node.filter(function (d) {
-      if (d.type !== "protein" && d.type !== "other_protein") {
-        return d;
-      }
-    })
+    node.filter(function(d) {
+        if (d.type !== "protein" && d.type !== "other_protein") {
+          return d;
+        }
+      })
       .style("visibility", "hidden")
       .style("opacity", 1);
-    link.filter(function (d) {return d;})
+    link.filter(function(d) {
+        return d;
+      })
       .style("visibility", "hidden")
       .style("opacity", 1);
   }
 
   function showNodes() {
-    node.filter(function (d) {
-      if (d.type !== "protein" && d.type !== "other_protein") {
-        return d;
-      }
-    })
+    node.filter(function(d) {
+        if (d.type !== "protein" && d.type !== "other_protein") {
+          return d;
+        }
+      })
       .style("visibility", "visible")
       .style("opacity", 1);
-    link.filter(function (d) {return d;})
+    link.filter(function(d) {
+        return d;
+      })
       .style("visibility", "visible")
       .style("opacity", 1);
   }
@@ -182,9 +188,9 @@ function draw_graph(data) {
     if (d3.event.subject.type !== "protein") {
       if (!d3.event.active)
         simulation
-          .alphaTarget(0.05)
-          .alphaMin(0.06)
-          .velocityDecay(0.7);
+        .alphaTarget(0.05)
+        .alphaMin(0.06)
+        .velocityDecay(0.7);
       d3.event.subject.fx = null;
       d3.event.subject.fy = null;
     }

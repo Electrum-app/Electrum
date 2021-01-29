@@ -25,9 +25,9 @@ var show_all = false;
 var background_forward = true;
 var q_threshold = 0.1;
 
-class MIDASgraph{
+class MIDASgraph {
 
-   constructor(graph_data){
+  constructor(graph_data) {
     // Set constructor keys
     this.graphData = graph_data[0];
     this.metaboverseData = graph_data[1];
@@ -135,7 +135,7 @@ class MIDASgraph{
           metabolite = isomers[0];
           other_isomers = isomers.slice(1, isomers.length);
         } else {}
-        let _search = metabolite.replace(/[^0-9A-Z]+/gi,"").toLowerCase();
+        let _search = metabolite.replace(/[^0-9A-Z]+/gi, "").toLowerCase();
         let hmdb_id = metabolites_reference[_search].hmdb_id;
         let metabolite_name = metabolites_reference[_search].name;
         metabolite = metabolite.replace(/\s/g, ''); // Clean string, skip blanks

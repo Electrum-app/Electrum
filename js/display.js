@@ -30,6 +30,6 @@ Promise.all([
   d3.json(mapper_url)
 ]).then(function(data) {
   let midasGraph = new MIDASgraph(data);
-}).catch(function(error){
+}).catch(function(error) {
   console.log(error)
 });

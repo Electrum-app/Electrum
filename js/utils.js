@@ -43,7 +43,7 @@ function set_selection(data, selection) {
     }
     _nodes = data.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
     coordinates = {};
-    coordinates[selection] = [6,20,1,24];
+    coordinates[selection] = [6, 20, 1, 24];
     _distances = 850;
   } else {
     console.log("Did not select a protein or pathway")
@@ -62,15 +62,15 @@ function set_selection(data, selection) {
 }
 
 function init_simulation(
-    _nodes, _links, _distances,
-    _width, _height, _height_center) {
+  _nodes, _links, _distances,
+  _width, _height, _height_center) {
   let _sim = d3
     .forceSimulation(_nodes)
     .force("link", d3.forceLink(_links)
       .id(d => d.id)
       .distance(_distances)
       .strength(1))
-    .force("collide", d3.forceCollide().radius(d => d.r*5).iterations(1))
+    .force("collide", d3.forceCollide().radius(d => d.r * 5).iterations(1))
     .force("charge", d3.forceManyBody().strength(-350))
     .force("center", d3.forceCenter(_width / 2, _height / _height_center))
     .alphaDecay(0.005)
@@ -133,12 +133,18 @@ function make_edges(svg_viewer, div_edge, data, _links) {
     .data(_links)
     .enter()
     .append("path")
-    .attr("id", function(d) { return d.source.id + "\," + d.target.id })
-    .attr("class", function(d) { return "link interaction"; })
+    .attr("id", function(d) {
+      return d.source.id + "\," + d.target.id
+    })
+    .attr("class", function(d) {
+      return "link interaction";
+    })
     .attr("stroke-width", function(d) {
       if (d.metadata.type === "core") {
         return ((-1 * Math.log(d.metadata.q_value)) / 18) + 10;
-      } else { return 10; }
+      } else {
+        return 10;
+      }
     })
     .style("--link_color", function(d) {
       return draw_color(d, data.abs_max, data.cmap)
@@ -150,22 +156,24 @@ function make_edges(svg_viewer, div_edge, data, _links) {
         let _metabolite = d.target.display_name;
         let _fold_change = parseFloat(d.metadata.corrected_fold_change).toFixed(2);
         let _q_value = parseFloat(d.metadata.q_value).toExponential(2);
-        let _display_string = (""
-          + "<b>Protein:</b> " + _target + "<br>"
-          + "<b>Metabolite:</b> " + _metabolite + "<br>"
-          + "<b>log<sub>2</sub>(Fold Change):</b> " + _fold_change + "<br>"
-          + "<b>q-value:</b> " + _q_value
+        let _display_string = ("" +
+          "<b>Protein:</b> " + _target + "<br>" +
+          "<b>Metabolite:</b> " + _metabolite + "<br>" +
+          "<b>log<sub>2</sub>(Fold Change):</b> " + _fold_change + "<br>" +
+          "<b>q-value:</b> " + _q_value
         )
         div_edge.transition()
           .duration(100)
           .style("opacity", .9);
         div_edge
           .html(_display_string)
-            .style("left", (d3.event.pageX + 10) + "px")
-            .style("top", (d3.event.pageY - 5) + "px");
+          .style("left", (d3.event.pageX + 10) + "px")
+          .style("top", (d3.event.pageY - 5) + "px");
       }
       link
-        .filter(function (e) {return e;})
+        .filter(function(e) {
+          return e;
+        })
         .style("--link_color", function(e) {
           if (e === d) {
             return draw_color(e, data.abs_max, data.cmap)
@@ -189,7 +197,9 @@ function make_edges(svg_viewer, div_edge, data, _links) {
           .style("opacity", 0);
       }
       link
-        .filter(function (e) {return e;})
+        .filter(function(e) {
+          return e;
+        })
         .style("--link_color", function(e) {
           return draw_color(e, data.abs_max, data.cmap)
         })
@@ -230,9 +240,9 @@ function draw_background(svg_viewer, data, selection) {
 }
 
 function init_nodes(
-    svg_viewer, data, link, _nodes,
-    coordinates, current_protein, current_metabolite,
-    timer, prevent) {
+  svg_viewer, data, link, _nodes,
+  coordinates, current_protein, current_metabolite,
+  timer, prevent) {
 
   var node = svg_viewer
     .selectAll(".node")
@@ -240,7 +250,9 @@ function init_nodes(
     .enter()
     .append("g")
     .attr("class", "node")
-    .attr("id", function(d) {return d.id})
+    .attr("id", function(d) {
+      return d.id
+    })
 
   node
     .on("dblclick", function(d) {
@@ -301,7 +313,8 @@ function make_nodes(data, node, current_protein, div_protein) {
       }
     })
     .attr("id", function(d) {
-      return d.id})
+      return d.id
+    })
     .style("fill", function(d) {
       if (d.type === "protein") {
         return "orange"
@@ -313,7 +326,7 @@ function make_nodes(data, node, current_protein, div_protein) {
     })
 
   circle
-    .on("mouseover", function(d){
+    .on("mouseover", function(d) {
       if (d.type === "protein") {
         d3.select(this).style("fill", "red");
         /*
@@ -339,12 +352,14 @@ function make_nodes(data, node, current_protein, div_protein) {
           .style("opacity", .9);
         div_protein
           .html(_display_string)
-            .style("left", (d3.event.pageX + 10) + "px")
-            .style("top", (d3.event.pageY - 5) + "px");
+          .style("left", (d3.event.pageX + 10) + "px")
+          .style("top", (d3.event.pageY - 5) + "px");
 
         // Highlight all its edges
         link
-          .filter(function (e) { return e; })
+          .filter(function(e) {
+            return e;
+          })
           .style("--link_color", function(e) {
             if (e.source.id === d.id || e.target.id === d.id) {
               return draw_color(e, data.abs_max, data.cmap)
@@ -361,7 +376,7 @@ function make_nodes(data, node, current_protein, div_protein) {
           });
       }
     })
-    .on("mouseout", function(d){
+    .on("mouseout", function(d) {
       if (d.id === current_protein) {
         d3.select(this).style("fill", "red");
       } else if (d.type === "other_protein") {
@@ -373,7 +388,9 @@ function make_nodes(data, node, current_protein, div_protein) {
         .duration(500)
         .style("opacity", 0);
       link
-        .filter(function (e) {return e;})
+        .filter(function(e) {
+          return e;
+        })
         .style("--link_color", function(e) {
           return draw_color(e, data.abs_max, data.cmap)
         })
@@ -390,23 +407,23 @@ function make_text(node, coordinates) {
       if (d.type === "protein" || d.type === "other_protein") {
         if (coordinates[d.id][2] === 1) {
           return (
-            "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>"
-            + d.display_name.split("_")[0]
-            + "</tspan>"
+            "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
+            d.display_name.split("_")[0] +
+            "</tspan>"
           );
         } else {
           return (
-            "<tspan dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>"
-            + d.display_name.split("_")[0]
-            + "</tspan>"
+            "<tspan dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
+            d.display_name.split("_")[0] +
+            "</tspan>"
           );
         }
       } else {
         if (show_labels === true) {
           return (
-            "<tspan dx='32' y='.31em' style='font-size: 46px; font-weight: bold;'>"
-            + d.display_name
-            + "</tspan>"
+            "<tspan dx='32' y='.31em' style='font-size: 46px; font-weight: bold;'>" +
+            d.display_name +
+            "</tspan>"
           );
         }
       }
@@ -416,7 +433,7 @@ function make_text(node, coordinates) {
 
 function hide_nodes(node) {
   node
-    .filter(function (d) {
+    .filter(function(d) {
       if (d.type !== "protein" && d.type !== "other_protein") {
         return d;
       }
@@ -427,7 +444,7 @@ function hide_nodes(node) {
 
 function show_nodes(node, get_metabolites) {
   node
-    .filter(function (n) {
+    .filter(function(n) {
       if (n.type === "metabolite" && get_metabolites.includes(n.id)) {
         return n;
       }
@@ -438,7 +455,9 @@ function show_nodes(node, get_metabolites) {
 
 function hide_links(link) {
   link
-    .filter(function (d) {return d;})
+    .filter(function(d) {
+      return d;
+    })
     .style("visibility", "hidden")
     .style("opacity", 1);
 }
@@ -446,7 +465,7 @@ function hide_links(link) {
 function show_links(link, this_id) {
   let get_metabolites = [];
   link
-    .filter(function (l) {
+    .filter(function(l) {
       if (l.source.id === this_id) {
         get_metabolites.push(l.target.id)
         return l;
@@ -455,7 +474,7 @@ function show_links(link, this_id) {
     .style("visibility", "visible")
     .style("opacity", 1);
   link
-    .filter(function (ll) {
+    .filter(function(ll) {
       if (get_metabolites.includes(ll.target.id)) {
         return ll;
       }

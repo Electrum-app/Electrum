@@ -18,16 +18,14 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
 div_edge.tooltip, div_protein.tooltip {
-    position: absolute;
-    text-align: left;
-    padding: 7px;
-    font: 12px sans-serif;
-
-    border: 2px;
-    border-radius: 8px;
-    pointer-events: none;
+  position: absolute;
+  text-align: left;
+  padding: 7px;
+  font: 12px sans-serif;
+  border: 2px;
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 path.hull {
@@ -42,6 +40,7 @@ path.hull {
 #interaction {
   fill: black;
 }
+
 .link.interaction {
   stroke: var(--link_color);
 }
@@ -68,7 +67,6 @@ path.hull {
   fill: black;
 }
 
-
 .node text {
   display: inline;
   font: 32px sans-serif;
@@ -81,7 +79,9 @@ path.hull {
   text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
 }
 
-tspan {z-index:100;}
+tspan {
+  z-index: 100;
+}
 
 .cell {
   fill: none;
