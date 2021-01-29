@@ -53,8 +53,15 @@ function draw_graph(data) {
 
   var _width = window.innerWidth;
   var _height = window.innerHeight * 1.2;
+  var _height_center;
+  if (selection in that.pathway_dictionary) {
+    _height_center = 1.2;
+  } else {
+    _height_center = 2;
+  }
+
   var simulation = init_simulation(
-    _nodes, _links, _distances, _width, _height);
+    _nodes, _links, _distances, _width, _height, _height_center);
   var forceX = d3.forceX(_width / 2).strength(0.015);
   var forceY = d3.forceY(_height / 2).strength(0.015);
 
@@ -75,7 +82,7 @@ function draw_graph(data) {
     init_edges(svg_viewer)
     link = make_edges(svg_viewer, div_edge, that, _links);
   }
-  
+
   // Draw nodes (must happen after links are initialized)
   let node_outputs = init_nodes(
       svg_viewer, that, link, _nodes,
@@ -91,7 +98,7 @@ function draw_graph(data) {
       .on("drag", dragged)
       .on("end", dragended)
   )
-  circle = make_nodes(node, current_protein, div_protein);
+  circle = make_nodes(that, node, current_protein, div_protein);
 
   // Draw text
   text = make_text(node, coordinates);

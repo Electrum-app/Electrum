@@ -44,7 +44,7 @@ function set_selection(data, selection) {
     _nodes = data.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
     coordinates = {};
     coordinates[selection] = [6,20,1,24];
-    _distances = 1150;
+    _distances = 1000;
   } else {
     console.log("Did not select a protein or pathway")
     return
@@ -61,8 +61,10 @@ function set_selection(data, selection) {
   ];
 }
 
-function init_simulation(_nodes, _links, _distances, _width, _height) {
-  return d3
+function init_simulation(
+    _nodes, _links, _distances,
+    _width, _height, _height_center) {
+  let _sim = d3
     .forceSimulation(_nodes)
     .force("link", d3.forceLink(_links)
       .id(d => d.id)
@@ -70,9 +72,10 @@ function init_simulation(_nodes, _links, _distances, _width, _height) {
       .strength(1))
     .force("collide", d3.forceCollide().radius(d => d.r*5).iterations(1))
     .force("charge", d3.forceManyBody().strength(-350))
-    .force("center", d3.forceCenter(_width / 2, _height / 1.2))
-    .alphaDecay(0.001)
+    .force("center", d3.forceCenter(_width / 2, _height / _height_center))
+    .alphaDecay(0.005)
     .velocityDecay(0.7);
+  return _sim;
 }
 
 function init_canvas(selector, _width, _height) {
@@ -282,7 +285,7 @@ function init_nodes(
   return [node, current_protein, current_metabolite];
 }
 
-function make_nodes(node, current_protein, div_protein) {
+function make_nodes(data, node, current_protein, div_protein) {
 
   var circle = node
     .append(function(d) {
@@ -338,6 +341,24 @@ function make_nodes(node, current_protein, div_protein) {
           .html(_display_string)
             .style("left", (d3.event.pageX + 10) + "px")
             .style("top", (d3.event.pageY - 5) + "px");
+
+        // Highlight all its edges
+        link
+          .filter(function (e) { return e; })
+          .style("--link_color", function(e) {
+            if (e.source.id === d.id || e.target.id === d.id) {
+              return draw_color(e, data.abs_max, data.cmap)
+            } else {
+              return draw_color(e, data.abs_max, data.cmap_greys)
+            }
+          })
+          .style("opacity", function(e) {
+            if (e.source.id === d.id || e.target.id === d.id) {
+              return 1;
+            } else {
+              return 0.1;
+            }
+          });
       }
     })
     .on("mouseout", function(d){
@@ -351,6 +372,12 @@ function make_nodes(node, current_protein, div_protein) {
       div_protein.transition()
         .duration(500)
         .style("opacity", 0);
+      link
+        .filter(function (e) {return e;})
+        .style("--link_color", function(e) {
+          return draw_color(e, data.abs_max, data.cmap)
+        })
+        .style("opacity", 1);
     });
   return circle;
 }
