@@ -107,7 +107,9 @@ function draw_graph(data) {
   showNodes();
   if (use_edge_bundling === false || !selection in that.pathway_dictionary) {
     // simulation.on("tick", tick);
-    simulation.tick(150);
+    if(_links[0].x===undefined){
+      simulation.tick(50);
+    }
     circle.attr("transform", transform);
     link.attr("d", linkArc);
     text.attr("transform", transform);
@@ -119,7 +121,7 @@ function draw_graph(data) {
     //   });
     // }
     if (_links[0].path_d === undefined){
-      simulation.tick(150);
+      simulation.tick(50);
       let fbundling = d3.ForceEdgeBundling()
         .nodes(simulation.nodes())
         .edges(
