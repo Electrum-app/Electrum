@@ -3,7 +3,7 @@ Dynamic exploration of MIDAS protein-metabolite interaction data
 https://github.com/j-berg/Electrum/
 alias: electrum
 
-Copyright (C) 2020 Jordan A. Berg
+Copyright (C) 2020-2021 Jordan A. Berg
 Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
 
 This program is free software: you can redistribute it and/or modify it under
@@ -19,106 +19,108 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 // Static [x,y] coordinates for query proteins
-const protein_coordinates = {
-  "HK1":[4.5,11,0],
-  "HK2":[4.6,11,1],
-  "HK3":[4.5,11.1,0],
-  "GCK":[4.6,11.1,1],
+const ccm_coordinates = {
+  //"HK1":[3,2,0,0],
+  //"HK2":[4,2,1,0],
+  //"HK3":[3,3,0,0],
+  "GCK":[8,4,0,0],
 
-  "G6PC":[6,11.5,0],
+  //"G6PC":[7,3,1,1],
 
-  "PGI":[4.6,11.9,1],
+  //"PGI":[4,5,0,2],
 
-  "GPI":[6,12.3,0],
+  "GPI":[12,7,1,3],
 
-  "PFKM":[4.5,12.7,0],
-  "PFKL":[4.6,12.7,1],
-  "PFKP":[4.6,12.8,1],
+  //"PFKM":[4,7,0,4],
+  "PFKL":[8,10,0,4],
+  "PFKP":[8,11,0,4],
 
-  "FBPase-L":[6,13.2,0],
-  "FBPase-M":[6,13.3,0],
+  "FBP1":[12,10,1,5],
+  "FBP2":[12,11,1,5],
 
-  "ALDOAconc": [4.5,13.7,0], //ALDOAconc?
-  "ALDOBconc":[4.6,13.7,1],
-  "ALDOCconc":[4.6,13.8,1],
+  "ALDOA": [6,13,0,6], //ALDOAconc?
+  "ALDOB":[6,14,0,6],
+  "ALDOC":[7,14,1,6],
 
-  "GAPDH":[4.6,14.2,1],
+  "GAPDH":[8,16.75,0,7],
 
-  "TPI":[6,14.6,0], //TPI1
+  "TPI1":[13,16,1,8], //TPI1
 
-  "PGK1":[4.6,15,1],
-  "PGK2":[4.6,15.1,1],
+  "PGK1":[8,19.5,0,9],
+  "PGK2":[8,20.5,0,9],
 
-  "PHGDH":[6,15.5,0],
+  "PHGDH":[13,20.5,1,10],
 
-  "PSAT1":[7.5,15.5,0],
+  "PSAT1":[19,20.5,1,11],
 
-  "PSPH":[9,15.5,0],
+  //"PSPH":[15,17,1,12],
 
-  "PGAM1":[4.6,15.9,1],
-  "PGAM2":[4.6,16,1],
+  "PGAM1":[8,22.5,0,13],
+  "PGAM2":[8,23.5,0,13],
 
-  "ENO1": [6,16.4,0],
-  "ENO2": [6.1,16.4,1],
-  "ENO3": [6,16.5,0],
+  "ENO1": [8,25.75,0,14],
+  "ENO2": [8,26.75,0,14],
+  //"ENO3": [8,23,1,14],
 
-  "PKLR": [4.5,16.9,0],  //?
-  "PYK": [4.6,16.9,1],
-  "PKM1": [4.5,17,0], //?
-  "PKM2": [4.6,17,1], //?
+  "PKLR": [6,29,0,15],  //?
+  //"PYK": [4,25,1,15],
+  "PKM1": [6,30,0,15], //?
+  "PKM2": [7,30,1,15], //?
 
-  "LDHAL6B": [7,17,0],
-  "LDHA": [7.1,17,1],
-  "LDHB": [7,17.1,0],
-  "LDHC": [7.1,17.1,1],
+  //"LDHAL6B": [10,28,0,16],
+  "LDHA": [15.5,30,0,16],
+  "LDHB": [16.5,30,1,16],
+  //"LDHC": [11,29,1,16],
 
-  "MPC1": [5.4,17.4,0],
-  "MPC2": [5.5,17.4,1],
+  //"MPC1": [5,30,0,17],
+  //"MPC2": [6,30,1,17],
 
-  "PDHA1": [5.4,17.8,0],
-  "DLAT": [5.5,17.8,1],
-  "DLD": [5.4,17.9,0],
+  "E1-PDH": [6,33.75,0,31],
+  "E2-PDH": [6,34.75,0,31],
+  "E3-PDH": [7,34.75,1,31],
 
-  "CS": [6.25,18.5,0],
+  //"PDHA1": [4,32,0,18],
+  //"DLAT": [3,33,0,18],
+  //"DLD": [4,33,1,18],
 
-  "ACO2_a": [7.5,19.1,0],
+  //"ACC": [9,32,1,19], // citrate -> [acetyl-CoA -> malonyl-CoA]
 
-  "ACO2_b": [7.5,19.7,0],
+  //"ACSS2A-c203": [12,35,1,20], // [acetate -> acetyl-CoA] -> TCA
 
-  "ACC": [7,18,0], // citrate -> [acetyl-CoA -> malonyl-CoA]
+  "CS": [17.5,38.25,1,21],
 
-  "ACSS2A-c203": [4,18,1], // [acetate -> acetyl-CoA] -> TCA
+  //"ACO2_a": [10,37,1,22],
 
-  "IDH1": [6.25,20.4,0], // Not in same complex?
-  "IDH2": [6.25,20.5,0],
+  //"ACO2_b": [12,40,1,23],
 
-  "IDH3A2BG": [7,21.1,0],
-  "IDH3AB": [7.1,21.1,1],
-  "IDH3AG": [7,21.2,0],
+  //"IDH1": [11,43,0,24], // Not in same complex?
+  "IDH2": [15,44.75,0,24],
 
-  "OGDH": [5.4,21.1,0],
-  "DLST_b": [5.5,21.1,1],
-  "DLD_b": [5.4,21.2,0],
-  "DHTKD1r": [5.5,21.2,1],
+  "IDH3a2bg": [21,44.5,1,25],
+  "IDH3ab": [20,45.5,0,25],
+  "IDH3ag": [21,45.5,1,25],
 
-  "SUCLG1": [4.5,20.4,0],
-  "SUCLG2": [4.6,20.4,1],
-  "SUCLA2": [4.6,20.5,1],
+  //"OGDH": [8,47,0,26],
+  //"DLST_b": [9,47,1,26],
+  //"DLD_b": [8,48,0,26],
+  //"DHTKD1r": [9,48,1,26],
 
-  "SDHA": [3.4,19.7,0],
-  "SDHB": [3.5,19.7,1],
-  "SDHC": [3.4,19.8,0],
-  "SDHD": [3.5,19.8,1],
+  //"SUCLG1": [3,47,0,27],
+  //"SUCLG2": [4,47,1,27],
+  //"SUCLA2": [4,48,0,27],
 
-  "FH": [3.5,19.1,1],
+  //"SDHA": [-2,43,0,28],
+  //"SDHB": [-1,43,1,28],
+  //"SDHC": [-2,44,0,28],
+  //"SDHD": [-1,44,1,28],
 
-  "MDH1": [4.6,18.5,1], // Not in same complex?
-  "MDH2": [4.6,18.6,1],
+  "FH": [2,41.25,0,29],
 
-  // Others?
-  "E1": [7.5,12.7,0],
-  "E2": [7.6,12.7,1],
-  "E3": [7.5,12.8,0],
+  //"MDH1": [1,37,0,30], // Not in same complex?
+  "MDH2": [3,38,0,30],
+
 }
 
-const protein_links = {}
+const pathway_dictionary = {
+  "Central Carbon Metabolism": ccm_coordinates,
+};
