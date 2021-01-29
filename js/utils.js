@@ -44,14 +44,14 @@ function set_selection(data, selection) {
     _nodes = data.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
     coordinates = {};
     coordinates[selection] = [6,20,1,24];
-    _distances = 1000;
+    _distances = 850;
   } else {
     console.log("Did not select a protein or pathway")
     return
   }
 
-  console.log(_nodes)
-  console.log(_links)
+  //console.log(_nodes)
+  //console.log(_links)
 
   return [
     _links,

@@ -31,15 +31,6 @@ class MIDASgraph{
     // Set constructor keys
     this.graphData = graph_data[0];
     this.metaboverseData = graph_data[1];
-    this.complexes = {};
-    this.proteins = [];
-    this.nodes = [];
-    this.links = [];
-    this.current_selection = new Set();
-    this.all_values = [];
-    this.added_nodes = [];
-    this.node_lookup = {};
-    this.indexer = 0;
 
     this.init_data();
 
@@ -77,7 +68,7 @@ class MIDASgraph{
       } else {
         show_all = true;
       }
-      draw_graph(that)
+      draw_graph(that);
     });
     d3.select("#toggle_background").on("click", function() {
       if (background_forward === true) {
@@ -85,7 +76,12 @@ class MIDASgraph{
       } else {
         background_forward = true;
       }
-      draw_graph(that)
+      draw_graph(that);
+    });
+    d3.select("#qval_button").on("change", function() {
+      q_threshold = this.value;
+      that.init_data();
+      draw_graph(that);
     });
   }
 
@@ -117,6 +113,16 @@ class MIDASgraph{
   }
 
   init_data() {
+
+    this.complexes = {};
+    this.proteins = [];
+    this.nodes = [];
+    this.links = [];
+    this.current_selection = new Set();
+    this.all_values = [];
+    this.added_nodes = [];
+    this.node_lookup = {};
+    this.indexer = 0;
 
     for (let connection in this.graphData) {
       if (connection !== 'columns') {
@@ -154,7 +160,7 @@ class MIDASgraph{
         let q_value = this.graphData[connection]['q_value'];
         this.all_values.push(Math.abs(log_fc_c));
 
-        if (q_value <= q_threshold) {
+        if (q_value <= parseFloat(q_threshold)) {
 
           // Add protein node info if doesn't exist
           if (!this.added_nodes.includes(protein)) {

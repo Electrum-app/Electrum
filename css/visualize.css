@@ -144,6 +144,25 @@ div {
   padding-top: 3px;
 }
 
+#qval_box {
+  font: 12px sans-serif;
+  margin-left: 35px;
+  margin-top: 5px;
+  padding-top: -3px;
+  padding-left: 8px;
+  background: #efefef;
+  border: 1px solid #767676;
+  border-radius: 3px;
+}
+
+#qval_button {
+  font: 12px sans-serif;
+  margin-left: 5px;
+  margin-bottom: 1px;
+  margin-top: 1px;
+  margin-right: 1px;
+}
+
 #input_distances {
   font: 12px sans-serif;
 }
