@@ -24,87 +24,79 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <html>
 
-  <link rel="shortcut icon" href="_data/img/electrum-logo.png" />
+<link rel="shortcut icon" href="_data/img/electrum-logo.png">
 
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/modal.css">
-  <link rel="stylesheet" href="css/visualize.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/modal.css">
+<link rel="stylesheet" href="css/visualize.css">
 
-  <script src="js/jquery/jquery.min.js"></script>
-  <script src="js/d3/d3.min.js"></script>
-  <script src="js/coordinates.js"></script>
-  <script src="js/backgrounds.js"></script>
-  <script src="js/proteins.js"></script>
-  <script src="js/metabolites.js"></script>
-  <script src="js/js-colormaps.js"></script>
-  <script src="js/display.js"></script>
-  <script src="js/graph.js"></script>
-  <script src="js/draw.js"></script>
-  <script src="js/utils.js"></script>
+<script src="js/jquery/jquery.min.js"></script>
+<script src="js/d3/d3.min.js"></script>
+<script src="js/coordinates.js"></script>
+<script src="js/backgrounds.js"></script>
+<script src="js/proteins.js"></script>
+<script src="js/metabolites.js"></script>
+<script src="js/js-colormaps.js"></script>
+<script src="js/display.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/utils.js"></script>
 
-  <head>
-    <!-- menu -->
-    <menu>
-      <font size=3.25px>
-        <menuItem style="float:right" target="_blank"><a href="https://github.com/Electrum/Electrum/issues">Contact Us</a></menuItem>
-        <menuItem style="float:right"><a href="html/cite.html">Cite</a></menuItem>
-        <menuItem style="float:right"><a href="html/faqs.html">FAQs</a></menuItem>
-        <menuItem style="float:right"><a href="html/about.html">About</a></menuItem>
-        <menuItem style="float:left"><a href="index.html">Electrum</a></menuItem>
-      </font>
-    </menu>
-  </head>
+<head>
+  <!-- menu -->
+  <menu>
+    <font size=3px>
+      <menuItem style="float:right"><a href="https://github.com/Electrum/Electrum/issues" target="_blank">Contact Us</a></menuItem>
+      <menuItem style="float:right"><a href="html/cite.html">Cite</a></menuItem>
+      <menuItem style="float:right"><a href="html/faqs.html">FAQs</a></menuItem>
+      <menuItem style="float:right"><a href="html/about.html">About</a></menuItem>
+      <menuItem style="float:left"><a href="index.html">Electrum</a></menuItem>
+    </font>
+  </menu>
+</head>
 
-  <body>
+<body>
 
-    <div id="menu_panel">
-      <select id="menu"></select>
-      <br>
-      <div id="qval_box">
-        q-value cut-off:
-        <input
-          type="number"
-          name="qval_button"
-          id="qval_button"
-          min="0"
-          max="1"
-          value="0.1"
-          step="0.01"
-        />
+  <div id="menu_panel">
+    <select id="menu"></select>
+    <br>
+    <div id="qval_box">
+      q-value cut-off:
+      <input type="number" name="qval_button" id="qval_button" min="0" max="1" value="0.1" step="0.01" />
+    </div>
+    <br>
+    <div title="Click to toggle on or off absolute values for fold changes.">
+      <button id="toggle_absolute_values">Toggle Absolute Values</button>
+    </div>
+    <br>
+    <div title="Click to toggle on or off metabolite labels.">
+      <button id="toggle_labels">Toggle Metabolite Labels</button>
+    </div>
+    <br>
+    <div title="Click to toggle on or off all metabolites.">
+      <button id="toggle_all">Toggle All Metabolites</button>
+    </div>
+    <br>
+    <div title="Click to toggle background pathway image on top or behind edges.">
+      <button id="toggle_background">Toggle Pathway Forward/Back</button>
+    </div>
+  </div>
+  <div id="graph" align="center">
+
+  </div>
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h3>Biological Pathways & Reactions</h3>
       </div>
-      <br>
-      <div title="Click to toggle on or off absolute values for fold changes.">
-        <button id="toggle_absolute_values">Toggle Absolute Values</button>
-      </div>
-      <br>
-      <div title="Click to toggle on or off metabolite labels.">
-        <button id="toggle_labels">Toggle Metabolite Labels</button>
-      </div>
-      <br>
-      <div title="Click to toggle on or off all metabolites.">
-        <button id="toggle_all">Toggle All Metabolites</button>
-      </div>
-      <br>
-      <div title="Click to toggle background pathway image on top or behind edges.">
-        <button id="toggle_background">Toggle Pathway Forward/Back</button>
+      <div id="modal-fill" class="modal-body">
       </div>
     </div>
-    <div id="graph" align="center">
+  </div>
+  <script src="js/modal.js"></script>
 
-    </div>
-    <div id="myModal" class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <span class="close">&times;</span>
-          <h3>Biological Pathways & Reactions</h3>
-        </div>
-        <div id="modal-fill" class="modal-body">
-        </div>
-      </div>
-    </div>
-    <script src="js/modal.js"></script>
-
-  </body>
+</body>
 
 </html>
