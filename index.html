@@ -28,10 +28,12 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/modal.css">
+<link rel="stylesheet" href="css/buttons.css">
 <link rel="stylesheet" href="css/visualize.css">
 
 <script src="js/jquery/jquery.min.js"></script>
 <script src="js/d3/d3.min.js"></script>
+<script src="js/d3-ForceEdgeBundling/d3-ForceEdgeBundling.js"></script>
 <script src="js/coordinates.js"></script>
 <script src="js/backgrounds.js"></script>
 <script src="js/proteins.js"></script>
@@ -79,6 +81,10 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <br>
     <div title="Click to toggle background pathway image on top or behind edges.">
       <button id="toggle_background">Toggle Pathway Forward/Back</button>
+    </div>
+    <br>
+    <div title="Click to toggle edge bundling.">
+    <button id="toggle_edge_bundling">Toggle Edge Bundling</button>
     </div>
   </div>
   <div id="graph" align="center">

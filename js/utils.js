@@ -102,6 +102,12 @@ function init_canvas(selector, _width, _height) {
   return svg_viewer;
 }
 
+function sort_links(links) {
+  return links.sort(function(a, b) {
+    return b.metadata.q_value - a.metadata.q_value;
+  });
+}
+
 function init_edges(svg_viewer) {
   svg_viewer
     .append("defs")

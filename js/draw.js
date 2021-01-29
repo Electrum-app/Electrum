@@ -39,6 +39,8 @@ function draw_graph(data) {
   let _distances = selection_outputs[2];
   let coordinates = selection_outputs[3];
 
+  _links = sort_links(_links);
+
   // reset graph
   d3.selectAll("#svg_viewer_id").remove();
 
@@ -104,7 +106,43 @@ function draw_graph(data) {
   text = make_text(node, coordinates);
 
   showNodes()
-  simulation.on("tick", tick);
+  if (use_edge_bundling === false || !selection in that.pathway_dictionary) {
+    simulation.on("tick", tick);
+  } else {
+    // generate bundling path
+    if (_links[0].path_d !== undefined) {
+      _links.forEach(function(l) {
+        delete l.path_d
+      });
+    }
+    simulation.tick(150);
+    var fbundling = d3.ForceEdgeBundling()
+      .nodes(simulation.nodes())
+      .edges(
+        simulation
+        .force('link').links().map(function(edge) {
+          return {
+            source: simulation.nodes().indexOf(edge.source),
+            target: simulation.nodes().indexOf(edge.target)
+          }
+        }));
+    let edge_bundles = fbundling();
+
+    for (let i = 0; i < _links.length; i++) {
+      _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
+    }
+
+    var d3line = d3.line()
+      .x(function(d) {
+        return d.x;
+      })
+      .y(function(d) {
+        return d.y;
+      });
+    circle.attr("transform", transform);
+    link.attr("d", d => d3line(d.path_d));
+    text.attr("transform", transform);
+  }
 
   if (selection in that.pathway_dictionary && show_all === false) {
     setTimeout(delayDisappear, 1000);
@@ -112,12 +150,9 @@ function draw_graph(data) {
 
   // Draw curved edges
   function tick() {
-    circle
-      .attr("transform", transform);
-    link
-      .attr("d", linkArc);
-    text
-      .attr("transform", transform);
+    circle.attr("transform", transform);
+    link.attr("d", linkArc);
+    text.attr("transform", transform);
   }
 
   // Internal functions
