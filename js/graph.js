@@ -31,9 +31,6 @@ class MIDASgraph{
     // Graph
     this.graph_data = graph_data
     this.initData = this.initializeData(graph_data);
-
-    
-
     console.log("initData", this.initData)
 
     this.clicked_nodes = {} // record which nodes are currently clicked, and how many metabolite it has
@@ -63,7 +60,7 @@ class MIDASgraph{
       )
       .on("dblclick.zoom", null)
       .append("g");
-    
+
     // this.svg_viewer
     //   .append("defs")
     //   .selectAll("marker")
@@ -84,8 +81,8 @@ class MIDASgraph{
     //   .attr("orient", "auto")
     //   .append("path")
     //   .attr("d", "M0, -5L10, 0L0, 5");
-    
-    
+
+
 
     this.draw_graph();
   }
@@ -197,7 +194,8 @@ class MIDASgraph{
       "abs_max": abs_max,
       "cmap": cmap,
       "complexes": complexes,
-      "node_lookup": node_lookup
+      "node_lookup": node_lookup,
+      "cmap": cmap
     };
   }
 
@@ -267,17 +265,10 @@ class MIDASgraph{
             node_lookup[protein] = indexer;
             indexer += 1;
           }
-          if(Object.keys(this.clicked_nodes).indexOf(protein)===-1){
+          if (protein in this.clicked_nodes) {
+            delete this.clicked_nodes.protein
+          } else {
             this.clicked_nodes[protein] = 0;
-            
-            // update coordinates of other proteins
-            for(let i=0; i<this.initData.nodes.length; i++){
-              let current_node = this.initData.nodes[i];
-              if(current_node.xcoord > protein_node.xcoord+0.05){
-                // if the node is on the right of current protein, move it to the right so that there will be space for metabolites
-                current_node.xcoord += 0.5;
-              }
-            }
           }
         }
         if (protein === selected_protein) {
@@ -328,13 +319,16 @@ class MIDASgraph{
     console.log(node_list)
     console.log(link_list)
     console.log(nodes)
-
-
-    console.log('===')
-    this.initData.nodes = this.initData.nodes.concat(node_list)
-    this.initData.links = this.initData.links.concat(link_list)
-    console.log(this.clicked_nodes)
-    this.draw_graph();
+    if (selected_protein in this.clicked_nodes) {
+      console.log('already here')
+      this.initData.nodes = this.initData.nodes.concat(node_list)
+      this.initData.links = this.initData.links.concat(link_list)
+      this.draw_graph();
+    } else {
+      this.initData.nodes = this.initData.nodes.concat(node_list)
+      this.initData.links = this.initData.links.concat(link_list)
+      this.draw_graph();
+    }
   }
 
   clear_graph(){
@@ -351,7 +345,7 @@ class MIDASgraph{
       .attr("id", "nodes_group");
 
     let that = this;
-    
+
     // let simulation = d3.forceSimulation(this.initData.nodes)
     //   .force("link", d3.forceLink().id(d => d.id).distance(400).strength(1))
     //   .force("charge", d3.forceManyBody().strength(-5000))
@@ -386,22 +380,15 @@ class MIDASgraph{
 
     console.log(xMin, xMax)
     console.log(yMin, yMax)
-    
+
     // let links = this.links_group.selectAll("path").data(this.initData.links);
     // links.exit().remove();
-    // links = links.enter().append("path").merge(links)        
+    // links = links.enter().append("path").merge(links)
     //     .attr("id", function(d) {
     //       return d.source.id + "\," + d.target.id
     //     })
     //     .attr("class", "link interaction")
-    //     .style("--link_color", function(d) {
-    //       let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
-    //       console.log()
-    //       return cmap[_val];
-    //     })
-    //     .attr("stroke-width", function(d) {
-    //       return ((-1 * Math.log(d.metadata.q_value)) / 100) + 5;
-    //     });
+    //
 
     console.log(this.initData.links)
 
@@ -411,12 +398,21 @@ class MIDASgraph{
           .attr("x1", d=>xScale(d.source.xcoord)-32)
           .attr("y1", d=>yScale(d.source.ycoord)-32)
           .attr("x2", d=>xScale(d.target.xcoord))
-          .attr("y2", d=>yScale(d.target.ycoord)-29)
-          .attr("stroke", "black")
-          .attr("opacity", 0.3)
+          .attr("y2", d=>yScale(d.target.ycoord)-30)
+          .style("stroke", function(d) {
+            let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+            return that.initData.cmap[_val];
+          })
+          .attr("stroke-width", function(d) {
+            let _weight = ((-1 * Math.log(d.metadata.q_value)) / 10) + 1;
+            if (_weight > 6) {
+              _weight = 6;
+            }
+            return _weight;
+          })
           .attr("id", d=>d.source.id+"-"+d.target.id)
 
-      
+
     let nodes = this.nodes_group.selectAll("g").data(this.initData.nodes);
     nodes.exit().remove();
     nodes = nodes.enter().append("g").merge(nodes)
@@ -442,7 +438,7 @@ class MIDASgraph{
     //     d.fy = d.fy_const * 100 - 1050;
     //   }
     // });
-    
+
 
     let text = nodes
       .append("text")
@@ -463,7 +459,7 @@ class MIDASgraph{
                 + "</tspan>"
               );
             }
-          } 
+          }
           else {
             return (
               // "<tspan dx='-32px' y='-2.9em' style='font-weight: bold;'>"
@@ -546,7 +542,7 @@ class MIDASgraph{
           that.updateData(that.graph_data, d.id, nodes, links);
         }
       });
-      
+
         // simulation.on("tick", tick);
 
         // Draw curved edges
@@ -558,12 +554,12 @@ class MIDASgraph{
           text
             .attr("transform", transform);
         }
-    
+
         function linkArc(d) {
-    
+
           var dx = d.target.x - d.source.x;
           var dy = d.target.y - d.source.y;
-    
+
           return (
             "M" +
             (d.source.x - 30) +
@@ -575,14 +571,14 @@ class MIDASgraph{
             d.target.y
           );
         }
-    
+
         function transform(d) {
           return "translate(" + d.x + "," + d.y + ")";
         }
         function dragsubject() {
           return simulation.find(d3.event.x, d3.event.y);
         }
-    
+
         function dragstarted() {
           // if (d3.event.subject.type === "metabolite") {
           //   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -590,7 +586,7 @@ class MIDASgraph{
           //   d3.event.subject.fy = d3.event.subject.y;
           // }
         }
-    
+
         function dragged(d) {
           // if (d3.event.subject.type === "metabolite") {
           //   d3.event.subject.fx = d3.event.x;
@@ -609,9 +605,9 @@ class MIDASgraph{
                 d3.select("#"+l).attr("x2", (d3.event.x)).attr("y2", (d3.event.y))
               })
           }
-          
+
         }
-    
+
         function dragended(d) {
           // if (d3.event.subject.type === "metabolite") {
           //   if (!d3.event.active)
@@ -630,7 +626,7 @@ class MIDASgraph{
             })
             d.xcoord = xScale.invert(d3.event.x+32);
             d.ycoord = yScale.invert(d3.event.y+32);
-            
+
           } else if(d.type === "metabolite"){
             d3.select("#"+d.id)
               .attr("transform", d => "translate("+ (d3.event.x) + "," + (d3.event.y+32)+")")
@@ -640,10 +636,10 @@ class MIDASgraph{
             d.xcoord = xScale.invert(d3.event.x);
             d.ycoord = yScale.invert(d3.event.y+32);
           }
-          
+
         }
 
-    
+
 
   }
   get_coords(protein_xcoord, protein_ycoord, protein){
