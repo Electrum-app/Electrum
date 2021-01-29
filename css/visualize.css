@@ -131,7 +131,7 @@ div {
 
 #menu {
   font: 16px sans-serif;
-  margin-left: 35px;
+  margin-left: 15px;
 }
 
 #toggle_absolute_values,
@@ -139,14 +139,14 @@ div {
 #toggle_all,
 #toggle_background {
   font: 12px sans-serif;
-  margin-left: 35px;
+  margin-left: 15px;
   margin-top: 5px;
   padding-top: 3px;
 }
 
 #qval_box {
   font: 12px sans-serif;
-  margin-left: 35px;
+  margin-left: 15px;
   margin-top: 5px;
   padding-top: -3px;
   padding-left: 8px;
