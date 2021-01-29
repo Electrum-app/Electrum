@@ -134,7 +134,10 @@ div {
   margin-left: 35px;
 }
 
-#toggle_absolute_values, #toggle_labels, #toggle_all {
+#toggle_absolute_values,
+#toggle_labels,
+#toggle_all,
+#toggle_background {
   font: 12px sans-serif;
   margin-left: 35px;
   margin-top: 5px;

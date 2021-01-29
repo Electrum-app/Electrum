@@ -62,12 +62,20 @@ function draw_graph(data) {
   svg_viewer = init_canvas(selector, _width, _height);
 
   // Draw edges
-  init_edges(svg_viewer)
-  link = make_edges(svg_viewer, div_edge, that, _links);
+  if (background_forward === true) {
+    init_edges(svg_viewer)
+    link = make_edges(svg_viewer, div_edge, that, _links);
 
-  // Draw background SVG pathway if selection is a pathway
-  draw_background(svg_viewer, that, selection);
+    // Draw background SVG pathway if selection is a pathway
+    draw_background(svg_viewer, that, selection);
+  } else {
+    // Draw background SVG pathway if selection is a pathway
+    draw_background(svg_viewer, that, selection);
 
+    init_edges(svg_viewer)
+    link = make_edges(svg_viewer, div_edge, that, _links);
+  }
+  
   // Draw nodes (must happen after links are initialized)
   let node_outputs = init_nodes(
       svg_viewer, that, link, _nodes,

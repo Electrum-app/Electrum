@@ -22,6 +22,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 var use_absolute_values = true;
 var show_labels = true;
 var show_all = false;
+var background_forward = true;
 var q_threshold = 0.1;
 
 class MIDASgraph{
@@ -75,6 +76,14 @@ class MIDASgraph{
         show_all = false;
       } else {
         show_all = true;
+      }
+      draw_graph(that)
+    });
+    d3.select("#toggle_background").on("click", function() {
+      if (background_forward === true) {
+        background_forward = false;
+      } else {
+        background_forward = true;
       }
       draw_graph(that)
     });
