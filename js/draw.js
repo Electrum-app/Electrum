@@ -26,7 +26,6 @@ var delay = 200;
 var prevent = false;
 
 function draw_graph(data) {
-
   var that = data;
   var cmap = that.cmap;
   var cmap_greys = that.cmap_greys;
@@ -105,31 +104,38 @@ function draw_graph(data) {
   // Draw text
   text = make_text(node, coordinates);
 
-  showNodes()
+  showNodes();
   if (use_edge_bundling === false || !selection in that.pathway_dictionary) {
-    simulation.on("tick", tick);
+    // simulation.on("tick", tick);
+    simulation.tick(150);
+    circle.attr("transform", transform);
+    link.attr("d", linkArc);
+    text.attr("transform", transform);
   } else {
     // generate bundling path
-    if (_links[0].path_d !== undefined) {
-      _links.forEach(function(l) {
-        delete l.path_d
-      });
-    }
-    simulation.tick(150);
-    let fbundling = d3.ForceEdgeBundling()
-      .nodes(simulation.nodes())
-      .edges(
-        simulation
-        .force('link').links().map(function(edge) {
-          return {
-            source: simulation.nodes().indexOf(edge.source),
-            target: simulation.nodes().indexOf(edge.target)
-          }
-        }));
-    let edge_bundles = fbundling();
+    // if (_links[0].path_d !== undefined) {
+    //   _links.forEach(function(l) {
+    //     delete l.path_d
+    //   });
+    // }
+    if (_links[0].path_d === undefined){
+      simulation.tick(150);
+      let fbundling = d3.ForceEdgeBundling()
+        .nodes(simulation.nodes())
+        .edges(
+          simulation
+          .force('link').links().map(function(edge) {
+            return {
+              source: simulation.nodes().indexOf(edge.source),
+              target: simulation.nodes().indexOf(edge.target)
+            }
+          }));
+      let edge_bundles = fbundling();
 
-    for (let i = 0; i < _links.length; i++) {
-      _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
+      for (let i = 0; i < _links.length; i++) {
+        _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
+      }
+      
     }
 
     let d3line = d3.line()
@@ -142,7 +148,10 @@ function draw_graph(data) {
     circle.attr("transform", transform);
     link.attr("d", d => d3line(d.path_d));
     text.attr("transform", transform);
+    
+
   }
+
 
   if (selection in that.pathway_dictionary && show_all === false) {
     setTimeout(delayDisappear, 1000);
