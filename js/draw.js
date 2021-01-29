@@ -116,7 +116,7 @@ function draw_graph(data) {
       });
     }
     simulation.tick(150);
-    var fbundling = d3.ForceEdgeBundling()
+    let fbundling = d3.ForceEdgeBundling()
       .nodes(simulation.nodes())
       .edges(
         simulation
@@ -132,7 +132,7 @@ function draw_graph(data) {
       _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
     }
 
-    var d3line = d3.line()
+    let d3line = d3.line()
       .x(function(d) {
         return d.x;
       })
