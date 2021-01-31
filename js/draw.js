@@ -105,9 +105,11 @@ function draw_graph(data) {
   text = make_text(node, coordinates);
 
   showNodes();
-  if (use_edge_bundling === false || !selection in that.pathway_dictionary) {
+  if (!selection in that.pathway_dictionary) {
+    simulation.on("tick", tick);
+  } else if (use_edge_bundling === false) {
     //simulation.on("tick", tick);
-    if(_links[0].x===undefined){
+    if (_links[0].x === undefined) {
       simulation.tick(50);
     }
     circle.attr("transform", transform);
@@ -120,7 +122,7 @@ function draw_graph(data) {
     //     delete l.path_d
     //   });
     // }
-    if (_links[0].path_d === undefined){
+    if (_links[0].path_d === undefined) {
       simulation.tick(50);
       let fbundling = d3.ForceEdgeBundling()
         .nodes(simulation.nodes())

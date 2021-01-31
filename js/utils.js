@@ -18,20 +18,41 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-var _hmdb_url = "https://hmdb.ca/metabolites/"
-var _uniprot_url = "https://www.uniprot.org/uniprot/"
-var _reactome_url = "https://reactome.org/content/detail/"
+var _hmdb_url = "https://hmdb.ca/metabolites/";
+var _uniprot_url = "https://www.uniprot.org/uniprot/";
+var _reactome_url = "https://reactome.org/content/detail/";
 
 function set_selection(data, selection) {
   // get nodes, links, coordinates for pathway or protein selection
   if (selection in data.pathway_dictionary) {
     let _selector_ids = data.pathway_dictionary[selection];
-    _links = data.links.filter(link => link.source.id in _selector_ids)
+    let _intra_ids = data.components_dictionary[selection];
+
+    let _metabolite_ids = [];
+    if (show_intra_pathway === true) {
+      _metabolite_ids = _metabolite_ids.concat(_intra_ids);
+    }
+    if (show_inter_pathway === true) {
+      let _inter_ids = data.metabolites.filter(e => !_intra_ids.includes(e));
+      _metabolite_ids = _metabolite_ids.concat(_inter_ids);
+    }
+
+    let _all_ids = Object.keys(_selector_ids).concat(_metabolite_ids)
+
+    _links = data.links
+      .filter(link => link.source.id in _selector_ids)
+      .filter(link => _metabolite_ids.includes(link.target.id))
+
     let _metabolites = [];
     for (let _m in _links) {
-      _metabolites.push(_links[_m].target.id)
+      if (_all_ids.includes(_links[_m].target.id)) {
+        _metabolites.push(_links[_m].target.id)
+      }
     }
-    _nodes = data.nodes.filter(node => node.id in _selector_ids || _metabolites.includes(node.id))
+    _nodes = data.nodes
+      .filter(function(node) {
+        return node.id in _selector_ids || _metabolites.includes(node.id);
+      })
     coordinates = data.pathway_dictionary[selection];
     _distances = 2250;
   } else if (data.proteins.includes(selection)) {
@@ -50,7 +71,7 @@ function set_selection(data, selection) {
     return
   }
 
-  //console.log(_nodes)
+  console.log(_nodes)
   //console.log(_links)
 
   return [
@@ -576,11 +597,8 @@ function reset_proteins(_nodes, current_protein) {
 }
 
 function linkArc(d) {
-
   var dx = d.target.x - d.source.x;
   var dy = d.target.y - d.source.y;
-  //console.log(d)
-  //console.log(dx)
   return (
     "M" +
     d.source.x +
@@ -606,4 +624,13 @@ function drawLink(d) {
 function drawNode(d) {
   context.moveTo(d.x + 3, d.y);
   context.arc(d.x, d.y, 3, 0, 2 * Math.PI);
+}
+
+function modVar(_var) {
+  if (_var === true) {
+    _var = false;
+  } else {
+    _var = true;
+  }
+  return _var;
 }

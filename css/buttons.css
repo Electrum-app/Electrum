@@ -40,7 +40,8 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   padding-top: 3px;
 }
 
-#qval_box {
+#qval_box,
+#check_box {
   font: 12px sans-serif;
   margin-left: 15px;
   margin-top: 5px;
@@ -51,12 +52,26 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   border-radius: 3px;
 }
 
+#check_box {
+  padding-right: 10px;
+  padding-bottom: 5px;
+}
+
+
 #qval_button {
   font: 12px sans-serif;
   margin-left: 5px;
   margin-bottom: 1px;
   margin-top: 1px;
   margin-right: 1px;
+}
+
+.inline-field input,
+.inline-field label {
+  display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 0px; /* I added this after I posted my reply */
+  vertical-align: middle; /* Fixes any weird issues in Firefox and IE */
 }
 
 /* Start https://stackoverflow.com/a/39846603 */

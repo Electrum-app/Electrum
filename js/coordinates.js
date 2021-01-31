@@ -18,109 +18,84 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Static [x,y] coordinates for query proteins
+// Static [x,y, z] coordinates for query proteins where z is the boolean representation of whether text should be displayed to the right (1) or left (0) of the node
 const ccm_coordinates = {
-  //"HK1":[3,2,0,0],
-  //"HK2":[4,2,1,0],
-  //"HK3":[3,3,0,0],
-  "GCK": [8.3, 3.7, 0, 0],
+  "GCK": [8.5, 3, 0],
 
-  //"G6PC":[7,3,1,1],
+  "GPI": [11.75, 6.5, 1],
 
-  //"PGI":[4,5,0,2],
+  "PFKL": [8, 9.25, 0],
+  "PFKP": [8, 10.25, 0],
 
-  "GPI": [11, 7.1, 1, 3],
+  "ALDOA": [5.5, 12.75, 0],
+  "ALDOB": [5.5, 13.75, 0],
+  "ALDOC": [6.5, 13.75, 1],
 
-  //"PFKM":[4,7,0,4],
-  "PFKL": [8, 9.7, 0, 4],
-  "PFKP": [8, 10.7, 0, 4],
+  "GAPDH": [8.5, 16.5, 0],
 
-  "FBP1": [12, 10, 1, 5],
-  "FBP2": [12, 11, 1, 5],
+  "TPI1": [13.25, 16, 1],
 
-  "ALDOA": [5.5, 13, 0, 6], //ALDOAconc?
-  "ALDOB": [5.5, 14, 0, 6],
-  "ALDOC": [6.5, 14, 1, 6],
+  "PGK1": [8.5, 19.5, 0],
+  "PGK2": [8.5, 20.5, 0],
 
-  "GAPDH": [8.3, 16.75, 0, 7],
+  "PHGDH": [13, 20.5, 1],
 
-  "TPI1": [12.75, 16.3, 1, 8], //TPI1
+  "PSAT1": [19.25, 20.5, 1],
 
-  "PGK1": [8.3, 19.5, 0, 9],
-  "PGK2": [8.3, 20.5, 0, 9],
+  "PGAM1": [8.5, 22.8, 0],
+  "PGAM2": [8.5, 23.8, 0],
 
-  "PHGDH": [12.4, 20.5, 1, 10],
+  "ENO1": [8.5, 26.25, 0],
+  "ENO2": [8.5, 27.25, 0],
 
-  "PSAT1": [18.5, 20.5, 1, 11],
+  "PKLR-2": [6, 29.5, 0],
+  "PKM1": [6, 30.5, 0],
+  "PKM2": [7, 30.5, 1],
 
-  //"PSPH":[15,17,1,12],
+  "LDHA": [16, 30.75, 0],
+  "LDHB": [17, 30.75, 1],
 
-  "PGAM1": [8.3, 22.8, 0, 13],
-  "PGAM2": [8.3, 23.8, 0, 13],
+  "E1-PDH": [6, 34.5, 0],
+  "E2-PDH": [6, 35.5, 0],
+  "E3-PDH": [7, 35.5, 1],
 
-  "ENO1": [8.3, 26, 0, 14],
-  "ENO2": [8.3, 27, 0, 14],
-  //"ENO3": [8,23,1,14],
+  "CS": [17.25, 39, 1],
 
-  "PKLR-2": [6, 29.2, 0, 15], //?
-  //"PYK": [4,25,1,15],
-  "PKM1": [6, 30.2, 0, 15], //?
-  "PKM2": [7, 30.2, 1, 15], //?
+  "IDH2": [15.5, 46, 0],
+  "IDH3a2bg": [18.5, 46.5, 1],
 
-  //"LDHAL6B": [10,28,0,16],
-  "LDHA": [15.3, 30.3, 0, 16],
-  "LDHB": [16.3, 30.3, 1, 16],
-  //"LDHC": [11,29,1,16],
+  "FH": [1.75, 42.5, 0],
 
-  //"MPC1": [5,30,0,17],
-  //"MPC2": [6,30,1,17],
-
-  "E1-PDH": [6, 34, 0, 31],
-  "E2-PDH": [6, 35, 0, 31],
-  "E3-PDH": [7, 35, 1, 31],
-
-  //"PDHA1": [4,32,0,18],
-  //"DLAT": [3,33,0,18],
-  //"DLD": [4,33,1,18],
-
-  //"ACC": [9,32,1,19], // citrate -> [acetyl-CoA -> malonyl-CoA]
-
-  //"ACSS2A-c203": [12,35,1,20], // [acetate -> acetyl-CoA] -> TCA
-
-  "CS": [16.5, 38.5, 1, 21],
-
-  //"ACO2_a": [10,37,1,22],
-
-  //"ACO2_b": [12,40,1,23],
-
-  //"IDH1": [11,43,0,24], // Not in same complex?
-  "IDH2": [15, 45, 0, 24],
-
-  "IDH3a2bg": [17.9, 45.4, 1, 25],
-  //"IDH3ab": [20,45.5,0,25],
-  //"IDH3ag": [21,45.5,1,25],
-
-  //"OGDH": [8,47,0,26],
-  //"DLST_b": [9,47,1,26],
-  //"DLD_b": [8,48,0,26],
-  //"DHTKD1r": [9,48,1,26],
-
-  //"SUCLG1": [3,47,0,27],
-  //"SUCLG2": [4,47,1,27],
-  //"SUCLA2": [4,48,0,27],
-
-  //"SDHA": [-2,43,0,28],
-  //"SDHB": [-1,43,1,28],
-  //"SDHC": [-2,44,0,28],
-  //"SDHD": [-1,44,1,28],
-
-  "FH": [1.8, 41.75, 0, 29],
-
-  //"MDH1": [1,37,0,30], // Not in same complex?
-  "MDH2": [2.8, 38.5, 0, 30],
-
+  "MDH2": [3, 39, 0]
 }
 
 const pathway_dictionary = {
-  "Central Carbon Metabolism": ccm_coordinates,
+  "Central Carbon Metabolism": ccm_coordinates
+};
+
+const components_dictionary = {
+  "Central Carbon Metabolism": [
+    "D-Glucose",
+    "Glucose 6-phosphate",
+    "D-Fructose 6-phosphate",
+    "D-Fructose 1,6-bisphosphate",
+    "D-Glyceraldehyde 3-phosphate",
+    "Dihydroxyacetone phosphate",
+    "Glyceric acid 1,3-biphosphate",
+    "D-3-Phosphoglyceric acid",
+    "D-2-Phosphoglyceric acid",
+    "Phosphatidylethanolamine",
+    "Hydroxypyruvic acid",
+    "Pyruvate",
+    "Lactate",
+    "Acetyl coenzyme A",
+    "Citric acid",
+    "Isocitric acid",
+    "Ketoglutaric acid",
+    "Succinyl coenzyme A",
+    "Succinic acid",
+    "Fumaric acid",
+    "L-Malic acid",
+    "Oxaloacetic acid"
+  ]
 };

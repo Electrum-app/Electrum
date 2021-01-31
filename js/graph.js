@@ -25,6 +25,8 @@ var show_all = false;
 var background_forward = true;
 var use_edge_bundling = true;
 var toggle_scaling = false;
+var show_intra_pathway = true;
+var show_inter_pathway = true;
 var q_threshold = 0.1;
 
 class MIDASgraph {
@@ -39,6 +41,7 @@ class MIDASgraph {
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
     this.pathway_dictionary = pathway_dictionary;
+    this.components_dictionary = components_dictionary;
     this.background_dictionary = background_dictionary;
     this.menu_selector = "menu";
     this.make_menu();
@@ -49,43 +52,23 @@ class MIDASgraph {
       draw_graph(that)
     });
     d3.select("#toggle_absolute_values").on("click", function() {
-      if (use_absolute_values === true) {
-        use_absolute_values = false;
-      } else {
-        use_absolute_values = true;
-      }
+      use_absolute_values = modVar(use_absolute_values);
       draw_graph(that)
     });
     d3.select("#toggle_labels").on("click", function() {
-      if (show_labels === true) {
-        show_labels = false;
-      } else {
-        show_labels = true;
-      }
+      show_labels = modVar(show_labels);
       draw_graph(that)
     });
     d3.select("#toggle_all").on("click", function() {
-      if (show_all === true) {
-        show_all = false;
-      } else {
-        show_all = true;
-      }
+      show_all = modVar(show_all);
       draw_graph(that);
     });
     d3.select("#toggle_background").on("click", function() {
-      if (background_forward === true) {
-        background_forward = false;
-      } else {
-        background_forward = true;
-      }
+      background_forward = modVar(background_forward);
       draw_graph(that);
     });
     d3.select("#toggle_edge_bundling").on("click", function() {
-      if (use_edge_bundling === true) {
-        use_edge_bundling = false;
-      } else {
-        use_edge_bundling = true;
-      }
+      use_edge_bundling = modVar(use_edge_bundling);
       draw_graph(that);
     });
     d3.select("#qval_button").on("change", function() {
@@ -94,11 +77,15 @@ class MIDASgraph {
       draw_graph(that);
     });
     d3.select("#toggle_scaling").on("click", function() {
-      if (toggle_scaling === true) {
-        toggle_scaling = false;
-      } else {
-        toggle_scaling = true;
-      }
+      toggle_scaling = modVar(toggle_scaling);
+      draw_graph(that);
+    });
+    d3.select("#toggle_intra_pathway").on("click", function() {
+      show_intra_pathway = modVar(show_intra_pathway);
+      draw_graph(that);
+    });
+    d3.select("#toggle_inter_pathway").on("click", function() {
+      show_inter_pathway = modVar(show_inter_pathway);
       draw_graph(that);
     });
   }
@@ -134,6 +121,7 @@ class MIDASgraph {
 
     this.complexes = {};
     this.proteins = [];
+    this.metabolites = [];
     this.nodes = [];
     this.links = [];
     this.current_selection = new Set();
@@ -156,16 +144,13 @@ class MIDASgraph {
         let _search = metabolite.replace(/[^0-9A-Z]+/gi, "").toLowerCase();
         let hmdb_id = metabolites_reference[_search].hmdb_id;
         let metabolite_name = metabolites_reference[_search].name;
-        metabolite = metabolite.replace(/\s/g, ''); // Clean string, skip blanks
-
         let kegg_id = metabolites_reference[_search].kegg_id;
 
         let protein = this.graphData[connection]['query_protein'];
         let protein_name = protein_reference[protein].name;
         let uniprot_id = protein_reference[protein].uniprot_id;
-        protein = protein.replace(/\s/g, ''); // Clean string, skip blanks
 
-        if ((protein === "") | (metabolite === "")) {
+        if ((protein.replace(/\s/g, '') === "") || (metabolite.replace(/\s/g, '') === "")) {
           continue;
         }
 
@@ -200,6 +185,7 @@ class MIDASgraph {
 
           // Add metabolite node info if doesn't exist
           if (!this.added_nodes.includes(metabolite)) {
+            this.metabolites.push(metabolite);
             this.nodes.push({
               'id': metabolite,
               'display_name': metabolite_name,

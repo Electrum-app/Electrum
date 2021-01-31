@@ -62,6 +62,15 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   <div id="menu_panel">
     <select id="menu"></select>
     <br>
+    <div title="Toggle between all metabolites, intra-pathway-only metabolites, and inter-pathway-only metabolites.">
+      <div id="check_box" class="inline-field">
+        <input type="checkbox" id="toggle_intra_pathway" checked>
+        <label for="toggle_intra_pathway"> Show intra-pathway metabolites</label><br>
+        <input type="checkbox" id="toggle_inter_pathway" checked>
+        <label for="toggle_inter_pathway"> Show inter-pathway metabolites</label>
+      </div>
+    </div>
+    <br>
     <div title="Toggle between 1-D scaling (edges are scaled by q-value only) and 2-D scaling (edges are scaled by edge width for q-value and edge color for log2 fold change).">
       <label class="switch">
         <input type="checkbox" id="toggle_scaling">
