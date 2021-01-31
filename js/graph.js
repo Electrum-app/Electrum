@@ -24,6 +24,7 @@ var show_labels = true;
 var show_all = false;
 var background_forward = true;
 var use_edge_bundling = true;
+var toggle_scaling = false;
 var q_threshold = 0.1;
 
 class MIDASgraph {
@@ -90,6 +91,14 @@ class MIDASgraph {
     d3.select("#qval_button").on("change", function() {
       q_threshold = this.value;
       that.init_data();
+      draw_graph(that);
+    });
+    d3.select("#toggle_scaling").on("click", function() {
+      if (toggle_scaling === true) {
+        toggle_scaling = false;
+      } else {
+        toggle_scaling = true;
+      }
       draw_graph(that);
     });
   }
@@ -216,6 +225,29 @@ class MIDASgraph {
               "type": "core",
             }
           })
+        }
+      }
+    }
+
+    // get q-value percentiles
+    for (let _p in this.proteins) {
+      let _these_proteins = [];
+      for (let _l in this.links) {
+        if (this.links[_l].source.id === this.proteins[_p]) {
+          _these_proteins.push({
+            'id': this.links[_l].target.id,
+            'q_value': this.links[_l].metadata.q_value
+          });
+        }
+      }
+      _these_proteins.sort(function(a, b) {
+        return b.q_value - a.q_value;
+      });
+      for (let _tp in _these_proteins) {
+        for (let _tl in this.links) {
+          if (_these_proteins[_tp].id === this.links[_tl].target.id) {
+            this.links[_tl].metadata.q_value_percentile = _tp / _these_proteins.length;
+          }
         }
       }
     }

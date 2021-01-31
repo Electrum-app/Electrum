@@ -62,7 +62,14 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   <div id="menu_panel">
     <select id="menu"></select>
     <br>
-    <div id="qval_box">
+    <div title="Toggle between 1-D scaling (edges are scaled by q-value only) and 2-D scaling (edges are scaled by edge width for q-value and edge color for log2 fold change).">
+      <label class="switch">
+        <input type="checkbox" id="toggle_scaling">
+        <div class="slider round"></div>
+      </label>
+    </div>
+    <br>
+    <div id="qval_box" title="Change the q-value threshold to determine which protein-metabolite interactions are displayed.">
       q-value cut-off:
       <input type="number" name="qval_button" id="qval_button" min="0" max="1" value="0.1" step="0.01" />
     </div>
@@ -84,7 +91,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     </div>
     <br>
     <div title="Click to toggle edge bundling.">
-    <button id="toggle_edge_bundling">Toggle Edge Bundling</button>
+      <button id="toggle_edge_bundling">Toggle Edge Bundling</button>
     </div>
   </div>
   <div id="graph" align="center">

@@ -58,3 +58,79 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   margin-top: 1px;
   margin-right: 1px;
 }
+
+/* Start https://stackoverflow.com/a/39846603 */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 170px;
+  height: 22px;
+  margin-left: 15px;
+  margin-top: 5px;
+  border: 1px solid #767676;
+  border-radius: 3px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #efefef;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 3px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 80px;
+  left: 0px;
+  bottom: 0px;
+  background-color: #D4AF37;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 3px;
+}
+
+input:checked+.slider {
+  background-color: #efefef;
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px #efefef;
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(86px);
+  -ms-transform: translateX(86px);
+  transform: translateX(90px);
+}
+
+/*------ ADDED CSS ---------*/
+.slider:after {
+  content: '1-D Scaling';
+  color: #000000;
+  display: block;
+  position: absolute;
+  transform: translate(15%, -50%);
+  top: 50%;
+  left: 50%;
+  font: 12px sans-serif;
+}
+
+input:checked+.slider:after {
+  content: '2-D Scaling';
+  transform: translate(-115%, -50%);
+}
+
+/*--------- END --------*/
+/* End https://stackoverflow.com/a/39846603 */

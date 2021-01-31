@@ -146,7 +146,7 @@ function make_edges(svg_viewer, div_edge, data, _links) {
       return "link interaction";
     })
     .attr("stroke-width", function(d) {
-      if (d.metadata.type === "core") {
+      if (d.metadata.type === "core" && toggle_scaling === true) {
         return ((-1 * Math.log(d.metadata.q_value)) / 18) + 10;
       } else {
         return 10;
@@ -215,8 +215,14 @@ function make_edges(svg_viewer, div_edge, data, _links) {
 }
 
 function draw_color(d, abs_max, cmap) {
+
+  let _val;
   if (d.metadata.type === "core") {
-    let _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+    if (toggle_scaling === true) {
+      _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+    } else {
+      _val = (parseFloat(d.metadata.q_value_percentile) * abs_max).toFixed(1);
+    }
     let _mod_val = 1;
     if (Math.abs(_val) >= abs_max) {
       _mod_val = 0;

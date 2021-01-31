@@ -106,7 +106,7 @@ function draw_graph(data) {
 
   showNodes();
   if (use_edge_bundling === false || !selection in that.pathway_dictionary) {
-    // simulation.on("tick", tick);
+    //simulation.on("tick", tick);
     if(_links[0].x===undefined){
       simulation.tick(50);
     }
@@ -137,7 +137,7 @@ function draw_graph(data) {
       for (let i = 0; i < _links.length; i++) {
         _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
       }
-      
+
     }
 
     let d3line = d3.line()
@@ -150,7 +150,7 @@ function draw_graph(data) {
     circle.attr("transform", transform);
     link.attr("d", d => d3line(d.path_d));
     text.attr("transform", transform);
-    
+
 
   }
 
