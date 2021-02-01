@@ -113,15 +113,17 @@ function draw_graph(data) {
       simulation.tick(50);
     }
     circle.attr("transform", transform);
+    link.attr("d", linkFlat);
+    text.attr("transform", transform);
+  } else if (show_intra_pathway === true && show_inter_pathway === false) {
+    if (_links[0].x === undefined) {
+      simulation.tick(50);
+    }
+    circle.attr("transform", transform);
     link.attr("d", linkArc);
     text.attr("transform", transform);
   } else {
     // generate bundling path
-    // if (_links[0].path_d !== undefined) {
-    //   _links.forEach(function(l) {
-    //     delete l.path_d
-    //   });
-    // }
     if (_links[0].path_d === undefined) {
       simulation.tick(50);
       let fbundling = d3.ForceEdgeBundling()
@@ -139,7 +141,6 @@ function draw_graph(data) {
       for (let i = 0; i < _links.length; i++) {
         _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
       }
-
     }
 
     let d3line = d3.line()
@@ -164,7 +165,7 @@ function draw_graph(data) {
   // Draw curved edges
   function tick() {
     circle.attr("transform", transform);
-    link.attr("d", linkArc);
+    link.attr("d", linkFlat);
     text.attr("transform", transform);
   }
 

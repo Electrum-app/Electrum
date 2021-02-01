@@ -53,7 +53,11 @@ function set_selection(data, selection) {
       .filter(function(node) {
         return node.id in _selector_ids || _metabolites.includes(node.id);
       })
-    coordinates = data.pathway_dictionary[selection];
+    if (show_intra_pathway === true && show_inter_pathway === false) {
+      coordinates = data.pathway_dictionary_i[selection];
+    } else {
+      coordinates = data.pathway_dictionary[selection];
+    }
     _distances = 2250;
   } else if (data.proteins.includes(selection)) {
     _links = data.links.filter(link => link.source.id === selection)
@@ -71,7 +75,7 @@ function set_selection(data, selection) {
     return
   }
 
-  console.log(_nodes)
+  //console.log(_nodes)
   //console.log(_links)
 
   return [
@@ -263,9 +267,15 @@ function draw_color(d, abs_max, cmap) {
 function draw_background(svg_viewer, data, selection) {
   if (selection in data.background_dictionary) {
     let _backgrounds = data.background_dictionary[selection];
+    let _url;
+    if (show_intra_pathway === true && show_inter_pathway === false) {
+      _url = _backgrounds.url_intra;
+    } else {
+      _url = _backgrounds.url;
+    }
     svg_viewer
       .append('svg:image')
-      .attr('xlink:href', _backgrounds.url)
+      .attr('xlink:href', _url)
       .attr("height", _backgrounds.height)
       .attr("x", _backgrounds.x_pos)
       .attr("y", _backgrounds.y_pos);
@@ -321,7 +331,10 @@ function init_nodes(
     })
 
   node.each(function(d) {
-    if (d.type === "protein" || d.type === "other_protein") {
+    if (show_intra_pathway === true && show_inter_pathway === false) {
+      d.fx = coordinates[d.id][0] * 100;
+      d.fy = coordinates[d.id][1] * 100 - 1000;
+    } else if (d.type === "protein" || d.type === "other_protein") {
       d.fx = coordinates[d.id][0] * 100;
       d.fy = coordinates[d.id][1] * 100 - 1000;
     }
@@ -437,7 +450,8 @@ function make_text(node, coordinates) {
     .append("text")
     .raise()
     .html(function(d) {
-      if (d.type === "protein" || d.type === "other_protein") {
+
+      if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true && show_inter_pathway === false)) {
         if (coordinates[d.id][2] === 1) {
           return (
             "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
@@ -596,7 +610,7 @@ function reset_proteins(_nodes, current_protein) {
   }
 }
 
-function linkArc(d) {
+function linkFlat(d) {
   var dx = d.target.x - d.source.x;
   var dy = d.target.y - d.source.y;
   return (
@@ -605,6 +619,26 @@ function linkArc(d) {
     "," +
     d.source.y +
     "A0,0 0 0,1 " +
+    d.target.x +
+    "," +
+    d.target.y
+  );
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x;
+  var dy = d.target.y - d.source.y;
+  var dr = Math.sqrt(dx * dx + dy * dy) * 0.75;
+  return (
+    "M" +
+    d.source.x +
+    "," +
+    d.source.y +
+    "A" +
+    dr +
+    "," +
+    dr +
+    " 0 0,1 " +
     d.target.x +
     "," +
     d.target.y

@@ -69,8 +69,90 @@ const ccm_coordinates = {
   "MDH2": [3, 39, 0]
 }
 
+const ccm_coordinates_intra = {
+  "D-Glucose": [10.45, 0.25, 0],
+  "Glucose 6-phosphate": [10.45, 4, 0],
+  "D-Fructose 6-phosphate": [10.45, 7.25, 0],
+  "D-Fructose 1,6-bisphosphate": [10.45, 10.75, 0],
+  "D-Glyceraldehyde 3-phosphate": [10.45, 14.25, 0], //G3P
+  "Dihydroxyacetone phosphate": [14, 14.25, 0], //DHAP
+  "Glyceric acid 1,3-biphosphate": [10.45, 19, 0], //1,3-BPG
+  "D-3-Phosphoglyceric acid": [10.45, 21.25, 0],
+  "D-2-Phosphoglyceric acid": [10.45, 24, 0],
+  "Phosphatidylethanolamine": [10.45, 28.25, 0],
+  "Hydroxypyruvic acid": [10.45, 31, 0],
+  "Pyruvate": [10.45, 31.75, 0],
+  "Lactate": [14.45, 31, 0],
+
+  "Acetyl coenzyme A": [15, 38, 1],
+  "Citric acid": [17.5, 41.5, 1],
+  "Isocitric acid": [18.5, 44, 1],
+  "Ketoglutaric acid": [16.5, 49, 1],
+  "Succinyl coenzyme A": [10.45, 51.5, 1],
+  "Succinic acid": [4.5, 48.5, 0],
+  "Fumaric acid": [2, 44, 0],
+  "L-Malic acid": [3.25, 41.25, 0],
+  "Oxaloacetic acid": [6, 37.75, 0],
+
+  "3-Phosphohydroxypyruvate": [16.5, 21.25, 1], //3-PHP
+  "Phosphatidylserine": [22.95, 21.25, 1], //3-PS
+  "L-Serine": [22.95, 25, 1], // Serine
+
+  "GCK": [9, 2, 0],
+
+  "GPI": [12, 5.5, 1],
+
+  "PFKL": [8.75, 8.5, 0],
+  "PFKP": [8.75, 9.5, 0],
+
+  "ALDOA": [5.75, 12, 0],
+  "ALDOB": [5.75, 13, 0],
+  "ALDOC": [6.75, 13, 1],
+
+  "GAPDH": [9, 16, 0],
+
+  "TPI1": [13.75, 15.5, 1],
+
+  "PGK1": [9, 19, 0],
+  "PGK2": [9, 20, 0],
+
+  "PHGDH": [13.5, 20.35, 1],
+
+  "PSAT1": [20, 20.35, 1],
+
+  "PGAM1": [9, 22.5, 0],
+  "PGAM2": [9, 23.5, 0],
+
+  "ENO1": [9, 26, 0],
+  "ENO2": [9, 27, 0],
+
+  "PKLR-2": [6.25, 29.5, 0],
+  "PKM1": [6.25, 30.5, 0],
+  "PKM2": [7.25, 30.5, 1],
+
+  "LDHA": [16.5, 31, 0],
+  "LDHB": [17.5, 31, 1],
+
+  "E1-PDH": [6, 34.75, 0],
+  "E2-PDH": [6, 35.75, 0],
+  "E3-PDH": [7, 35.75, 1],
+
+  "CS": [18, 39.5, 1],
+
+  "IDH2": [16, 46.5, 0],
+  "IDH3a2bg": [19, 47, 1],
+
+  "FH": [1.75, 43, 0],
+
+  "MDH2": [3, 39.5, 0]
+}
+
 const pathway_dictionary = {
   "Central Carbon Metabolism": ccm_coordinates
+};
+
+const pathway_dictionary_i = {
+  "Central Carbon Metabolism": ccm_coordinates_intra
 };
 
 const components_dictionary = {
@@ -79,9 +161,9 @@ const components_dictionary = {
     "Glucose 6-phosphate",
     "D-Fructose 6-phosphate",
     "D-Fructose 1,6-bisphosphate",
-    "D-Glyceraldehyde 3-phosphate",
-    "Dihydroxyacetone phosphate",
-    "Glyceric acid 1,3-biphosphate",
+    "D-Glyceraldehyde 3-phosphate", //G3P
+    "Dihydroxyacetone phosphate", //DHAP
+    "Glyceric acid 1,3-biphosphate", //1,3-BPG
     "D-3-Phosphoglyceric acid",
     "D-2-Phosphoglyceric acid",
     "Phosphatidylethanolamine",
@@ -96,6 +178,9 @@ const components_dictionary = {
     "Succinic acid",
     "Fumaric acid",
     "L-Malic acid",
-    "Oxaloacetic acid"
+    "Oxaloacetic acid",
+    "3-Phosphohydroxypyruvate", //3-PHP
+    "Phosphatidylserine", //3-PS
+    "L-Serine", // Serine
   ]
 };

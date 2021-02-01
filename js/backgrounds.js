@@ -23,6 +23,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 const ccm_background = {
   "url": "_data/img/20201218_MIDAS-CCM_pathway-no-proteins.svg",
+  "url_intra": "_data/img/20201218_MIDAS-CCM_pathway-no-proteins-no-metabolites.svg",
   "height": 5000,
   "x_pos": 0,
   "y_pos": -900
