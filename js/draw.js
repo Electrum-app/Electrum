@@ -58,7 +58,7 @@ function draw_graph(data) {
   if (selection in that.pathway_dictionary) {
     _height_center = 1.2;
   } else {
-    _height_center = 2;
+    _height_center = 1;
   }
 
   var simulation = init_simulation(
@@ -86,7 +86,7 @@ function draw_graph(data) {
 
   // Draw nodes (must happen after links are initialized)
   let node_outputs = init_nodes(
-    svg_viewer, that, link, _nodes,
+    svg_viewer, that, link, _nodes, selection,
     coordinates, current_protein, current_metabolite,
     timer, prevent);
   node = node_outputs[0];
@@ -105,7 +105,8 @@ function draw_graph(data) {
   text = make_text(node, coordinates);
 
   showNodes();
-  if (!selection in that.pathway_dictionary) {
+
+  if (!(selection in that.pathway_dictionary)) {
     simulation.on("tick", tick);
   } else if (use_edge_bundling === false) {
     //simulation.on("tick", tick);

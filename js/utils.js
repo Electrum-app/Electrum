@@ -33,9 +33,13 @@ function set_selection(data, selection) {
       _metabolite_ids = _metabolite_ids.concat(_intra_ids);
     }
     if (show_inter_pathway === true) {
-      let _inter_ids = data.metabolites.filter(e => !_intra_ids.includes(e));
+      let _inter_ids = data.metabolites.filter(e => !(_intra_ids.includes(e)));
       _metabolite_ids = _metabolite_ids.concat(_inter_ids);
     }
+    // finish this
+    //if (show_intra_pathway === true && show_inter_pathway === false) {
+    //
+    //}
 
     let _all_ids = Object.keys(_selector_ids).concat(_metabolite_ids)
 
@@ -61,14 +65,20 @@ function set_selection(data, selection) {
     _distances = 2250;
   } else if (data.proteins.includes(selection)) {
     _links = data.links.filter(link => link.source.id === selection)
+
+    console.log(_links)
+
     // get the nodes with the links
     let _metabolites = [];
     for (let _m in _links) {
       _metabolites.push(_links[_m].target.id)
     }
     _nodes = data.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
+
+    console.log(_nodes)
+
     coordinates = {};
-    coordinates[selection] = [6, 20, 1, 24];
+    coordinates[selection] = [0, 2500, 1];
     _distances = 850;
   } else {
     console.log("Did not select a protein or pathway")
@@ -95,10 +105,10 @@ function init_simulation(
       .id(d => d.id)
       .distance(_distances)
       .strength(1))
-    .force("collide", d3.forceCollide().radius(d => d.r * 5).iterations(1))
+    .force("collide", d3.forceCollide().radius(d => d.r * 500).iterations(2))
     .force("charge", d3.forceManyBody().strength(-350))
-    .force("center", d3.forceCenter(_width / 2, _height / _height_center))
-    .alphaDecay(0.005)
+    .force("center", d3.forceCenter(_width / 0.9, _height / _height_center))
+    .alphaDecay(0.007)
     .velocityDecay(0.7);
   return _sim;
 }
@@ -241,6 +251,8 @@ function make_edges(svg_viewer, div_edge, data, _links) {
 
 function draw_color(d, abs_max, cmap) {
 
+  console.log(d)
+
   let _val;
   if (d.metadata.type === "core") {
     if (toggle_scaling === true) {
@@ -257,6 +269,13 @@ function draw_color(d, abs_max, cmap) {
     } else {
       _val = parseFloat(_val) - _mod_val;
     }
+
+    if (_val >= abs_max) {
+      _val = abs_max;
+    } else if (_val <= -abs_max) {
+      _val = -abs_max;
+    }
+
     if (use_absolute_values === true) {
       _val = Math.abs(_val);
     }
@@ -268,22 +287,28 @@ function draw_background(svg_viewer, data, selection) {
   if (selection in data.background_dictionary) {
     let _backgrounds = data.background_dictionary[selection];
     let _url;
+    let _height;
+    let _y_pos;
     if (show_intra_pathway === true && show_inter_pathway === false) {
       _url = _backgrounds.url_intra;
+      _height = _backgrounds.height_intra;
+      _y_pos = _backgrounds.y_pos_intra;
     } else {
       _url = _backgrounds.url;
+      _height = _backgrounds.height;
+      _y_pos = _backgrounds.y_pos;
     }
     svg_viewer
       .append('svg:image')
       .attr('xlink:href', _url)
-      .attr("height", _backgrounds.height)
+      .attr("height", _height)
       .attr("x", _backgrounds.x_pos)
-      .attr("y", _backgrounds.y_pos);
+      .attr("y", _y_pos);
   }
 }
 
 function init_nodes(
-  svg_viewer, data, link, _nodes,
+  svg_viewer, data, link, _nodes, selection,
   coordinates, current_protein, current_metabolite,
   timer, prevent) {
 
@@ -331,12 +356,15 @@ function init_nodes(
     })
 
   node.each(function(d) {
-    if (show_intra_pathway === true && show_inter_pathway === false) {
-      d.fx = coordinates[d.id][0] * 100;
-      d.fy = coordinates[d.id][1] * 100 - 1000;
-    } else if (d.type === "protein" || d.type === "other_protein") {
-      d.fx = coordinates[d.id][0] * 100;
-      d.fy = coordinates[d.id][1] * 100 - 1000;
+    if (show_intra_pathway === true &&
+      show_inter_pathway === false &&
+      selection in data.pathway_dictionary) {
+      d.fx = coordinates[d.id][0] + 1005;
+      d.fy = coordinates[d.id][1] - 960;
+    } else if (d.type === "protein" ||
+      d.type === "other_protein") {
+      d.fx = coordinates[d.id][0] + 1005;
+      d.fy = coordinates[d.id][1] - 960;
     }
   });
 
@@ -450,7 +478,6 @@ function make_text(node, coordinates) {
     .append("text")
     .raise()
     .html(function(d) {
-
       if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true && show_inter_pathway === false)) {
         if (coordinates[d.id][2] === 1) {
           return (

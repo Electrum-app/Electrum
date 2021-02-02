@@ -339,7 +339,7 @@ const metabolites_reference = {
     "chebi_id": "",
     "hmdb_id": "HMDB60180",
     "kegg_id": "C00197",
-    "name": "(2R)-2-Hydroxy-3-(phosphonatooxy)propanoate",
+    "name": "3PG",
     "smiles": "O[C@H](COP(O)(O)=O)C(O)=O"
   },
   "33dimethylacrylicacid": {
@@ -1025,7 +1025,7 @@ const metabolites_reference = {
     "chebi_id": "16905",
     "hmdb_id": "HMDB0060444",
     "kegg_id": "C00354",
-    "name": "beta-D-Fructose 1,6-bisphosphate",
+    "name": "F1,6-BP",
     "smiles": "O[C@H]1[C@H](O)[C@](O)(COP(O)(O)=O)O[C@@H]1COP(O)(O)=O"
   },
   "betaine": {
@@ -1207,7 +1207,7 @@ const metabolites_reference = {
     "chebi_id": "30769",
     "hmdb_id": "HMDB0000094",
     "kegg_id": "C00158",
-    "name": "Citric acid",
+    "name": "Citrate",
     "smiles": "OC(=O)CC(O)(CC(O)=O)C(O)=O"
   },
   "citrulline": {
@@ -1340,7 +1340,7 @@ const metabolites_reference = {
     "chebi_id": "",
     "hmdb_id": "HMDB60180",
     "kegg_id": "C00197",
-    "name": "(2R)-2-Hydroxy-3-(phosphonatooxy)propanoate",
+    "name": "3PG",
     "smiles": "O[C@H](COP(O)(O)=O)C(O)=O"
   },
   "dadp": {
@@ -1543,14 +1543,14 @@ const metabolites_reference = {
     "chebi_id": "16905",
     "hmdb_id": "HMDB0060444",
     "kegg_id": "C00354",
-    "name": "beta-D-Fructose 1,6-bisphosphate",
+    "name": "F1,6BP",
     "smiles": "O[C@H]1[C@H](O)[C@](O)(COP(O)(O)=O)O[C@@H]1COP(O)(O)=O"
   },
   "dfructose6phosphate": {
     "chebi_id": "15946",
     "hmdb_id": "HMDB0000124",
     "kegg_id": "C00085",
-    "name": "Fructose 6-phosphate",
+    "name": "F6P",
     "smiles": "OCC(=O)[C@@H](O)[C@H](O)[C@H](O)COP(O)(O)=O"
   },
   "dgalactaricacid": {
@@ -1606,7 +1606,7 @@ const metabolites_reference = {
     "chebi_id": "4167",
     "hmdb_id": "HMDB0000122",
     "kegg_id": "C00221",
-    "name": "D-Glucose",
+    "name": "Glucose",
     "smiles": "OC[C@H]1O[C@@H](O)[C@H](O)[C@@H](O)[C@@H]1O"
   },
   "dglucose16bisphosphate": {
@@ -1669,7 +1669,7 @@ const metabolites_reference = {
     "chebi_id": "29052",
     "hmdb_id": "HMDB0001112",
     "kegg_id": "C00118",
-    "name": "D-Glyceraldehyde 3-phosphate",
+    "name": "G3P",
     "smiles": "O[C@H](COP(O)(O)=O)C=O"
   },
   "dglycerol1phosphate": {
@@ -1816,7 +1816,7 @@ const metabolites_reference = {
     "chebi_id": "30887",
     "hmdb_id": "HMDB0000193",
     "kegg_id": "C00311",
-    "name": "Isocitric acid",
+    "name": "Isocitrate",
     "smiles": "OC(C(CC(O)=O)C(O)=O)C(O)=O"
   },
   "dlmandelicacid": {
@@ -2061,7 +2061,7 @@ const metabolites_reference = {
     "chebi_id": "15946",
     "hmdb_id": "HMDB0000124",
     "kegg_id": "C00085",
-    "name": "Fructose 6-phosphate",
+    "name": "F6P",
     "smiles": "OCC(=O)[C@@H](O)[C@H](O)[C@H](O)COP(O)(O)=O"
   },
   "fucose1phosphate": {
@@ -2572,7 +2572,7 @@ const metabolites_reference = {
     "chebi_id": "30915",
     "hmdb_id": "HMDB0000208",
     "kegg_id": "C00026",
-    "name": "Oxoglutaric acid",
+    "name": "a-ketoglutarate",
     "smiles": "OC(=O)CCC(=O)C(O)=O"
   },
   "ketoleucine": {
@@ -2838,7 +2838,7 @@ const metabolites_reference = {
     "chebi_id": "30797",
     "hmdb_id": "HMDB0000156",
     "kegg_id": "C00149",
-    "name": "L-Malic acid",
+    "name": "Malate",
     "smiles": "O[C@@H](CC(O)=O)C(O)=O"
   },
   "lmethionine": {
@@ -2901,7 +2901,7 @@ const metabolites_reference = {
     "chebi_id": "17115",
     "hmdb_id": "HMDB0000187",
     "kegg_id": "C00065",
-    "name": "L-Serine",
+    "name": "Serine",
     "smiles": "N[C@@H](CO)C(O)=O"
   },
   "lthreonine": {
@@ -3433,14 +3433,14 @@ const metabolites_reference = {
     "chebi_id": "30744",
     "hmdb_id": "HMDB0000223",
     "kegg_id": "C00036",
-    "name": "Oxalacetic acid",
+    "name": "Oxaloacetate",
     "smiles": "O=C(O)CC(=O)C(=O)O"
   },
   "oxaloaceticacid": {
     "chebi_id": "30744",
     "hmdb_id": "HMDB0000223",
     "kegg_id": "C00036",
-    "name": "Oxalacetic acid",
+    "name": "Oxaloacetate",
     "smiles": "O=C(O)CC(=O)C(=O)O"
   },
   "oxidizedglutathione": {
@@ -3517,7 +3517,7 @@ const metabolites_reference = {
     "chebi_id": "47767",
     "hmdb_id": "HMDB0060501",
     "kegg_id": "C00416",
-    "name": "Phosphatidylethanolamine",
+    "name": "PEP",
     "smiles": "[H][C@](COC(=O)CCCCCCCCCCCCCCCCC)(COP(O)(=O)OCCN)OC(=O)CCCCCCCCCCCCCCCCC"
   },
   "phosphatidylglycerol": {
@@ -3538,7 +3538,7 @@ const metabolites_reference = {
     "chebi_id": "84523",
     "hmdb_id": "HMDB0000614",
     "kegg_id": "C02737",
-    "name": "PS(16:0/16:0)",
+    "name": "3-PS",
     "smiles": "CCCCCCCCCCCCCCCC(=O)OCC(COP(=O)(O)OC[C@@H](C(=O)O)N)OC(=O)CCCCCCCCCCCCCCC"
   },
   "phosphoadenosinephosphosulfate": {
@@ -3664,7 +3664,7 @@ const metabolites_reference = {
     "chebi_id": "84523",
     "hmdb_id": "HMDB0000614",
     "kegg_id": "C02737",
-    "name": "PS(16:0/16:0)",
+    "name": "3-PS",
     "smiles": "CCCCCCCCCCCCCCCC(=O)OCC(COP(=O)(O)OC[C@@H](C(=O)O)N)OC(=O)CCCCCCCCCCCCCCC"
   },
   "putrescine": {
@@ -3727,14 +3727,14 @@ const metabolites_reference = {
     "chebi_id": "32816",
     "hmdb_id": "HMDB0000243",
     "kegg_id": "C00022",
-    "name": "Pyruvic acid",
+    "name": "Pyruvate",
     "smiles": "CC(=O)C(=O)O"
   },
   "pyruvicacid": {
     "chebi_id": "32816",
     "hmdb_id": "HMDB0000243",
     "kegg_id": "C00022",
-    "name": "Pyruvic acid",
+    "name": "Pyruvate",
     "smiles": "CC(=O)C(=O)O"
   },
   "quinolinicacid": {
@@ -3888,7 +3888,7 @@ const metabolites_reference = {
     "chebi_id": "15741",
     "hmdb_id": "HMDB0000254",
     "kegg_id": "C00042",
-    "name": "Succinic acid",
+    "name": "Succinate",
     "smiles": "O=C(O)CCC(=O)O"
   },
   "succinylacetone": {

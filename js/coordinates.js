@@ -20,131 +20,131 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // Static [x,y, z] coordinates for query proteins where z is the boolean representation of whether text should be displayed to the right (1) or left (0) of the node
 const ccm_coordinates = {
-  "GCK": [8.5, 3, 0],
+  "GCK": [-150, 200, 0],
 
-  "GPI": [11.75, 6.5, 1],
+  "GPI": [150, 560, 1],
 
-  "PFKL": [8, 9.25, 0],
-  "PFKP": [8, 10.25, 0],
+  "PFKL": [-200, 850, 0],
+  "PFKP": [-200, 950, 0],
 
-  "ALDOA": [5.5, 12.75, 0],
-  "ALDOB": [5.5, 13.75, 0],
-  "ALDOC": [6.5, 13.75, 1],
+  "ALDOA": [-450, 1165, 0],
+  "ALDOB": [-450, 1265, 0],
+  "ALDOC": [-350, 1265, 1],
 
-  "GAPDH": [8.5, 16.5, 0],
+  "GAPDH": [-150, 1550, 0],
 
-  "TPI1": [13.25, 16, 1],
+  "TPI1": [325, 1520, 1],
 
-  "PGK1": [8.5, 19.5, 0],
-  "PGK2": [8.5, 20.5, 0],
+  "PGK1": [-150, 1850, 0],
+  "PGK2": [-150, 1950, 0],
 
-  "PHGDH": [13, 20.5, 1],
+  "PHGDH": [300, 1950, 1],
 
-  "PSAT1": [19.25, 20.5, 1],
+  "PSAT1": [925, 1950, 1],
 
-  "PGAM1": [8.5, 22.8, 0],
-  "PGAM2": [8.5, 23.8, 0],
+  "PGAM1": [-150, 2200, 0],
+  "PGAM2": [-150, 2300, 0],
 
-  "ENO1": [8.5, 26.25, 0],
-  "ENO2": [8.5, 27.25, 0],
+  "ENO1": [-150, 2515, 0],
+  "ENO2": [-150, 2615, 0],
 
-  "PKLR-2": [6, 29.5, 0],
-  "PKM1": [6, 30.5, 0],
-  "PKM2": [7, 30.5, 1],
+  "PKLR-2": [-400, 2850, 0],
+  "PKM1": [-400, 2950, 0],
+  "PKM2": [-300, 2950, 1],
 
-  "LDHA": [16, 30.75, 0],
-  "LDHB": [17, 30.75, 1],
+  "LDHA": [600, 2960, 0],
+  "LDHB": [700, 2960, 1],
 
-  "E1-PDH": [6, 34.5, 0],
-  "E2-PDH": [6, 35.5, 0],
-  "E3-PDH": [7, 35.5, 1],
+  "E1-PDH": [-450, 3350, 0],
+  "E2-PDH": [-450, 3450, 0],
+  "E3-PDH": [-350, 3450, 1],
 
-  "CS": [17.25, 39, 1],
+  "CS": [775, 3825, 1],
 
-  "IDH2": [15.5, 46, 0],
-  "IDH3a2bg": [18.5, 46.5, 1],
+  "IDH2": [500, 4500, 0],
+  "IDH3a2bg": [850, 4550, 1],
 
-  "FH": [1.75, 42.5, 0],
+  "FH": [-850, 4170, 0],
 
-  "MDH2": [3, 39, 0]
+  "MDH2": [-725, 3800, 0]
 }
 
 const ccm_coordinates_intra = {
-  "D-Glucose": [10.45, 0.25, 0],
-  "Glucose 6-phosphate": [10.45, 4, 0],
-  "D-Fructose 6-phosphate": [10.45, 7.25, 0],
-  "D-Fructose 1,6-bisphosphate": [10.45, 10.75, 0],
-  "D-Glyceraldehyde 3-phosphate": [10.45, 14.25, 0], //G3P
-  "Dihydroxyacetone phosphate": [14, 14.25, 0], //DHAP
-  "Glyceric acid 1,3-biphosphate": [10.45, 19, 0], //1,3-BPG
-  "D-3-Phosphoglyceric acid": [10.45, 21.25, 0],
-  "D-2-Phosphoglyceric acid": [10.45, 24, 0],
-  "Phosphatidylethanolamine": [10.45, 28.25, 0],
-  "Hydroxypyruvic acid": [10.45, 31, 0],
-  "Pyruvate": [10.45, 31.75, 0],
-  "Lactate": [14.45, 31, 0],
+  "D-Glucose": [0, 20, 0],
+  "Glucose 6-phosphate": [0, 360, 0],
+  "D-Fructose 6-phosphate": [0, 720, 0], //F6P
+  "D-Fructose 1,6-bisphosphate": [0, 1050, 0],
+  "D-Glyceraldehyde 3-phosphate": [0, 1385, 0], //G3P
+  "Dihydroxyacetone phosphate": [300, 1385, 0], //DHAP
+  "Glyceric acid 1,3-biphosphate": [0, 1600, 0], //1,3-BPG
+  "D-3-Phosphoglyceric acid": [0, 2060, 0], //3PG
+  "D-2-Phosphoglyceric acid": [0, 2200, 0], //2PG
+  "Phosphatidylethanolamine": [0, 2720, 0], //PEP
+  "Hydroxypyruvic acid": [0, 2800, 0],
+  "Pyruvate": [0, 3065, 0],
+  "Lactate": [400, 3060, 0],
 
-  "Acetyl coenzyme A": [15, 38, 1],
-  "Citric acid": [17.5, 41.5, 1],
-  "Isocitric acid": [18.5, 44, 1],
-  "Ketoglutaric acid": [16.5, 49, 1],
-  "Succinyl coenzyme A": [10.45, 51.5, 1],
-  "Succinic acid": [4.5, 48.5, 0],
-  "Fumaric acid": [2, 44, 0],
-  "L-Malic acid": [3.25, 41.25, 0],
-  "Oxaloacetic acid": [6, 37.75, 0],
+  "Acetyl coenzyme A": [470, 3680, 1],
+  "Citric acid": [715, 4030, 1],
+  "Isocitric acid": [800, 4400, 1],
+  "Ketoglutaric acid": [620, 4655, 1],
+  "Succinyl coenzyme A": [25, 4950, 1],
+  "Succinic acid": [-560, 4685, 0],
+  "Fumaric acid": [-600, 4400, 0],
+  "L-Malic acid": [-680, 3970, 0],
+  "Oxaloacetic acid": [-420, 3650, 0],
 
-  "3-Phosphohydroxypyruvate": [16.5, 21.25, 1], //3-PHP
-  "Phosphatidylserine": [22.95, 21.25, 1], //3-PS
-  "L-Serine": [22.95, 25, 1], // Serine
+  "3-Phosphohydroxypyruvate": [600, 2060, 1], //3-PHP
+  "Phosphatidylserine": [1195, 2060, 1], //3-PS
+  "L-Serine": [1195, 2400, 1], // Serine
 
-  "GCK": [9, 2, 0],
+  "GCK": [-150, 200, 0],
 
-  "GPI": [12, 5.5, 1],
+  "GPI": [150, 560, 1],
 
-  "PFKL": [8.75, 8.5, 0],
-  "PFKP": [8.75, 9.5, 0],
+  "PFKL": [-200, 825, 0],
+  "PFKP": [-200, 925, 0],
 
-  "ALDOA": [5.75, 12, 0],
-  "ALDOB": [5.75, 13, 0],
-  "ALDOC": [6.75, 13, 1],
+  "ALDOA": [-450, 1165, 0],
+  "ALDOB": [-450, 1265, 0],
+  "ALDOC": [-350, 1265, 1],
 
-  "GAPDH": [9, 16, 0],
+  "GAPDH": [-150, 1550, 0],
 
-  "TPI1": [13.75, 15.5, 1],
+  "TPI1": [265, 1500, 1],
 
-  "PGK1": [9, 19, 0],
-  "PGK2": [9, 20, 0],
+  "PGK1": [-150, 1850, 0],
+  "PGK2": [-150, 1950, 0],
 
-  "PHGDH": [13.5, 20.35, 1],
+  "PHGDH": [325, 1950, 1],
 
-  "PSAT1": [20, 20.35, 1],
+  "PSAT1": [925, 1950, 1],
 
-  "PGAM1": [9, 22.5, 0],
-  "PGAM2": [9, 23.5, 0],
+  "PGAM1": [-150, 2170, 0],
+  "PGAM2": [-150, 2270, 0],
 
-  "ENO1": [9, 26, 0],
-  "ENO2": [9, 27, 0],
+  "ENO1": [-150, 2515, 0],
+  "ENO2": [-150, 2615, 0],
 
-  "PKLR-2": [6.25, 29.5, 0],
-  "PKM1": [6.25, 30.5, 0],
-  "PKM2": [7.25, 30.5, 1],
+  "PKLR-2": [-400, 2800, 0],
+  "PKM1": [-400, 2900, 0],
+  "PKM2": [-300, 2900, 1],
 
-  "LDHA": [16.5, 31, 0],
-  "LDHB": [17.5, 31, 1],
+  "LDHA": [475, 2960, 0],
+  "LDHB": [575, 2960, 1],
 
-  "E1-PDH": [6, 34.75, 0],
-  "E2-PDH": [6, 35.75, 0],
-  "E3-PDH": [7, 35.75, 1],
+  "E1-PDH": [-450, 3350, 0],
+  "E2-PDH": [-450, 3450, 0],
+  "E3-PDH": [-350, 3450, 1],
 
-  "CS": [18, 39.5, 1],
+  "CS": [775, 3850, 1],
 
-  "IDH2": [16, 46.5, 0],
-  "IDH3a2bg": [19, 47, 1],
+  "IDH2": [500, 4500, 0],
+  "IDH3a2bg": [850, 4550, 1],
 
-  "FH": [1.75, 43, 0],
+  "FH": [-850, 4120, 0],
 
-  "MDH2": [3, 39.5, 0]
+  "MDH2": [-700, 3750, 0]
 }
 
 const pathway_dictionary = {

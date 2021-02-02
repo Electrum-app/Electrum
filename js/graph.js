@@ -167,7 +167,7 @@ class MIDASgraph {
         if (q_value <= parseFloat(q_threshold)) {
 
           // Add protein node info if doesn't exist
-          if (!this.added_nodes.includes(protein)) {
+          if (!(this.added_nodes.includes(protein))) {
             this.proteins.push(protein);
             this.nodes.push({
               'id': protein,
@@ -185,7 +185,7 @@ class MIDASgraph {
           }
 
           // Add metabolite node info if doesn't exist
-          if (!this.added_nodes.includes(metabolite)) {
+          if (!(this.added_nodes.includes(metabolite))) {
             this.metabolites.push(metabolite);
             this.nodes.push({
               'id': metabolite,
@@ -201,6 +201,12 @@ class MIDASgraph {
             this.node_lookup[metabolite] = this.indexer;
             this.indexer += 1;
           }
+
+          // finish this
+          //for (let _c in this.components_dictionary) {
+          //  if () {}
+          //}
+
 
           // Add link info and weights
           this.links.push({

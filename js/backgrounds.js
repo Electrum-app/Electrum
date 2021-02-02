@@ -25,8 +25,11 @@ const ccm_background = {
   "url": "_data/img/20201218_MIDAS-CCM_pathway-no-proteins.svg",
   "url_intra": "_data/img/20201218_MIDAS-CCM_pathway-no-proteins-no-metabolites.svg",
   "height": 5000,
+  "height_intra": 4800,
   "x_pos": 0,
-  "y_pos": -900
+  "y_pos": -950,
+  "y_pos_intra": -850,
+
 }
 
 const background_dictionary = {
