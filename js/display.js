@@ -21,13 +21,17 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 const selector = "#graph";
 
 // MAIN --> Change URL to HTTPS URL when data is public
-let data_url = "_data/MIDAS-latest.txt";
-let mapper_url = "_data/HSA-latest.eldb";
+let data_url = "data/MIDAS-latest.txt";
+let mapper_url = "data/HSA-latest.eldb";
+let metabolite_url = "data/metabolites.json";
+let protein_url = "data/proteins.json";
 
 // add drop-down menu and selection determines input data table for construction
 Promise.all([
   d3.tsv(data_url),
-  d3.json(mapper_url)
+  d3.json(mapper_url),
+  d3.json(metabolite_url),
+  d3.json(protein_url)
 ]).then(function(data) {
   let midasGraph = new MIDASgraph(data);
 }).catch(function(error) {

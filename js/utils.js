@@ -251,8 +251,6 @@ function make_edges(svg_viewer, div_edge, data, _links) {
 
 function draw_color(d, abs_max, cmap) {
 
-  console.log(d)
-
   let _val;
   if (d.metadata.type === "core") {
     if (toggle_scaling === true) {

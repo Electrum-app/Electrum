@@ -35,6 +35,8 @@ class MIDASgraph {
     // Set constructor keys
     this.graphData = graph_data[0];
     this.metaboverseData = graph_data[1];
+    this.metabolites_reference = graph_data[2];
+    this.protein_reference = graph_data[3];
 
     this.init_data();
 
@@ -143,13 +145,13 @@ class MIDASgraph {
           other_isomers = isomers.slice(1, isomers.length);
         } else {}
         let _search = metabolite.replace(/[^0-9A-Z]+/gi, "").toLowerCase();
-        let hmdb_id = metabolites_reference[_search].hmdb_id;
-        let metabolite_name = metabolites_reference[_search].name;
-        let kegg_id = metabolites_reference[_search].kegg_id;
+        let hmdb_id = this.metabolites_reference[_search].hmdb_id;
+        let metabolite_name = this.metabolites_reference[_search].name;
+        let kegg_id = this.metabolites_reference[_search].kegg_id;
 
         let protein = this.graphData[connection]['query_protein'];
-        let protein_name = protein_reference[protein].name;
-        let uniprot_id = protein_reference[protein].uniprot_id;
+        let protein_name = this.protein_reference[protein].name;
+        let uniprot_id = this.protein_reference[protein].uniprot_id;
 
         if ((protein.replace(/\s/g, '') === "") || (metabolite.replace(/\s/g, '') === "")) {
           continue;
