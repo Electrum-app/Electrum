@@ -110,7 +110,7 @@ function draw_graph(data) {
   showNodes();
 
   if (!(selection in that.pathway_dictionary)) {
-    simulation.on("tick", tick);
+    simulation.tick(50);
     circle.attr("transform", transform);
     link.attr("d", linkFlat);
     text.attr("transform", transform);

@@ -365,7 +365,8 @@ function init_nodes(
     })
 
   let node_counter = 0;
-  let node_array_len = node._groups[0].length;
+
+  let node_array_len = node._groups[0].length
 
   // Refresh nodes
   node.each(function(d) {
