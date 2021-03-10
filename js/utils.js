@@ -413,6 +413,27 @@ function make_nodes(data, node, current_protein, div_protein) {
     .on("mouseover", function(d) {
       if (d.type === "protein") {
         d3.select(this).style("fill", "red");
+
+        link
+          .filter(function(e) {
+            return e;
+          })
+          .style("--link_color", function(e) {
+            if (e.source.id === d.id || e.target.id === d.id) {
+              return draw_color(e, data.abs_max, data.cmap)
+            } else {
+              return draw_color(e, data.abs_max, data.cmap_greys)
+            }
+          })
+          .style("opacity", function(e) {
+            if (e.source.id === d.id || e.target.id === d.id) {
+              return 1;
+            } else {
+              return 0.1;
+            }
+          });
+
+
         /*
         let _display_string = "<b>Metabolite Structure Results:</b><br>...";
         // Pop up metabolite analysis side-panel for these metabolites
