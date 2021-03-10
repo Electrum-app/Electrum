@@ -108,20 +108,15 @@ function draw_graph(data) {
 
   if (!(selection in that.pathway_dictionary)) {
     simulation.on("tick", tick);
+    circle.attr("transform", transform);
+    link.attr("d", linkFlat);
+    text.attr("transform", transform);
   } else if (show_intra_pathway === true) {
     if (_links[0].x === undefined) {
       simulation.tick(50);
     }
     circle.attr("transform", transform);
     link.attr("d", linkArc);
-    text.attr("transform", transform);
-  } else if (use_edge_bundling === false) {
-    //simulation.on("tick", tick);
-    if (_links[0].x === undefined) {
-      simulation.tick(50);
-    }
-    circle.attr("transform", transform);
-    link.attr("d", linkFlat);
     text.attr("transform", transform);
   } else {
     // generate bundling path

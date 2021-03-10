@@ -347,11 +347,10 @@ function init_nodes(
       }, delay);
     })
 
-  console.log(node)
-
   let node_counter = 0;
   let node_array_len = node._groups[0].length;
 
+  // Refresh nodes
   node.each(function(d) {
     if (show_intra_pathway === true &&
       selection in data.pathway_dictionary) {
@@ -363,7 +362,9 @@ function init_nodes(
       d.fy = coordinates[d.id][1] - 960;
     } else {
       let new_positions = circleCoord(node_counter, node_array_len, distance)
-      d.fx = new_positions[0] + 1005;
+      d.fx = null;
+      d.fy = null;
+      d.fx = new_positions[0] + 950;
       d.fy = new_positions[1] + 1600;
       node_counter += 1;
     }

@@ -22,7 +22,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 var use_absolute_values = true;
 var show_labels = true;
 var background_forward = true;
-var use_edge_bundling = true;
 var toggle_scaling = false;
 var show_intra_pathway = true;
 var q_threshold = 0.1;
@@ -62,10 +61,6 @@ class MIDASgraph {
     });
     d3.select("#toggle_background").on("click", function() {
       background_forward = modVar(background_forward);
-      draw_graph(that);
-    });
-    d3.select("#toggle_edge_bundling").on("click", function() {
-      use_edge_bundling = modVar(use_edge_bundling);
       draw_graph(that);
     });
     d3.select("#qval_button").on("change", function() {
