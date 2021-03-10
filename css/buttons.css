@@ -78,7 +78,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 .switch {
   position: relative;
   display: inline-block;
-  width: 170px;
+  width: 230px;
   height: 22px;
   margin-left: 15px;
   margin-top: 5px;
@@ -107,7 +107,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   position: absolute;
   content: "";
   height: 22px;
-  width: 80px;
+  width: 115px;
   left: 0px;
   bottom: 0px;
   background-color: orange;
@@ -125,27 +125,39 @@ input:focus+.slider {
 }
 
 input:checked+.slider:before {
-  -webkit-transform: translateX(86px);
-  -ms-transform: translateX(86px);
-  transform: translateX(90px);
+  -webkit-transform: translateX(115px);
+  -ms-transform: translateX(115px);
+  transform: translateX(115px);
 }
 
 /*------ ADDED CSS ---------*/
 .slider:after {
-  content: '1-D Scaling';
   color: #000000;
   display: block;
   position: absolute;
-  transform: translate(15%, -50%);
   top: 50%;
   left: 50%;
   font: 12px sans-serif;
 }
 
-input:checked+.slider:after {
-  content: '2-D Scaling';
-  transform: translate(-115%, -50%);
+.scaling:after {
+  content: '1-D Scaling';
+  transform: translate(40%, -50%);
 }
+input:checked+.scaling:after {
+  content: '2-D Scaling';
+  transform: translate(-150%, -50%);
+}
+
+.intra:after {
+  content: 'Intra-Pathway';
+  transform: translate(30%, -50%);
+}
+input:checked+.intra:after {
+  content: 'All Metabolites';
+  transform: translate(-125%, -50%);
+}
+
 
 /*--------- END --------*/
 /* End https://stackoverflow.com/a/39846603 */

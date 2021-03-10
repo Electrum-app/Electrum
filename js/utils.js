@@ -161,7 +161,7 @@ function init_edges(svg_viewer) {
     .attr("d", "M0, -5L10, 0L0, 5");
 }
 
-function make_edges(svg_viewer, div_edge, data, _links) {
+function make_edges(svg_viewer, div_edge, data, _links, selection) {
   var link = svg_viewer
     .append("g")
     .selectAll("path")
@@ -211,6 +211,7 @@ function make_edges(svg_viewer, div_edge, data, _links) {
         })
         .style("--link_color", function(e) {
           if (e === d) {
+            highlight_interacting_proteins(d, e);
             return draw_color(e, data.abs_max, data.cmap)
           } else {
             return draw_color(e, data.abs_max, data.cmap_greys)
@@ -225,6 +226,15 @@ function make_edges(svg_viewer, div_edge, data, _links) {
         });
     })
     .on("mouseout", function(d) {
+      node.each(function(n) {
+        if (n.id === current_protein) {
+          d3.select("rect#" + n.id).style("fill", "red");
+        } else if (n.type === "other_protein") {
+          d3.select("rect#" + n.id).style("fill", "grey");
+        } else if (n.type === "protein") {
+          d3.select("rect#" + n.id).style("fill", "orange");
+        }
+      })
       // remove label tooltip
       if (d.metadata.type === "core") {
         div_edge.transition()
@@ -238,7 +248,14 @@ function make_edges(svg_viewer, div_edge, data, _links) {
         .style("--link_color", function(e) {
           return draw_color(e, data.abs_max, data.cmap)
         })
-        .style("opacity", 1);
+        .style("opacity", function(o) {
+          if (show_intra_pathway === true
+          && selection in data.pathway_dictionary) {
+            return 1
+          } else {
+            return 0.2
+          }
+        });
     });
   return link;
 }
@@ -382,7 +399,7 @@ function circleCoord(index, num_nodes, radius) {
   return [x, y];
 }
 
-function make_nodes(data, node, current_protein, div_protein) {
+function make_nodes(data, node, current_protein, div_protein, selection) {
 
   var circle = node
     .append(function(d) {
@@ -468,6 +485,7 @@ function make_nodes(data, node, current_protein, div_protein) {
           })
           .style("--link_color", function(e) {
             if (e.source.id === d.id || e.target.id === d.id) {
+              highlight_interacting_proteins(d, e);
               return draw_color(e, data.abs_max, data.cmap)
             } else {
               return draw_color(e, data.abs_max, data.cmap_greys)
@@ -483,13 +501,16 @@ function make_nodes(data, node, current_protein, div_protein) {
       }
     })
     .on("mouseout", function(d) {
-      if (d.id === current_protein) {
-        d3.select(this).style("fill", "red");
-      } else if (d.type === "other_protein") {
-        d3.select(this).style("fill", "grey");
-      } else if (d.type === "protein") {
-        d3.select(this).style("fill", "orange");
-      }
+      node.each(function(n) {
+        if (n.id === current_protein) {
+          d3.select("rect#" + n.id).style("fill", "red");
+        } else if (n.type === "other_protein") {
+          d3.select("rect#" + n.id).style("fill", "grey");
+        } else if (n.type === "protein") {
+          d3.select("rect#" + n.id).style("fill", "orange");
+        }
+      })
+
       div_protein.transition()
         .duration(500)
         .style("opacity", 0);
@@ -500,7 +521,14 @@ function make_nodes(data, node, current_protein, div_protein) {
         .style("--link_color", function(e) {
           return draw_color(e, data.abs_max, data.cmap)
         })
-        .style("opacity", 1);
+        .style("opacity", function(o) {
+          if (show_intra_pathway === true
+          && selection in data.pathway_dictionary) {
+            return 1
+          } else {
+            return 0.2
+          }
+        });
     });
   return circle;
 }
@@ -509,6 +537,9 @@ function make_text(node, coordinates, selection, data) {
   var text = node
     .append("text")
     .raise()
+    .attr("id", function(d) {
+      return d.id
+    })
     .html(function(d) {
       if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true &&
         selection in data.pathway_dictionary)) {
@@ -688,7 +719,8 @@ function linkFlat(d) {
 function linkArc(d) {
   var dx = d.target.x - d.source.x;
   var dy = d.target.y - d.source.y;
-  var dr = Math.sqrt(dx * dx + dy * dy) * 0.75;
+  var dl = Math.sqrt(dx**2 + dy**2)
+  var dr = Math.sqrt(dx * dx + dy * dy) * (2250 / dl);
   return (
     "M" +
     d.source.x +
@@ -727,4 +759,12 @@ function modVar(_var) {
     _var = true;
   }
   return _var;
+}
+
+function highlight_interacting_proteins(d, e) {
+  if (e.source.id !== d.id) {
+    d3.select("rect#" + e.source.id).style("fill", "red");
+  } else {
+    d3.select("rect#" + e.target.id).style("fill", "red");
+  }
 }

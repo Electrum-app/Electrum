@@ -28,11 +28,6 @@ div_edge.tooltip, div_protein.tooltip {
   pointer-events: none;
 }
 
-path.hull {
-  fill: none;
-  fill-opacity: 0.3;
-}
-
 .link {
   fill: none;
 }

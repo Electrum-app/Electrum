@@ -69,10 +69,12 @@ function draw_graph(data) {
   // Set graphing space
   svg_viewer = init_canvas(selector, _width, _height);
 
+
+
   // Draw edges
   if (background_forward === true) {
     init_edges(svg_viewer)
-    link = make_edges(svg_viewer, div_edge, that, _links);
+    link = make_edges(svg_viewer, div_edge, that, _links, selection);
 
     // Draw background SVG pathway if selection is a pathway
     draw_background(svg_viewer, that, selection);
@@ -81,7 +83,7 @@ function draw_graph(data) {
     draw_background(svg_viewer, that, selection);
 
     init_edges(svg_viewer)
-    link = make_edges(svg_viewer, div_edge, that, _links);
+    link = make_edges(svg_viewer, div_edge, that, _links, selection);
   }
 
   // Draw nodes (must happen after links are initialized)
@@ -99,7 +101,8 @@ function draw_graph(data) {
     .on("drag", dragged)
     //.on("end", dragended)
   )
-  circle = make_nodes(that, node, current_protein, div_protein);
+
+  circle = make_nodes(that, node, current_protein, div_protein, selection);
 
   // Draw text
   text = make_text(node, coordinates, selection, data);
@@ -185,7 +188,14 @@ function draw_graph(data) {
         return d;
       })
       .style("visibility", "hidden")
-      .style("opacity", 1);
+      .style("opacity", function(o) {
+        if (show_intra_pathway === true
+        && selection in data.pathway_dictionary) {
+          return 1
+        } else {
+          return 0.2
+        }
+      });
   }
 
   function showNodes() {
@@ -200,7 +210,14 @@ function draw_graph(data) {
         return d;
       })
       .style("visibility", "visible")
-      .style("opacity", 1);
+      .style("opacity", function(o) {
+        if (show_intra_pathway === true
+        && selection in data.pathway_dictionary) {
+          return 1
+        } else {
+          return 0.2
+        }
+      });
   }
 
   function dragsubject() {
