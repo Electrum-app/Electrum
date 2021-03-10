@@ -88,7 +88,7 @@ function draw_graph(data) {
   let node_outputs = init_nodes(
     svg_viewer, that, link, _nodes, selection,
     coordinates, current_protein, current_metabolite,
-    timer, prevent);
+    _distances, timer, prevent);
   node = node_outputs[0];
   current_protein = node_outputs[1];
   current_metabolite = node_outputs[2];
@@ -97,17 +97,24 @@ function draw_graph(data) {
     .subject(dragsubject)
     .on("start", dragstarted)
     .on("drag", dragged)
-    .on("end", dragended)
+    //.on("end", dragended)
   )
   circle = make_nodes(that, node, current_protein, div_protein);
 
   // Draw text
-  text = make_text(node, coordinates);
+  text = make_text(node, coordinates, selection, data);
 
   showNodes();
 
   if (!(selection in that.pathway_dictionary)) {
     simulation.on("tick", tick);
+  } else if (show_intra_pathway === true) {
+    if (_links[0].x === undefined) {
+      simulation.tick(50);
+    }
+    circle.attr("transform", transform);
+    link.attr("d", linkArc);
+    text.attr("transform", transform);
   } else if (use_edge_bundling === false) {
     //simulation.on("tick", tick);
     if (_links[0].x === undefined) {
@@ -115,13 +122,6 @@ function draw_graph(data) {
     }
     circle.attr("transform", transform);
     link.attr("d", linkFlat);
-    text.attr("transform", transform);
-  } else if (show_intra_pathway === true && show_inter_pathway === false) {
-    if (_links[0].x === undefined) {
-      simulation.tick(50);
-    }
-    circle.attr("transform", transform);
-    link.attr("d", linkArc);
     text.attr("transform", transform);
   } else {
     // generate bundling path
@@ -154,13 +154,6 @@ function draw_graph(data) {
     circle.attr("transform", transform);
     link.attr("d", d => d3line(d.path_d));
     text.attr("transform", transform);
-
-
-  }
-
-
-  if (selection in that.pathway_dictionary && show_all === false) {
-    setTimeout(delayDisappear, 1000);
   }
 
   // Draw curved edges

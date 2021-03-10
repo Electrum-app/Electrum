@@ -24,7 +24,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <html>
 
-<link rel="shortcut icon" href="_data/img/electrum-logo.png">
+<link rel="shortcut icon" href="data/img/electrum-logo.png">
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/modal.css">
@@ -36,8 +36,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 <script src="js/d3-ForceEdgeBundling/d3-ForceEdgeBundling.js"></script>
 <script src="js/coordinates.js"></script>
 <script src="js/backgrounds.js"></script>
-<script src="js/proteins.js"></script>
-<script src="js/metabolites.js"></script>
 <script src="js/js-colormaps.js"></script>
 <script src="js/display.js"></script>
 <script src="js/graph.js"></script>
@@ -66,8 +64,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
       <div id="check_box" class="inline-field">
         <input type="checkbox" id="toggle_intra_pathway" checked>
         <label for="toggle_intra_pathway"> Show intra-pathway metabolites</label><br>
-        <input type="checkbox" id="toggle_inter_pathway" checked>
-        <label for="toggle_inter_pathway"> Show inter-pathway metabolites</label>
       </div>
     </div>
     <br>
@@ -89,10 +85,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <br>
     <div title="Click to toggle on or off metabolite labels.">
       <button id="toggle_labels">Toggle Metabolite Labels</button>
-    </div>
-    <br>
-    <div title="Click to toggle on or off all metabolites.">
-      <button id="toggle_all">Toggle All Metabolites</button>
     </div>
     <br>
     <div title="Click to toggle background pathway image on top or behind edges.">

@@ -31,15 +31,9 @@ function set_selection(data, selection) {
     let _metabolite_ids = [];
     if (show_intra_pathway === true) {
       _metabolite_ids = _metabolite_ids.concat(_intra_ids);
+    } else {
+      _metabolite_ids = data.metabolites.filter(e => e);
     }
-    if (show_inter_pathway === true) {
-      let _inter_ids = data.metabolites.filter(e => !(_intra_ids.includes(e)));
-      _metabolite_ids = _metabolite_ids.concat(_inter_ids);
-    }
-    // finish this
-    //if (show_intra_pathway === true && show_inter_pathway === false) {
-    //
-    //}
 
     let _all_ids = Object.keys(_selector_ids).concat(_metabolite_ids)
 
@@ -57,12 +51,12 @@ function set_selection(data, selection) {
       .filter(function(node) {
         return node.id in _selector_ids || _metabolites.includes(node.id);
       })
-    if (show_intra_pathway === true && show_inter_pathway === false) {
+    if (show_intra_pathway === true) {
       coordinates = data.pathway_dictionary_i[selection];
     } else {
       coordinates = data.pathway_dictionary[selection];
     }
-    _distances = 2250;
+    _distances = 3000;
   } else if (data.proteins.includes(selection)) {
     _links = data.links.filter(link => link.source.id === selection)
 
@@ -79,7 +73,7 @@ function set_selection(data, selection) {
 
     coordinates = {};
     coordinates[selection] = [0, 2500, 1];
-    _distances = 850;
+    _distances = 1500;
   } else {
     console.log("Did not select a protein or pathway")
     return
@@ -287,7 +281,7 @@ function draw_background(svg_viewer, data, selection) {
     let _url;
     let _height;
     let _y_pos;
-    if (show_intra_pathway === true && show_inter_pathway === false) {
+    if (show_intra_pathway === true) {
       _url = _backgrounds.url_intra;
       _height = _backgrounds.height_intra;
       _y_pos = _backgrounds.y_pos_intra;
@@ -308,7 +302,7 @@ function draw_background(svg_viewer, data, selection) {
 function init_nodes(
   svg_viewer, data, link, _nodes, selection,
   coordinates, current_protein, current_metabolite,
-  timer, prevent) {
+  distance, timer, prevent) {
 
   var node = svg_viewer
     .selectAll(".node")
@@ -353,9 +347,13 @@ function init_nodes(
       }, delay);
     })
 
+  console.log(node)
+
+  let node_counter = 0;
+  let node_array_len = node._groups[0].length;
+
   node.each(function(d) {
     if (show_intra_pathway === true &&
-      show_inter_pathway === false &&
       selection in data.pathway_dictionary) {
       d.fx = coordinates[d.id][0] + 1005;
       d.fy = coordinates[d.id][1] - 960;
@@ -363,10 +361,24 @@ function init_nodes(
       d.type === "other_protein") {
       d.fx = coordinates[d.id][0] + 1005;
       d.fy = coordinates[d.id][1] - 960;
+    } else {
+      let new_positions = circleCoord(node_counter, node_array_len, distance)
+      d.fx = new_positions[0] + 1005;
+      d.fy = new_positions[1] + 1600;
+      node_counter += 1;
     }
+
   });
 
   return [node, current_protein, current_metabolite];
+}
+
+function circleCoord(index, num_nodes, radius) {
+  let deg = (index / num_nodes) * 360;
+  let x = radius * Math.sin(deg);
+  let y = radius * Math.cos(deg);
+
+  return [x, y];
 }
 
 function make_nodes(data, node, current_protein, div_protein) {
@@ -471,12 +483,13 @@ function make_nodes(data, node, current_protein, div_protein) {
   return circle;
 }
 
-function make_text(node, coordinates) {
+function make_text(node, coordinates, selection, data) {
   var text = node
     .append("text")
     .raise()
     .html(function(d) {
-      if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true && show_inter_pathway === false)) {
+      if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true &&
+        selection in data.pathway_dictionary)) {
         if (coordinates[d.id][2] === 1) {
           return (
             "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +

@@ -21,12 +21,10 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 var use_absolute_values = true;
 var show_labels = true;
-var show_all = false;
 var background_forward = true;
 var use_edge_bundling = true;
 var toggle_scaling = false;
 var show_intra_pathway = true;
-var show_inter_pathway = true;
 var q_threshold = 0.1;
 
 class MIDASgraph {
@@ -62,10 +60,6 @@ class MIDASgraph {
       show_labels = modVar(show_labels);
       draw_graph(that)
     });
-    d3.select("#toggle_all").on("click", function() {
-      show_all = modVar(show_all);
-      draw_graph(that);
-    });
     d3.select("#toggle_background").on("click", function() {
       background_forward = modVar(background_forward);
       draw_graph(that);
@@ -85,10 +79,6 @@ class MIDASgraph {
     });
     d3.select("#toggle_intra_pathway").on("click", function() {
       show_intra_pathway = modVar(show_intra_pathway);
-      draw_graph(that);
-    });
-    d3.select("#toggle_inter_pathway").on("click", function() {
-      show_inter_pathway = modVar(show_inter_pathway);
       draw_graph(that);
     });
   }
