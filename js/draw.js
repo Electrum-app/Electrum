@@ -42,7 +42,6 @@ function draw_graph(data) {
       && selection in data.pathway_dictionary) {
     _nodes = add_intra_nodes(_nodes)
   }
-
   _links = sort_links(_links);
 
   // reset graph

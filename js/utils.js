@@ -429,6 +429,8 @@ function make_nodes(data, node, current_protein, div_protein, selection) {
         return "grey"
       } else if (d.isomers !== "") {
         return "lightgrey"
+      } else if (d.type === "added_metabolite") {
+        return "white"
       }
     })
 
@@ -825,7 +827,7 @@ function add_intra_nodes(nodes) {
       "isomers": "",
       "kegg_id": "",
       "protein_name": "",
-      "type": "metabolite",
+      "type": "added_metabolite",
       "uniprot_id": ""
     })
   }
