@@ -347,11 +347,15 @@ function init_nodes(
           if (d.type === "protein") {
             current_protein = d.id;
             // hide all links and metabolite nodes
-            hide_nodes(node)
-            hide_links(link)
+            //hide_nodes(node)
+            //hide_links(link)
             // get all interacting links and nodes
-            let these_metabolites = show_links(link, current_protein);
-            show_nodes(node, these_metabolites)
+            //let these_metabolites = show_links(link, current_protein);
+            //show_nodes(node, these_metabolites)
+
+
+            /* Add sub-structure pop-out here */
+
           } else if (d.type === "metabolite") {
             current_metabolite = d.id;
             display_metabolite_metadata(d, data);
@@ -544,18 +548,12 @@ function make_text(node, coordinates, selection, data) {
     .html(function(d) {
       if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true &&
         selection in data.pathway_dictionary)) {
-        if (coordinates[d.id][2] === 1) {
-          return (
-            "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
-            d.display_name.split("_")[0] +
-            "</tspan>"
-          );
+        if (show_intra_pathway === true
+            && selection in data.pathway_dictionary
+            && d.isomers !== "") {
+          return handle_intra_isomers(d);
         } else {
-          return (
-            "<tspan dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
-            d.display_name.split("_")[0] +
-            "</tspan>"
-          );
+          return handle_metabolite_side(d);
         }
       } else {
         if (show_labels === true) {
@@ -768,4 +766,69 @@ function highlight_interacting_proteins(d, e) {
   } else {
     d3.select("rect#" + e.target.id).style("fill", "red");
   }
+}
+
+function handle_intra_isomers(d) {
+  if (d.display_name === "Citrate") {
+    return (
+      "<tspan dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Citrate</tspan><tspan dx='200' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Isocitrate</tspan>"
+    );
+  } else if (d.display_name === "G3P") {
+    return (
+      "<tspan dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G3P</tspan><tspan dx='160' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>DHAP</tspan>"
+    );
+  } else if (d.display_name === "F6P") {
+    return (
+      "<tspan dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G6P</tspan><tspan dx='100' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>F6P</tspan>"
+    );
+  } else {
+    return handle_metabolite_side(d);
+  }
+}
+
+function handle_metabolite_side(d) {
+  if (coordinates[d.id][2] === 1) {
+    return (
+      "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
+      d.display_name.split("_")[0] +
+      "</tspan>"
+    );
+  } else if (coordinates[d.id][2] === 2) {
+    return (
+      "<tspan dx='15' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
+      d.display_name.split("_")[0] +
+      "</tspan>"
+    );
+  } else {
+    return (
+      "<tspan dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
+      d.display_name.split("_")[0] +
+      "</tspan>"
+    );
+  }
+}
+
+function add_intra_nodes(nodes) {
+  let add_nodes = [
+    "1,3-BPG",
+    "2PG",
+    "3-PHP",
+    "Lactate",
+    "Fumarate"
+  ];
+
+  for (let n in add_nodes) {
+    nodes.push({
+      "display_name": add_nodes[n],
+      "hmdb_id": "",
+      "id": add_nodes[n],
+      "isomers": "",
+      "kegg_id": "",
+      "protein_name": "",
+      "type": "metabolite",
+      "uniprot_id": ""
+    })
+  }
+
+  return nodes;
 }

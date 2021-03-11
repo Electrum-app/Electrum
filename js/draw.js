@@ -38,6 +38,11 @@ function draw_graph(data) {
   let _distances = selection_outputs[2];
   let coordinates = selection_outputs[3];
 
+  if (show_intra_pathway === true
+      && selection in data.pathway_dictionary) {
+    _nodes = add_intra_nodes(_nodes)
+  }
+
   _links = sort_links(_links);
 
   // reset graph
@@ -68,8 +73,6 @@ function draw_graph(data) {
 
   // Set graphing space
   svg_viewer = init_canvas(selector, _width, _height);
-
-
 
   // Draw edges
   if (background_forward === true) {

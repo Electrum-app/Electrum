@@ -70,37 +70,36 @@ const ccm_coordinates = {
 }
 
 const ccm_coordinates_intra = {
-  "D-Glucose": [0, 20, 0],
-  "Glucose 6-phosphate": [0, 360, 0],
-  "D-Fructose 6-phosphate": [0, 720, 0], //F6P
+  "D-Glucose": [-215, 330, 0],
+  "D-Fructose 6-phosphate": [-135, 690, 1], //G6P ; F6P
   "D-Fructose 1,6-bisphosphate": [0, 1050, 0],
-  "D-Glyceraldehyde 3-phosphate": [0, 1385, 0], //G3P
-  "Dihydroxyacetone phosphate": [300, 1385, 0], //DHAP
-  "Glyceric acid 1,3-biphosphate": [0, 1600, 0], //1,3-BPG
+  "D-Glyceraldehyde 3-phosphate": [0, 1385, 0], //G3P ; DHAP
+  "Dihydroxyacetone phosphate": [300, 1385, 0], //
+  "1,3-BPG": [0, 1710, 0], //1,3-BPG
   "D-3-Phosphoglyceric acid": [0, 2060, 0], //3PG
-  "D-2-Phosphoglyceric acid": [0, 2200, 0], //2PG
+  "2PG": [0, 2395, 0], //2PG
   "Phosphatidylethanolamine": [0, 2720, 0], //PEP
   "Hydroxypyruvic acid": [0, 2800, 0],
   "Pyruvate": [0, 3065, 0],
-  "Lactate": [400, 3060, 0],
+  "Lactate": [965, 3065, 1],
 
   "Acetyl coenzyme A": [470, 3680, 1],
-  "Citric acid": [715, 4030, 1],
+  "Citric acid": [720, 4050, 0], // Citrate ; Isocitrate
   "Isocitric acid": [800, 4400, 1],
-  "Ketoglutaric acid": [620, 4655, 1],
-  "Succinyl coenzyme A": [25, 4950, 1],
+  "Ketoglutaric acid": [590, 4645, 1],
+  "Succinyl coenzyme A": [25, 4910, 1],
   "Succinic acid": [-560, 4685, 0],
-  "Fumaric acid": [-600, 4400, 0],
+  "Fumarate": [-715, 4310, 0],
   "L-Malic acid": [-680, 3970, 0],
   "Oxaloacetic acid": [-420, 3650, 0],
 
-  "3-Phosphohydroxypyruvate": [600, 2060, 1], //3-PHP
+  "3-PHP": [630, 2060, 2], //3-PHP
   "Phosphatidylserine": [1195, 2060, 1], //3-PS
   "L-Serine": [1195, 2400, 1], // Serine
 
-  "GCK": [-150, 200, 0],
+  "GCK": [-450, 690, 0],
 
-  "GPI": [150, 560, 1],
+  "GPI": [200, 690, 1],
 
   "PFKL": [-200, 825, 0],
   "PFKP": [-200, 925, 0],
@@ -111,7 +110,7 @@ const ccm_coordinates_intra = {
 
   "GAPDH": [-150, 1550, 0],
 
-  "TPI1": [265, 1500, 1],
+  "TPI1": [265, 1215, 1],
 
   "PGK1": [-150, 1850, 0],
   "PGK2": [-150, 1950, 0],
@@ -137,10 +136,10 @@ const ccm_coordinates_intra = {
   "E2-PDH": [-450, 3450, 0],
   "E3-PDH": [-350, 3450, 1],
 
-  "CS": [775, 3850, 1],
+  "CS": [350, 4050, 0],
 
-  "IDH2": [500, 4500, 0],
-  "IDH3a2bg": [850, 4550, 1],
+  "IDH2": [520, 4350, 0],
+  "IDH3a2bg": [870, 4400, 1],
 
   "FH": [-850, 4120, 0],
 
