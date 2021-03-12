@@ -30,13 +30,6 @@ div_edge.tooltip, div_protein.tooltip {
 
 .link {
   fill: none;
-}
-
-#interaction {
-  fill: black;
-}
-
-.link.interaction {
   stroke: var(--link_color);
 }
 

@@ -24,6 +24,7 @@ var current_metabolite = "";
 var timer = 0;
 var delay = 200;
 var prevent = false;
+var selection_in_pathway = false;
 
 function draw_graph(data) {
 
@@ -41,6 +42,12 @@ function draw_graph(data) {
   let _nodes = selection_outputs[1];
   let _distances = selection_outputs[2];
   let coordinates = selection_outputs[3];
+
+  if (selection in data.pathway_dictionary) {
+    selection_in_pathway = true;
+  } else {
+    selection_in_pathway = false;
+  }
 
   if (show_intra_pathway === true
       && selection in data.pathway_dictionary) {
@@ -118,12 +125,12 @@ function draw_graph(data) {
     simulation.tick(50);
     circle.attr("transform", transform);
     link.attr("d", linkFlat);
-    text.attr("transform", transform);
+    text.attr("transform", transform_text);
   } else if (show_intra_pathway === true) {
     simulation.tick(50);
     circle.attr("transform", transform);
     link.attr("d", linkArc);
-    text.attr("transform", transform);
+    text.attr("transform", transform_text);
   } else {
     // generate bundling path
     simulation.tick(50);
@@ -148,14 +155,14 @@ function draw_graph(data) {
       .y(function(d) { return d.y; });
     circle.attr("transform", transform);
     link.attr("d", d => d3line(d.path_d));
-    text.attr("transform", transform);
+    text.attr("transform", transform_text);
   }
 
   // Draw curved edges
   function tick() {
     circle.attr("transform", transform);
     link.attr("d", linkFlat);
-    text.attr("transform", transform);
+    text.attr("transform", transform_text);
   }
 
   // Internal functions

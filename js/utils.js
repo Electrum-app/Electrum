@@ -90,7 +90,7 @@ function init_simulation(
   let _sim = d3
     .forceSimulation(_nodes)
     .force("link", d3.forceLink(_links)
-      .id(d => d.id)
+      .id(d => parsed_string(d.id))
       .distance(_distances)
       .strength(1))
     //.force("collide", d3.forceCollide().radius(d => d.r * 500).iterations(2))
@@ -164,7 +164,7 @@ function init_edges(svg_viewer) {
     .enter()
     .append("marker")
     .attr("id", function(d) {
-      return d;
+      return parsed_string(d);
     })
     .append("path");
 }
@@ -177,10 +177,10 @@ function make_edges(svg_viewer, div_edge, data, _links, selection) {
     .enter()
     .append("path")
     .attr("id", function(d) {
-      return d.source.id + "\," + d.target.id
+      return parsed_string(d.source.id) + "\," + parsed_string(d.target.id)
     })
     .attr("class", function(d) {
-      return "link interaction";
+      return "link";
     })
     .attr("stroke-width", function(d) {
       if (d.metadata.type === "core" && toggle_scaling === true) {
@@ -275,10 +275,11 @@ function draw_color(d, abs_max, cmap) {
   let _val;
   if (d.metadata.type === "core") {
     if (toggle_scaling === true) {
-      _val = parseFloat(d.metadata.corrected_fold_change).toFixed(1);
+      _val = parseFloat(d.metadata.corrected_fold_change);
     } else {
-      _val = (parseFloat(d.metadata.q_value_percentile) * abs_max).toFixed(1);
+      _val = (parseFloat(d.metadata.q_value_percentile) * abs_max);
     }
+
     let _mod_val = 1;
     if (Math.abs(_val) >= abs_max) {
       _mod_val = 0;
@@ -298,7 +299,7 @@ function draw_color(d, abs_max, cmap) {
     if (use_absolute_values === true) {
       _val = Math.abs(_val);
     }
-    return cmap[_val];
+    return cmap[_val.toFixed(1)];
   }
 }
 
@@ -338,7 +339,7 @@ function init_nodes(
     .append("g")
     .attr("class", "node")
     .attr("id", function(d) {
-      return d.id
+      return parsed_string(d.id)
     })
 
   node
@@ -379,7 +380,12 @@ function init_nodes(
     })
 
   let node_counter = 0;
-  let node_array_len = node._groups[0].length
+  let node_array_len = node._groups[0]
+    .filter(function(n) {
+      if (n.__data__.type === "metabolite") {
+        return n;
+      }
+    }).length + 1
 
   // Refresh nodes
   node.each(function(d) {
@@ -408,9 +414,10 @@ function init_nodes(
 }
 
 function circleCoord(index, num_nodes, radius) {
-  let deg = (index / num_nodes) * 360;
-  let x = radius * Math.sin(deg);
-  let y = radius * Math.cos(deg);
+  let deg = (((index) / (num_nodes - 1)) * 360) -90;
+  let x = radius * Math.cos((deg * Math.PI / 180));
+  let y = radius * Math.sin((deg * Math.PI / 180));
+
   return [x, y, deg];
 }
 
@@ -430,7 +437,7 @@ function make_nodes(data, node, current_protein, div_protein, selection) {
       }
     })
     .attr("id", function(d) {
-      return d.id
+      return parsed_string(d.id)
     })
     .style("fill", function(d) {
       if (d.type === "protein") {
@@ -555,11 +562,8 @@ function make_nodes(data, node, current_protein, div_protein, selection) {
 function make_text(node, coordinates, selection, data) {
   var text = node
     .append("text")
-    .raise()
     .attr("id", function(d) {
-      return d.id
-
-
+      return parsed_string(d.id)
     })
     .html(function(d) {
       if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true &&
@@ -574,15 +578,13 @@ function make_text(node, coordinates, selection, data) {
       } else {
         if (show_labels === true) {
           return (
-            "<tspan dx='32' y='.31em' style='font-size: 46px; font-weight: bold;'>" +
+            "<tspan id='" + parsed_string(d.id) + "' style='font-size: 46px; font-weight: bold;'>" +
             d.display_name +
             "</tspan>"
           );
         }
       }
     });
-
-  text.attr("transform", "rotate(45)")
 
   return text;
 }
@@ -759,6 +761,39 @@ function transform(d) {
   return "translate(" + d.x + "," + d.y + ")";
 }
 
+function transform_text(d) {
+
+  if (d.type !== "metabolite"
+      || (show_intra_pathway === true
+      && selection_in_pathway === true)) {
+    return "translate(" + d.x + "," + d.y + ")";
+  } else {
+    let angle;
+    let x_offset;
+    if (d.degrees >= -90 && d.degrees <= 89) {
+      x_offset = d.x;
+      y_offset = d.y;
+      angle = (d.degrees);
+      d3.select("text#" + parsed_string(d.id))
+        .attr("text-anchor", "start")
+        .attr("dx", "45")
+        .attr("y", ".35em")
+    } else {
+      d3.select("text#" + parsed_string(d.id))
+        .attr("text-anchor", "end")
+        .attr("dx", "-45")
+        .attr("y", ".40em")
+      x_offset = d.x;
+      y_offset = d.y;
+
+      angle = (d.degrees - 180);
+    }
+    return "translate(" + x_offset + "," + y_offset + ") "
+         + "rotate(" + (angle) + ")";
+  }
+
+}
+
 
 function drawLink(d) {
   context.moveTo(d.source.x, d.source.y);
@@ -790,15 +825,15 @@ function highlight_interacting_proteins(d, e) {
 function handle_intra_isomers(d) {
   if (d.display_name === "Citrate") {
     return (
-      "<tspan dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Citrate</tspan><tspan dx='200' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Isocitrate</tspan>"
+      "<tspan id='" + parsed_string(d.id) + "' dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Citrate</tspan><tspan dx='200' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Isocitrate</tspan>"
     );
   } else if (d.display_name === "G3P") {
     return (
-      "<tspan dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G3P</tspan><tspan dx='160' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>DHAP</tspan>"
+      "<tspan id='" + parsed_string(d.id) + "' dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G3P</tspan><tspan dx='160' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>DHAP</tspan>"
     );
   } else if (d.display_name === "F6P") {
     return (
-      "<tspan dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G6P</tspan><tspan dx='100' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>F6P</tspan>"
+      "<tspan id='" + parsed_string(d.id) + "' dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G6P</tspan><tspan dx='100' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>F6P</tspan>"
     );
   } else {
     return handle_metabolite_side(d);
@@ -808,19 +843,19 @@ function handle_intra_isomers(d) {
 function handle_metabolite_side(d) {
   if (coordinates[d.id][2] === 1) {
     return (
-      "<tspan dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
+      "<tspan id='" + parsed_string(d.id) + "' dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
   } else if (coordinates[d.id][2] === 2) {
     return (
-      "<tspan dx='15' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
+      "<tspan id='" + parsed_string(d.id) + "' dx='15' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
   } else {
     return (
-      "<tspan dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
+      "<tspan id='" + parsed_string(d.id) + "' dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
@@ -850,4 +885,8 @@ function add_intra_nodes(nodes) {
   }
 
   return nodes;
+}
+
+function parsed_string(s) {
+  return "_" + s.replace(/ /g, "_").replace(/\(/g, "").replace(/\)/g, "").replace(/,/g, "").replace(/-/g, "_")
 }
