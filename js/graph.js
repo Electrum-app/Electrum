@@ -34,6 +34,7 @@ class MIDASgraph {
     this.metaboverseData = graph_data[1];
     this.metabolites_reference = graph_data[2];
     this.protein_reference = graph_data[3];
+    this.radial_order = graph_data[4].map(({Metabolites}) => Metabolites);
 
     this.init_data();
 

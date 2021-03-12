@@ -17,7 +17,7 @@ DATA_PATH = os.path.join(
     "..",
     "..",
     "data"
-     )
+)
 
 def import_table(
         _path,
@@ -141,7 +141,7 @@ def __main__():
 
 
 
-    # Output enrichment table 
+    # Output enrichment table
 
 
 

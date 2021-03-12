@@ -59,18 +59,12 @@ function set_selection(data, selection) {
     _distances = 3000;
   } else if (data.proteins.includes(selection)) {
     _links = data.links.filter(link => link.source.id === selection)
-
-    console.log(_links)
-
     // get the nodes with the links
     let _metabolites = [];
     for (let _m in _links) {
       _metabolites.push(_links[_m].target.id)
     }
     _nodes = data.nodes.filter(node => node.id === selection || _metabolites.includes(node.id))
-
-    console.log(_nodes)
-
     coordinates = {};
     coordinates[selection] = [0, 2500, 1];
     _distances = 1500;
@@ -99,11 +93,11 @@ function init_simulation(
       .id(d => d.id)
       .distance(_distances)
       .strength(1))
-    .force("collide", d3.forceCollide().radius(d => d.r * 500).iterations(2))
-    .force("charge", d3.forceManyBody().strength(-350))
-    .force("center", d3.forceCenter(_width / 0.9, _height / _height_center))
-    .alphaDecay(0.007)
-    .velocityDecay(0.7);
+    //.force("collide", d3.forceCollide().radius(d => d.r * 500).iterations(2))
+    //.force("charge", d3.forceManyBody().strength(-350))
+    //.force("center", d3.forceCenter(_width / 0.9, _height / _height_center))
+    //.alphaDecay(0.007)
+    //.velocityDecay(0.7);
   return _sim;
 }
 
@@ -137,6 +131,24 @@ function sort_links(links) {
   });
 }
 
+function sort_nodes(nodes, radial_order) {
+  let mod_nodes;
+  mod_nodes = nodes.filter(n => n.type !== "metabolite")
+  for (let r in radial_order) {
+    for (let m in nodes) {
+      if (radial_order[r] === nodes[m].id) {
+        mod_nodes.push(nodes[m])
+      }
+    }
+  }
+  for (let m in nodes) {
+    if (!(radial_order.includes(nodes[m].id)) && nodes[m].type === "metabolite") {
+      mod_nodes.push(nodes[m])
+    }
+  }
+  return mod_nodes
+}
+
 function init_edges(svg_viewer) {
   svg_viewer
     .append("defs")
@@ -151,14 +163,7 @@ function init_edges(svg_viewer) {
     .attr("id", function(d) {
       return d;
     })
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 15.7)
-    .attr("refY", -0.18)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-    .append("path")
-    .attr("d", "M0, -5L10, 0L0, 5");
+    .append("path");
 }
 
 function make_edges(svg_viewer, div_edge, data, _links, selection) {
@@ -251,6 +256,8 @@ function make_edges(svg_viewer, div_edge, data, _links, selection) {
         .style("opacity", function(o) {
           if (show_intra_pathway === true
           && selection in data.pathway_dictionary) {
+            return 1
+          } else if (!(selection in data.pathway_dictionary)) {
             return 1
           } else {
             return 0.2
@@ -369,7 +376,6 @@ function init_nodes(
     })
 
   let node_counter = 0;
-
   let node_array_len = node._groups[0].length
 
   // Refresh nodes
@@ -384,8 +390,8 @@ function init_nodes(
       d.fy = coordinates[d.id][1] - 960;
     } else {
       let new_positions = circleCoord(node_counter, node_array_len, distance)
-      d.fx = null;
-      d.fy = null;
+      d.fx = undefined;
+      d.fy = undefined;
       d.fx = new_positions[0] + 950;
       d.fy = new_positions[1] + 1600;
       node_counter += 1;
@@ -400,7 +406,6 @@ function circleCoord(index, num_nodes, radius) {
   let deg = (index / num_nodes) * 360;
   let x = radius * Math.sin(deg);
   let y = radius * Math.cos(deg);
-
   return [x, y];
 }
 
@@ -531,6 +536,8 @@ function make_nodes(data, node, current_protein, div_protein, selection) {
         .style("opacity", function(o) {
           if (show_intra_pathway === true
           && selection in data.pathway_dictionary) {
+            return 1
+          } else if (!(selection in data.pathway_dictionary)) {
             return 1
           } else {
             return 0.2

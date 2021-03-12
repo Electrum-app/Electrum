@@ -26,6 +26,10 @@ var delay = 200;
 var prevent = false;
 
 function draw_graph(data) {
+
+  // reset graph
+  d3.selectAll("#svg_viewer_id").remove();
+
   var that = data;
   var cmap = that.cmap;
   var cmap_greys = that.cmap_greys;
@@ -41,11 +45,10 @@ function draw_graph(data) {
   if (show_intra_pathway === true
       && selection in data.pathway_dictionary) {
     _nodes = add_intra_nodes(_nodes)
+  } else {
+    _nodes = sort_nodes(_nodes, data.radial_order)
   }
   _links = sort_links(_links);
-
-  // reset graph
-  d3.selectAll("#svg_viewer_id").remove();
 
   // All tooltip code adapted from:
   //https://bl.ocks.org/d3noob/a22c42db65eb00d4e369
@@ -117,40 +120,32 @@ function draw_graph(data) {
     link.attr("d", linkFlat);
     text.attr("transform", transform);
   } else if (show_intra_pathway === true) {
-    if (_links[0].x === undefined) {
-      simulation.tick(50);
-    }
+    simulation.tick(50);
     circle.attr("transform", transform);
     link.attr("d", linkArc);
     text.attr("transform", transform);
   } else {
     // generate bundling path
-    if (_links[0].path_d === undefined) {
-      simulation.tick(50);
-      let fbundling = d3.ForceEdgeBundling()
-        .nodes(simulation.nodes())
-        .edges(
-          simulation
-          .force('link').links().map(function(edge) {
-            return {
-              source: simulation.nodes().indexOf(edge.source),
-              target: simulation.nodes().indexOf(edge.target)
-            }
-          }));
-      let edge_bundles = fbundling();
+    simulation.tick(50);
+    let fbundling = d3.ForceEdgeBundling()
+      .nodes(simulation.nodes())
+      .edges(
+        simulation
+        .force('link').links().map(function(edge) {
+          return {
+            source: simulation.nodes().indexOf(edge.source),
+            target: simulation.nodes().indexOf(edge.target)
+          }
+        }));
+    let edge_bundles = fbundling();
 
-      for (let i = 0; i < _links.length; i++) {
-        _links[i].path_d = edge_bundles[i].slice(1, edge_bundles[i].length - 1);
-      }
+    for (let i = 0; i < _links.length; i++) {
+      _links[i].path_d = edge_bundles[i].slice(0, edge_bundles[i].length + 10);
     }
 
     let d3line = d3.line()
-      .x(function(d) {
-        return d.x;
-      })
-      .y(function(d) {
-        return d.y;
-      });
+      .x(function(d) { return d.x; })
+      .y(function(d) { return d.y; });
     circle.attr("transform", transform);
     link.attr("d", d => d3line(d.path_d));
     text.attr("transform", transform);
@@ -194,6 +189,8 @@ function draw_graph(data) {
         if (show_intra_pathway === true
         && selection in data.pathway_dictionary) {
           return 1
+        } else if (!(selection in data.pathway_dictionary)) {
+          return 1
         } else {
           return 0.2
         }
@@ -215,6 +212,8 @@ function draw_graph(data) {
       .style("opacity", function(o) {
         if (show_intra_pathway === true
         && selection in data.pathway_dictionary) {
+          return 1
+        } else if (!(selection in data.pathway_dictionary)) {
           return 1
         } else {
           return 0.2
