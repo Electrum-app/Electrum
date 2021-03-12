@@ -115,7 +115,10 @@ function init_canvas(selector, _width, _height) {
     .attr("height", _height - 80)
     .call(
       d3.zoom().on("zoom", function() {
-        svg_viewer.attr("transform", d3.event.transform);
+        svg_viewer
+          .transition()
+            .duration(500)
+          .attr("transform", d3.event.transform);
       })
     )
     .on("dblclick.zoom", null)
@@ -394,6 +397,8 @@ function init_nodes(
       d.fy = undefined;
       d.fx = new_positions[0] + 950;
       d.fy = new_positions[1] + 1600;
+      d.radians = (new_positions[2] * Math.PI / 180);
+      d.degrees = new_positions[2];
       node_counter += 1;
     }
 
@@ -406,7 +411,7 @@ function circleCoord(index, num_nodes, radius) {
   let deg = (index / num_nodes) * 360;
   let x = radius * Math.sin(deg);
   let y = radius * Math.cos(deg);
-  return [x, y];
+  return [x, y, deg];
 }
 
 function make_nodes(data, node, current_protein, div_protein, selection) {
@@ -553,6 +558,8 @@ function make_text(node, coordinates, selection, data) {
     .raise()
     .attr("id", function(d) {
       return d.id
+
+
     })
     .html(function(d) {
       if (d.type === "protein" || d.type === "other_protein" || (show_intra_pathway === true &&
@@ -574,6 +581,9 @@ function make_text(node, coordinates, selection, data) {
         }
       }
     });
+
+  text.attr("transform", "rotate(45)")
+
   return text;
 }
 
