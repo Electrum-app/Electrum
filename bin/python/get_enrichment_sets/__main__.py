@@ -138,11 +138,18 @@ def __main__():
         metabolite_reference=metabolite_reference)
 
     # Perform enrichment analysis
-
+    #unified_table.head()
 
 
     # Output enrichment table
+    """
+    ALDOA   CHEMONTID:0003457   observed#   expected#   p-val   fdr
+    ALDOA   CHEMONTID:0003458   observed#   expected#   p-val   fdr
+    ALDOA   CHEMONTID:0003459   observed#   expected#   p-val   fdr
 
+
+
+    """
 
 
 
