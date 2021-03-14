@@ -37,7 +37,6 @@ class MIDASgraph {
     this.radial_order = graph_data[4].map(({Metabolites}) => Metabolites);
 
     this.init_data();
-
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
     this.pathway_dictionary = pathway_dictionary;
@@ -49,7 +48,7 @@ class MIDASgraph {
 
     // Create watcher roles for menus and buttons
     let that = this;
-    d3.select("#menu").on("change", function() {
+    d3.select("#pathway_menu").on("change", function() {
       draw_graph(that)
     });
     d3.select("#toggle_absolute_values").on("click", function() {

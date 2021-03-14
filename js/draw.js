@@ -36,7 +36,7 @@ function draw_graph(data) {
   var cmap_greys = that.cmap_greys;
 
   // get nodes, links, coordinates for pathway or protein selection
-  let selection = document.getElementById("menu").value;
+  let selection = document.getElementById("pathway_menu").value;
   let selection_outputs = set_selection(that, selection);
   let _links = selection_outputs[0];
   let _nodes = selection_outputs[1];
