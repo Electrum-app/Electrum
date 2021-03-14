@@ -44,7 +44,7 @@ class MIDASgraph {
     this.pathway_dictionary_i = pathway_dictionary_i;
     this.components_dictionary = components_dictionary;
     this.background_dictionary = background_dictionary;
-    this.menu_selector = "menu";
+    this.menu_selector = "pathway_menu";
     this.make_menu();
 
     // Create watcher roles for menus and buttons

@@ -106,7 +106,3 @@ tspan {
   border-left: 10px solid var(--arrow_color);
   float: right;
 }
-
-div {
-  display: inline-block;
-}

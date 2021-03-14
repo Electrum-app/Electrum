@@ -1,0 +1,205 @@
+<!--
+Electrum
+Dynamic exploration of MIDAS protein-metabolite interaction data
+https://github.com/j-berg/Electrum/
+alias: electrum
+
+Copyright (C) 2020-2021 Jordan A. Berg
+Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<meta charset="utf-8" />
+<title>About - Electrum</title>
+
+<html>
+
+<link rel="shortcut icon" href="data/img/electrum-logo.png" />
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/buttons.css">
+
+<script src="js/jquery/jquery.min.js"></script>
+<script src="js/d3/d3.min.js"></script>
+<script src="js/d3-ForceEdgeBundling/d3-ForceEdgeBundling.js"></script>
+<script src="js/coordinates.js"></script>
+<script src="js/backgrounds.js"></script>
+<script src="js/js-colormaps.js"></script>
+<script src="js/display.js"></script>
+<script src="js/graph.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/export.js"></script>
+<script src="js/utils.js"></script>
+
+<head>
+  <!-- menu -->
+  <menu>
+    <font size=3.25px>
+      <menuItem style="float:right"><a href="https://github.com/Electrum/Electrum/issues" target="_blank">Contact Us</a></menuItem>
+      <menuItem style="float:right"><a href="cite.html">Cite</a></menuItem>
+      <menuItem style="float:right"><a href="faqs.html">FAQs</a></menuItem>
+      <menuItem style="float:right"><a href="about.html">About</a></menuItem>
+      <menuItem style="float:left"><a href="index.html">Electrum</a></menuItem>
+    </font>
+  </menu>
+</head>
+
+<body>
+  <div class="pad-t-100 pad-lr-300">
+
+    <h1>Contents</h1>
+    <a href="#sec-basics"><b><u>1 Basics</u></b></a><br>
+    <a href="#sec-menu"><b><i>&emsp;1.1 Drop-down menu</i></b></a><br>
+    <a href="#sec-buttons"><b><i>&emsp;1.2 Buttons</i></b></a><br>
+    <a href="#sec-colors"><b><i>&emsp;1.3 Colors</i></b></a><br><br>
+
+    <a href="#sec-data"><b><u>2 Data</u></b></a><br>
+    <a href="#sec-upload"><b><i>&emsp;2.1 Uploading protein-metabolite interaction data</i></b></a><br>
+    <a href="#sec-format"><b><i>&emsp;2.2 Required input data formatting</i></b></a><br><br>
+
+    <a href="#sec-analysis"><b><u>3 Analysis Features</u></b></a><br>
+    <a href="#sec-enrichment"><b><i>&emsp;3.1 Sub-structure enrichment analysis</i></b></a><br>
+    <a href="#sec-reactions"><b><i>&emsp;3.2 Metabolite reaction metadata</i></b></a><br>
+    <a href="#sec-metadata"><b><i>&emsp;3.3 Accessing other metadata</i></b></a>
+
+  </div>
+
+  <div class="pad-t-50 pad-lr-300">
+
+    <br>
+
+    <a id="sec-basics"><br></a>
+    <h2>1 Basics</h2>
+
+
+    <a id="sec-menu"><br></a>
+    <h3>1.1 Drop-down menu</h3>
+
+    Select either a curated metabolic pathway with its assayed set of proteins or select an individual protein to view the relevant protein-metabolite interactions.
+    <br>
+    <div id="menu_panel" class="pad-t-05">
+      <select id="pathway_menu"></select>
+        </div>
+    <br>
+    <br>
+    <br>
+
+
+    <a id="sec-buttons"><br></a>
+    <h3>1.2 Buttons</h3>
+
+    Toggle between intra-pathway-only metabolites for the selected pathway or all assayed metabolites in the MIDAS database. This only applies when a pathway has been selected.
+    <br>
+    <div>
+      <label class="switch">
+        <input type="checkbox" id="toggle_intra_pathway">
+        <div class="slider round intra"></div>
+      </label>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Toggle between 1-D scaling (where edge colors are scaled by q-value only and all edge widths are identical) and 2-D scaling (where edge widths are scaled according to the interaction's q-value and edge colors are scaled by the interaction's log2 fold change).
+    <br>
+    <div>
+      <label class="switch">
+        <input type="checkbox" id="toggle_scaling">
+        <div class="slider round scaling"></div>
+      </label>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Change the q-value threshold to determine which protein-metabolite interactions are displayed. The default value is set at 0.1. Hovering over an edge will display the q-value of the protein-metabolite interaction.
+    <br>
+    <div id="qval_box">
+      q-value cut-off:
+      <input type="number" name="qval_button" id="qval_button" min="0" max="1" value="0.1" step="0.01" />
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to toggle on or off absolute values for fold changes. By default, absolute fold changes for protein-metabolite interactios are displayed. Hovering over an edge will display the fold change of the protein-metabolite interaction.
+    <br>
+    <div>
+      <button id="toggle_absolute_values">Toggle Absolute Values</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to toggle on or off metabolite labels. By default, metabolite labels are displayed.
+    <br>
+    <div>
+      <button id="toggle_labels">Toggle Metabolite Labels</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to toggle background pathway image on top or behind edges. By default, the pathway image is layered on top of the protein/metabolite nodes and edges. However, this can block certain edges' metadata from being displayed. However, toggling the pathway image back will allow for these edges' metadata to be displayed when hovering over a given edge.
+    <br>
+    <div>
+      <button id="toggle_background">Toggle Pathway Forward/Back</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to save the current graph view as an SVG.
+    <br>
+    <div>
+      <button id="saveSVG">Export SVG</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+
+    <a id="sec-colors"><br></a>
+    <h3>1.3 Colors</h3>
+
+
+
+    <a id="sec-data"><br></a>
+    <h2>2 Data</h2>
+
+    <a id="sec-upload"><br></a>
+    <h3>2.1 Uploading protein-metabolite interaction data</h3>
+
+    <a id="sec-format"><br></a>
+    <h3>2.2 Required input data formatting</h3>
+
+
+    <a id="sec-analysis"><br></a>
+    <h2>3 Analysis Features</h2>
+
+    <a id="sec-enrichment"><br></a>
+    <h3>3.1 Sub-structure enrichment analysis</h3>
+
+    <a id="sec-reactions"><br></a>
+    <h3>3.2 Metabolite reaction metadata</h3>
+
+    <a id="sec-metadata"><br></a>
+    <h3>3.3 Accessing other metadata</h3>
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+</body>
+
+</html>

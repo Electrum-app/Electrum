@@ -236,11 +236,11 @@ function make_edges(svg_viewer, div_edge, data, _links, selection) {
     .on("mouseout", function(d) {
       node.each(function(n) {
         if (n.id === current_protein) {
-          d3.select("rect#" + n.id).style("fill", "red");
+          d3.select("rect#" + parsed_string(n.id)).style("fill", "red");
         } else if (n.type === "other_protein") {
-          d3.select("rect#" + n.id).style("fill", "grey");
+          d3.select("rect#" + parsed_string(n.id)).style("fill", "grey");
         } else if (n.type === "protein") {
-          d3.select("rect#" + n.id).style("fill", "orange");
+          d3.select("rect#" + parsed_string(n.id)).style("fill", "orange");
         }
       })
       // remove label tooltip
@@ -527,11 +527,11 @@ function make_nodes(data, node, current_protein, div_protein, selection) {
     .on("mouseout", function(d) {
       node.each(function(n) {
         if (n.id === current_protein) {
-          d3.select("rect#" + n.id).style("fill", "red");
+          d3.select("rect#" + parsed_string(n.id)).style("fill", "red");
         } else if (n.type === "other_protein") {
-          d3.select("rect#" + n.id).style("fill", "grey");
+          d3.select("rect#" + parsed_string(n.id)).style("fill", "grey");
         } else if (n.type === "protein") {
-          d3.select("rect#" + n.id).style("fill", "orange");
+          d3.select("rect#" + parsed_string(n.id)).style("fill", "orange");
         }
       })
 
@@ -712,11 +712,11 @@ function display_metabolite_metadata(this_metabolite, data) {
 function reset_proteins(_nodes, current_protein) {
   for (let n in _nodes) {
     if (current_protein === _nodes[n].id) {
-      d3.select("rect#" + _nodes[n].id).style("fill", "red");
+      d3.select("rect#" + parsed_string(_nodes[n].id)).style("fill", "red");
     } else if (current_protein !== _nodes[n].id && "protein" === _nodes[n].type) {
-      d3.select("rect#" + _nodes[n].id).style("fill", "orange");
+      d3.select("rect#" + parsed_string(_nodes[n].id)).style("fill", "orange");
     } else if (current_protein !== _nodes[n].id && "other_protein" === _nodes[n].type) {
-      d3.select("rect#" + _nodes[n].id).style("fill", "grey");
+      d3.select("rect#" + parsed_string(_nodes[n].id)).style("fill", "grey");
     }
   }
 }
@@ -816,9 +816,9 @@ function modVar(_var) {
 
 function highlight_interacting_proteins(d, e) {
   if (e.source.id !== d.id) {
-    d3.select("rect#" + e.source.id).style("fill", "red");
+    d3.select("rect#" + parsed_string(e.source.id)).style("fill", "red");
   } else {
-    d3.select("rect#" + e.target.id).style("fill", "red");
+    d3.select("rect#" + parsed_string(e.target.id)).style("fill", "red");
   }
 }
 

@@ -25,6 +25,10 @@ html {
   font-family: sans-serif;
 }
 
+div {
+  display: inline-block;
+}
+
 text {
   font: 12px sans-serif;
   text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
@@ -185,6 +189,7 @@ menu {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 100
 }
 
 menuitem {
@@ -375,4 +380,53 @@ img {
   line-height: 15px;
   text-shadow: none;
   user-select: none;
+}
+
+.margin-t-50 {
+  margin-top: 50px;
+}
+
+.pad-t-05 {
+  padding-top:5px;
+}
+
+.pad-t-50 {
+  padding-top:50px;
+}
+.pad-t-100 {
+  padding-top:100px;
+}
+
+.pad-tb-100 {
+  padding-top:100px;
+  padding-bottom:100px;
+}
+.pad-tb-150 {
+  padding-top:150px;
+  padding-bottom:150px;
+}
+.pad-tb-200 {
+  padding-top:200px;
+  padding-bottom:200px;
+}
+
+.pad-lr-300 {
+  padding-left:300px;
+  padding-right:300px;
+}
+.pad-lr-400 {
+  padding-left:400px;
+  padding-right:400px;
+}
+.pad-lr-500 {
+  padding-left:500px;
+  padding-right:500px;
+}
+.pad-lr-600 {
+  padding-left:600px;
+  padding-right:600px;
+}
+
+.fix-position {
+  position: fixed;
 }

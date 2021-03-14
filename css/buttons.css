@@ -20,11 +20,9 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #menu_panel {
   overflow: hidden;
-  position: fixed;
-  margin-top: 50px;
 }
 
-#menu {
+#pathway_menu {
   font: 16px sans-serif;
   margin-left: 15px;
 }
