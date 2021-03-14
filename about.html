@@ -172,6 +172,37 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <a id="sec-colors"><br></a>
     <h3>1.3 Colors</h3>
 
+    <b>1-D Scaling</b>
+    <br>
+    Edge colors are scaled by q-value only and all edge widths are identical.
+    <br>
+    <div class="test_q_slider_1">
+      &emsp;&emsp;<i>q-value</i>:&nbsp;&nbsp;0.1<input id="q_slider_1" type="range" min="0" max="1" value="0.05" step="0.01" onchange="updateSliderQ1(this.value)">0
+    </div>
+    <br>
+    <div id="line-1D" class="test_line_1 margin-t-15 margin-b-25 margin-l-100">
+    </div>
+
+    <br>
+    <br>
+    <b>2-D Scaling</b>
+    <br>
+    Edge widths are scaled according to the interaction's q-value and edge colors are scaled by the interaction's log2 fold change.
+    <br>
+    <div id="test_q_slider_2">
+      &emsp;&emsp;<i>q-value</i>:&nbsp;&nbsp;0.1<input id="q_slider_2" type="range" min="0" max="1" value="0.05" step="0.01" onchange="updateSliderQ2(this.value)">0
+    </div>
+    <br>
+    <div id="test_fc_slider_2">
+      <i>fold change</i>: &ensp;&nbsp;-5<input id="fc_slider_2" type="range" min="-5" max="5" value="0" step="0.5" onchange="updateSliderFC2(this.value)">5
+    </div>
+    <br>
+    <div id="line-2D" class="test_line_2 margin-t-15 margin-l-100">
+    </div>
+
+    <br>
+    <br>
+    <br>
 
 
     <a id="sec-data"><br></a>
@@ -201,5 +232,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   </div>
 </body>
+
+<script src="js/range_sliders.js"></script>
 
 </html>

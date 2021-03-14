@@ -382,8 +382,31 @@ img {
   user-select: none;
 }
 
+.margin-t-15 {
+  margin-top: 15px;
+}
+
+.margin-t-25 {
+  margin-top: 25px;
+}
+
+.margin-b-25 {
+  margin-bottom: 25px;
+}
+
 .margin-t-50 {
   margin-top: 50px;
+}
+
+
+
+.margin-tb-25 {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.margin-l-100 {
+  margin-left: 100px;
 }
 
 .pad-t-05 {
@@ -397,14 +420,21 @@ img {
   padding-top:100px;
 }
 
+.pad-tb-25 {
+  padding-top:25px;
+  padding-bottom:25px;
+}
+
 .pad-tb-100 {
   padding-top:100px;
   padding-bottom:100px;
 }
+
 .pad-tb-150 {
   padding-top:150px;
   padding-bottom:150px;
 }
+
 .pad-tb-200 {
   padding-top:200px;
   padding-bottom:200px;

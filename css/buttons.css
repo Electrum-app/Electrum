@@ -65,6 +65,17 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   margin-right: 1px;
 }
 
+.test_line_1,
+.test_line_2 {
+  background: black;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  width: 250px;
+  height: 10px;
+  z-index: 99;
+}
+
 .inline-field input,
 .inline-field label {
   display: inline-block;
