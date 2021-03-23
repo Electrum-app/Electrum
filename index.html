@@ -95,6 +95,10 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <div title="Click to save the current graph view as an SVG">
       <button id="saveSVG">Export SVG</button>
     </div>
+    <br>
+    <form id="uploadTableForm" enctype="multipart/form-data" action="/upload/file" method="post">
+        <input id="uploadTable" type="file" />
+    </form>
   </div>
   <div id="graph" align="center">
 

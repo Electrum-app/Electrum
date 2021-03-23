@@ -25,6 +25,7 @@ var background_forward = true;
 var toggle_scaling = false;
 var show_intra_pathway = true;
 var q_threshold = 0.1;
+var reader = new FileReader();
 
 class MIDASgraph {
 
@@ -36,7 +37,6 @@ class MIDASgraph {
     this.protein_reference = graph_data[3];
     this.radial_order = graph_data[4].map(({Metabolites}) => Metabolites);
 
-    this.init_data();
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
     this.pathway_dictionary = pathway_dictionary;
@@ -44,10 +44,28 @@ class MIDASgraph {
     this.components_dictionary = components_dictionary;
     this.background_dictionary = background_dictionary;
     this.menu_selector = "pathway_menu";
+
+    this.init_data();
     this.make_menu();
 
     // Create watcher roles for menus and buttons
     let that = this;
+
+    d3.select("#uploadTable").on("change", function() {
+      var file = document.querySelector('input[type=file]').files[0];
+      reader.onload = function(event) {
+        var arrayBuffer = event.target.result;
+        var data = d3.tsvParse(arrayBuffer, function(d){
+          return d;
+        });
+        that.graphData = data;
+        that.init_data();
+        that.make_menu();
+      }
+      if (file) {
+        reader.readAsText(file);
+      }
+    })
     d3.select("#pathway_menu").on("change", function() {
       draw_graph(that)
     });
