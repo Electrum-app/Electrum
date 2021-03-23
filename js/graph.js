@@ -115,6 +115,9 @@ class MIDASgraph {
     // Generate drop-down menu for species select
     var menu = [];
     menu = document.getElementById(this.menu_selector);
+    while (menu.firstChild) { // clear old menu options if new data are loaded
+        menu.removeChild(menu.firstChild);
+    }
     for (var i = 0; i < menu_list.length; i++) {
       var option = document.createElement("option");
       option.innerHTML = menu_list[i];
