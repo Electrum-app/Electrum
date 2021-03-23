@@ -32,12 +32,17 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 #toggle_all,
 #toggle_background,
 #saveSVG,
-#uploadTableForm,
+#uploadTable,
+#upfile0,
 #toggle_edge_bundling {
   font: 12px sans-serif;
   margin-left: 15px;
   margin-top: 5px;
   padding-top: 3px;
+}
+
+#uploadTableForm {
+  margin-top: -3px;
 }
 
 #qval_box,

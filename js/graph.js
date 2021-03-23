@@ -52,7 +52,9 @@ class MIDASgraph {
     let that = this;
 
     d3.select("#uploadTable").on("change", function() {
+
       var file = document.querySelector('input[type=file]').files[0];
+      console.log(file)
       reader.onload = function(event) {
         var arrayBuffer = event.target.result;
         var data = d3.tsvParse(arrayBuffer, function(d){

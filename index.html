@@ -31,6 +31,10 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 <link rel="stylesheet" href="css/buttons.css">
 <link rel="stylesheet" href="css/visualize.css">
 
+<script src="https://cdn.jsdelivr.net/npm/web-streams-polyfill@2.0.2/dist/ponyfill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/eligrey/Blob.js/Blob.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/streamsaver@2.0.3/StreamSaver.min.js"></script>
+
 <script src="js/jquery/jquery.min.js"></script>
 <script src="js/d3/d3.min.js"></script>
 <script src="js/d3-ForceEdgeBundling/d3-ForceEdgeBundling.js"></script>
@@ -92,17 +96,22 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
       <button id="toggle_background">Toggle Pathway Forward/Back</button>
     </div>
     <br>
-    <div title="Click to save the current graph view as an SVG">
-      <button id="saveSVG">Export SVG</button>
+    <div title="Click to upload a protein-metabolite interaction table."
+      <form id="uploadTableForm" enctype="multipart/form-data" action="/upload/file" method="post">
+          <input id="uploadTable" type="file" value="Upload Table" />
+      </form>
     </div>
     <br>
-    <form id="uploadTableForm" enctype="multipart/form-data" action="/upload/file" method="post">
-        <input id="uploadTable" type="file" />
-    </form>
+    <div title="Click to save the current graph view as an SVG.">
+      <form id="saveSVGForm" enctype="multipart/form-data" action="#" onsubmit="return download_svg(this);" method="get">
+        <button id="upfile0" class="btn"><i class="fa fa-download" id="upfile1" style="cursor:pointer"></i> Export SVG</button>
+        <input id="saveSVG" type="file" value="Export SVG" style="display:none" />
+      </form>
+    </div>
   </div>
-  <div id="graph" align="center">
 
-  </div>
+  <div id="graph" align="center" />
+
   <div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
