@@ -372,6 +372,11 @@ img {
   user-select: none;
 }
 
+#example_data_image {
+  position: relative;
+  margin-left: -40px;
+}
+
 .selectedData {
   width: 90px;
   height: 15px;

@@ -211,8 +211,24 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <a id="sec-upload"><br></a>
     <h3>2.1 Uploading protein-metabolite interaction data</h3>
 
+    Input protein-metabolite tables can be uploaded by clicking the appropriate button (as shown below) and selecting the file corresponding to protein-metabolite interaction data.
+    <br>
+    <form id="uploadTableForm" enctype="multipart/form-data" action="/upload/file" method="post">
+        <input id="uploadTable" type="file" />
+    </form>
+    <br>
+    <br>
+    <br>
+
     <a id="sec-format"><br></a>
     <h3>2.2 Required input data formatting</h3>
+
+    Any protein-metabolite interaction data to be visualized and explored using Electrum must follow the following format style and must be exported as a tab-delimited data table with the file suffix ".txt"
+
+    <img id="example_data_image" src="data/img/example_data.png" alt="Example MIDAS protein-metabolite interaction table" >
+    <br>
+    <br>
+    <br>
 
 
     <br>
