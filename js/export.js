@@ -67,13 +67,9 @@ function holder_function() {
 
 function download_svg(d) {
 
-  toSVG()
-
-
   var svg = document.querySelector('#svg_viewer_id');
   var xml = new XMLSerializer().serializeToString(svg);
   xml = xml.replace(/--link_color/g, "fill: none; stroke");
-  console.log(xml)
 
   var blob = new Blob([xml])
   var fileStream = streamSaver.createWriteStream('plot.svg', {
