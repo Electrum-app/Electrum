@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const streamSaver = window.streamSaver
-const uInt8 = new TextEncoder().encode('StreamSaver is awesome')
 
 $("#upfile1").click(function () {
     $("#saveSVG").trigger('click');
@@ -26,13 +25,13 @@ $("#upfile1").click(function () {
 
 function download_png(d) {
   saveSvgAsPng(
-      d3.select("#svg_viewer_id")._groups[0][0].cloneNode(true),
-      "plot.png", {
-        encoderOptions: 1,
-        scale: 1,
-        encoderType: "image/svg+xml"
-      }
-    );
+    d3.select("#svg_viewer_id")._groups[0][0].cloneNode(true),
+    "plot.png", {
+      encoderOptions: 1,
+      scale: 1,
+      encoderType: "image/svg+xml"
+    }
+  );
 }
 
 
