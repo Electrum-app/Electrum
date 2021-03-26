@@ -320,6 +320,7 @@ function draw_background(svg_viewer, data, selection) {
     }
     svg_viewer
       .append('svg:image')
+      .attr('id', 'background_image')
       .attr('xlink:href', _url)
       .attr("height", _height)
       .attr("x", _backgrounds.x_pos)

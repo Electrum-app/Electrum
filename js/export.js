@@ -24,12 +24,26 @@ $("#upfile1").click(function () {
     $("#saveSVG").trigger('click');
 });
 
-function download_svg(d) {
-  var _this_svg = d3.select("#svg_viewer_id")._groups[0][0].cloneNode(true);
+function download_png(d) {
+  saveSvgAsPng(
+      d3.select("#svg_viewer_id")._groups[0][0].cloneNode(true),
+      "plot.png", {
+        encoderOptions: 1,
+        scale: 1,
+        encoderType: "image/svg+xml"
+      }
+    );
+}
 
-  var xmlns = "http://www.w3.org/2000/xmlns/";
-  var xlinkns = "http://www.w3.org/1999/xlink";
-  var svgns = "http://www.w3.org/2000/svg";
+
+function holder_function() {
+  const xmlns = "http://www.w3.org/2000/xmlns/";
+  const xlinkns = "http://www.w3.org/1999/xlink";
+  const svgns = "http://www.w3.org/2000/svg";
+
+  var _this_svg = d3.select("#svg_viewer_id")
+    .classed('c3', true)
+    ._groups[0][0].cloneNode(true);
   _this_svg.setAttributeNS(xmlns, "xmlns", svgns);
   _this_svg.setAttributeNS(xmlns, "xmlns:xlink", xlinkns);
 
@@ -46,21 +60,34 @@ function download_svg(d) {
 
   var _Serializer = new XMLSerializer();
   svg_output = _Serializer.serializeToString(_this_svg);
-  var svg_split = svg_output.split("<defs><marker");
-  svg_string = svg_split[0] + "<defs><style>" + text + "</style><marker" + svg_split[1];
 
-  const blob = new Blob([svg_string])
-  const fileStream = streamSaver.createWriteStream('plot.svg', {
+  // Additional clean-up
+  svg_output = svg_output.replace(/--link_color/g, "fill: none; stroke");
+
+}
+
+function download_svg(d) {
+
+  toSVG()
+
+
+  var svg = document.querySelector('#svg_viewer_id');
+  var xml = new XMLSerializer().serializeToString(svg);
+  xml = xml.replace(/--link_color/g, "fill: none; stroke");
+  console.log(xml)
+
+  var blob = new Blob([xml])
+  var fileStream = streamSaver.createWriteStream('plot.svg', {
     size: blob.size
   })
-  const readableStream = blob.stream()
+  var readableStream = blob.stream()
   if (window.WritableStream && readableStream.pipeTo) {
     return readableStream.pipeTo(fileStream)
-      .then(() => console.log('done writing'))
+      .then(() => console.log('SVG exported'))
   }
   window.writer = fileStream.getWriter()
-  const reader = readableStream.getReader()
-  const pump = () => reader.read()
+  var reader = readableStream.getReader()
+  var pump = () => reader.read()
     .then(res => res.done
       ? writer.close()
       : writer.write(res.value).then(pump))
