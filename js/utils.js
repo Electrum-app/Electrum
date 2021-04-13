@@ -826,15 +826,15 @@ function highlight_interacting_proteins(d, e) {
 function handle_intra_isomers(d) {
   if (d.display_name === "Citrate") {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Citrate</tspan><tspan dx='200' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Isocitrate</tspan>"
+      "<tspan id='" + parsed_string(d.id) + "' dx='-56px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Citrate</tspan><tspan dx='200px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Isocitrate</tspan>"
     );
   } else if (d.display_name === "G3P") {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G3P</tspan><tspan dx='160' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>DHAP</tspan>"
+      "<tspan id='" + parsed_string(d.id) + "' dx='-56px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G3P</tspan><tspan dx='160px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>DHAP</tspan>"
     );
   } else if (d.display_name === "F6P") {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' dx='-56' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G6P</tspan><tspan dx='100' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>F6P</tspan>"
+      "<tspan id='" + parsed_string(d.id) + "' dx='-56px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G6P</tspan><tspan dx='100px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>F6P</tspan>"
     );
   } else {
     return handle_metabolite_side(d);
@@ -844,19 +844,19 @@ function handle_intra_isomers(d) {
 function handle_metabolite_side(d) {
   if (coordinates[d.id][2] === 1) {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' dx='46' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
+      "<tspan id='" + parsed_string(d.id) + "' x='46px' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
   } else if (coordinates[d.id][2] === 2) {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' dx='15' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
+      "<tspan id='" + parsed_string(d.id) + "' x='15px' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
   } else {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' dx='-46' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
+      "<tspan id='" + parsed_string(d.id) + "' x='-46px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );

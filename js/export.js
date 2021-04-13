@@ -18,6 +18,9 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const streamSaver = window.streamSaver
+const xmlns = "http://www.w3.org/2000/xmlns/";
+const xlinkns = "http://www.w3.org/1999/xlink";
+const svgns = "http://www.w3.org/2000/svg";
 
 $("#upfile1").click(function () {
     $("#saveSVG").trigger('click');
@@ -65,13 +68,52 @@ function holder_function() {
 
 }
 
+
+
 function download_svg(d) {
 
-  var svg = document.querySelector('#svg_viewer_id');
-  var xml = new XMLSerializer().serializeToString(svg);
-  xml = xml.replace(/--link_color/g, "fill: none; stroke");
 
-  var blob = new Blob([xml])
+  var svg = document.querySelector('#svg_viewer_id');
+  svg = svg.cloneNode(true);
+
+  svg.setAttributeNS(xmlns, "xmlns", svgns);
+  svg.setAttributeNS(xmlns, "xmlns:xlink", xlinkns);
+  var serializer = new window.XMLSerializer;
+  var string = serializer.serializeToString(svg);
+
+  // Fix formattings
+  string = string.replace(/--link_color/g, "fill: none; stroke");
+
+  var circle_replace = 'circle fill="#343d46" stroke="black" stroke-width="3px" r="24px" ';
+  string = string.replace(/circle\ /g, circle_replace);
+
+  var rect_replace = 'fill="orange" stroke="black" stroke-width="5px" width="70px" height="70px" x="-35" y="-35" border-top-right-radius="25px" ';
+  string = string.replace(/style="fill: orange;"/g, rect_replace);
+
+  string = string.replace(/dx="/g, 'x="');
+  // End fix formattings
+
+  // Embed background image
+  //var background_svg;
+
+
+  //var embed_search = "</svg>"
+  //var replace_search = background_svg + embed_search
+  //
+
+
+  // Remove anything in image tag
+      /*
+      <image id="background_image" xlink:href="data/img/20201218_MIDAS-CCM_pathway-no-proteins-no-metabolites.svg" height="4800" x="0" y="-850"/>
+      */
+
+
+
+  //
+
+
+  var blob = new Blob([string], {type: "image/svg+xml"})
+
   var fileStream = streamSaver.createWriteStream('plot.svg', {
     size: blob.size
   })
@@ -88,11 +130,23 @@ function download_svg(d) {
       : writer.write(res.value).then(pump))
 
   pump()
+
 }
 
 
-d3.select("#saveSVGForm").on("change", function() {
 
+
+
+  //console.log("asdjhd")
+
+  //var xml = new XMLSerializer().serializeToString(svg);
+  //xml = xml.replace(/--link_color/g, "fill: none; stroke");
+
+  //var blob = new Blob([xml])
+
+
+d3.select("#saveSVGForm").on("change", function() {
+  console.log(d3.symbolCircle)
   console.log("Hello")
 
   var _this_svg = d3.select("#svg_viewer_id")._groups[0][0].cloneNode(true);
