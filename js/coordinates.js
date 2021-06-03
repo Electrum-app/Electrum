@@ -78,8 +78,7 @@ const ccm_coordinates_intra = {
   "1,3-BPG": [0, 1520, 0], //1,3-BPG
   "D-3-Phosphoglyceric acid": [0, 1870, 0], //3PG
   "2PG": [0, 2205, 0], //2PG
-  "Phosphatidylethanolamine": [0, 2530, 0], //PEP
-  "Hydroxypyruvic acid": [0, 2800, 0],
+  "Phosphoenolpyruvic acid": [0, 2530, 0], //PEP
   "Pyruvate": [0, 2970, 0],
   "Lactate": [965, 2970, 1],
 
@@ -94,7 +93,7 @@ const ccm_coordinates_intra = {
   "Oxaloacetic acid": [-420, 3650, 0],
 
   "3-PHP": [630, 1870, 2], //3-PHP
-  "Phosphatidylserine": [1195, 1870, 1], //3-PS
+  "O-Phospho-L-serine": [1195, 1870, 1], //3-PS
   "Serine": [1195, 2210, 1], // Serine
 
   "GCK": [-350, 205, 0],
@@ -165,8 +164,7 @@ const components_dictionary = {
     "Glyceric acid 1,3-biphosphate", //1,3-BPG
     "D-3-Phosphoglyceric acid",
     "D-2-Phosphoglyceric acid",
-    "Phosphatidylethanolamine",
-    "Hydroxypyruvic acid",
+    "Phosphoenolpyruvic acid", //PEP
     "Pyruvate",
     "Lactate",
     "Acetyl coenzyme A",
@@ -179,7 +177,7 @@ const components_dictionary = {
     "L-Malic acid",
     "Oxaloacetic acid",
     "3-Phosphohydroxypyruvate", //3-PHP
-    "Phosphatidylserine", //3-PS
+    "O-Phospho-L-serine", //3-PS,
     "Serine", // Serine
   ]
 };

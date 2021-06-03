@@ -3370,7 +3370,7 @@
         "chebi_id": "15811",
         "hmdb_id": "HMDB0000272",
         "kegg_id": "C01005",
-        "name": "Phosphoserine",
+        "name": "3-PS",
         "smiles": "N[C@@H](COP(O)(O)=O)C(O)=O"
     },
     "ophosphorylethanolamine": {
@@ -3545,7 +3545,7 @@
         "chebi_id": "44897",
         "hmdb_id": "HMDB0000263",
         "kegg_id": "C00074",
-        "name": "Phosphoenolpyruvic acid",
+        "name": "PEP",
         "smiles": "OC(=O)C(=C)OP(O)(O)=O"
     },
     "phosphoribosylpyrophosphate": {
