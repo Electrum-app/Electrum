@@ -153,13 +153,27 @@ class MIDASgraph {
           other_isomers = isomers.slice(1, isomers.length);
         } else {}
         let _search = metabolite.replace(/[^0-9A-Z]+/gi, "").toLowerCase();
-        let hmdb_id = this.metabolites_reference[_search].hmdb_id;
-        let metabolite_name = this.metabolites_reference[_search].name;
-        let kegg_id = this.metabolites_reference[_search].kegg_id;
+        let hmdb_id, metabolite_name, kegg_id;
+        if (_search in this.metabolites_reference) {
+          hmdb_id = this.metabolites_reference[_search].hmdb_id;
+          metabolite_name = this.metabolites_reference[_search].name;
+          kegg_id = this.metabolites_reference[_search].kegg_id;
+        } else {
+          hmdb_id = null;
+          metabolite_name = _search;
+          kegg_id = null;
+        }
 
         let protein = this.graphData[connection]['query_protein'];
-        let protein_name = this.protein_reference[protein].name;
-        let uniprot_id = this.protein_reference[protein].uniprot_id;
+        let protein_name, uniprot_id;
+        if (protein in this.protein_reference) {
+          protein_name = this.protein_reference[protein].name;
+          uniprot_id = this.protein_reference[protein].uniprot_id;
+        } else {
+          protein_name = protein;
+          uniprot_id = null;
+        }
+        
 
         if ((protein.replace(/\s/g, '') === "") || (metabolite.replace(/\s/g, '') === "")) {
           continue;
