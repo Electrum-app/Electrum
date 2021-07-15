@@ -21,11 +21,16 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 // Static [x,y, z] coordinates for query proteins where z is the boolean representation of whether text should be displayed to the right (1) or left (0) of the node
 const ccm_coordinates = {
   "GCK": [-150, 200, 0],
+  
+  "HK1": [150, 205, 1],
 
   "GPI": [150, 560, 1],
 
   "PFKL": [-200, 850, 0],
   "PFKP": [-200, 950, 0],
+  
+  "FBP1": [200, 850, 1],
+  "FBP2": [200, 950, 1],
 
   "ALDOA": [-450, 1165, 0],
   "ALDOB": [-450, 1265, 0],
@@ -98,10 +103,15 @@ const ccm_coordinates_intra = {
 
   "GCK": [-350, 205, 0],
 
-  "GPI": [175, 400, 1],
+  "HK1": [-75, 205, 1],
+
+  "GPI": [140, 400, 1],
 
   "PFKL": [-200, 535, 0],
   "PFKP": [-200, 635, 0],
+
+  "FBP1": [175, 535, 1],
+  "FBP2": [175, 635, 1],
 
   "ALDOA": [-150, 875, 0],
   "ALDOB": [-150, 975, 0],
@@ -135,7 +145,7 @@ const ccm_coordinates_intra = {
   "E2-PDH": [-150, 3320, 0],
   "E3-PDH": [-150, 3420, 0],
 
-  "CS": [350, 4050, 0],
+  "CS": [500, 3900, 0],
 
   "IDH2": [520, 4350, 0],
   "IDH3a2bg": [870, 4400, 1],

@@ -59,6 +59,10 @@
         "uniprot_id": "P06744",
         "name": "Glucose-6-phosphate isomerase"
     },
+    "HK1": {
+        "uniprot_id": "P19367",
+        "name": "Hexokinase-1"
+    },
     "IDH2": {
         "uniprot_id": "P48735",
         "name": "Isocitrate dehydrogenase [NADP], mitochondrial"

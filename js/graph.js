@@ -173,7 +173,6 @@ class MIDASgraph {
           protein_name = protein;
           uniprot_id = null;
         }
-        
 
         if ((protein.replace(/\s/g, '') === "") || (metabolite.replace(/\s/g, '') === "")) {
           continue;
