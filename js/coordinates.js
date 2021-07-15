@@ -99,7 +99,7 @@ const ccm_coordinates_intra = {
 
   "3-PHP": [630, 1870, 2], //3-PHP
   "O-Phospho-L-serine": [1195, 1870, 1], //3-PS
-  "Serine": [1195, 2210, 1], // Serine
+  "L-Serine": [1195, 2210, 1], // Serine
 
   "GCK": [-350, 205, 0],
 
@@ -188,6 +188,6 @@ const components_dictionary = {
     "Oxaloacetic acid",
     "3-Phosphohydroxypyruvate", //3-PHP
     "O-Phospho-L-serine", //3-PS,
-    "Serine", // Serine
+    "L-Serine", // Serine
   ]
 };

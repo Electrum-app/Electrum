@@ -1907,7 +1907,7 @@
         "chebi_id": "16523",
         "hmdb_id": "HMDB0003406",
         "kegg_id": "C00740",
-        "name": "Serine",
+        "name": "L-Serine",
         "smiles": "N[C@H](CO)C(O)=O"
     },
     "dsorbitol": {
@@ -2876,11 +2876,11 @@
         "name": "Saccharopine",
         "smiles": "N[C@@H](CCCCN[C@@H](CCC(O)=O)C(O)=O)C(O)=O"
     },
-    "serine": {
+    "lserine": {
         "chebi_id": "17115",
         "hmdb_id": "HMDB0000187",
         "kegg_id": "C00065",
-        "name": "Serine",
+        "name": "L-Serine",
         "smiles": "N[C@@H](CO)C(O)=O"
     },
     "lthreonine": {
