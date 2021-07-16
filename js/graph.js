@@ -111,6 +111,7 @@ class MIDASgraph {
     }
     menu_list.push("---------------------------------------");
     menu_list.push("Proteins:");
+    menu_list.push("* All proteins *");
     for (let _protein in sorted_proteins) {
       menu_list.push(sorted_proteins[_protein]);
     }

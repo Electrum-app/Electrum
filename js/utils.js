@@ -23,8 +23,15 @@ var _uniprot_url = "https://www.uniprot.org/uniprot/";
 var _reactome_url = "https://reactome.org/content/detail/";
 
 function set_selection(data, selection) {
+
+
   // get nodes, links, coordinates for pathway or protein selection
-  if (selection in data.pathway_dictionary) {
+  if (selection.includes("All proteins")) {
+    _links = data.links;
+    _nodes = data.nodes;
+    coordinates = {};
+    _distances = 3000;
+  } else if (selection in data.pathway_dictionary) {
     let _selector_ids = data.pathway_dictionary[selection];
     let _intra_ids = data.components_dictionary[selection];
 
@@ -72,9 +79,6 @@ function set_selection(data, selection) {
     console.log("Did not select a protein or pathway")
     return
   }
-
-  //console.log(_nodes)
-  //console.log(_links)
 
   return [
     _links,
@@ -387,6 +391,15 @@ function init_nodes(
         return n;
       }
     }).length + 1
+  
+  let node_counter_proteins = 0;
+  let node_array_len_proteins = node._groups[0]
+    .filter(function(n) {
+      if (n.__data__.type === "protein" ||
+          n.__data__.type === "other_protein") {
+        return n;
+      }
+    }).length + 1
 
   // Refresh nodes
   node.each(function(d) {
@@ -394,12 +407,24 @@ function init_nodes(
       selection in data.pathway_dictionary) {
       d.fx = coordinates[d.id][0] + 1005;
       d.fy = coordinates[d.id][1] - 960;
+    } else if ((d.type === "protein" ||
+        d.type === "other_protein") && 
+        selection.includes("All proteins")) {
+      let new_coordinates = circleCoord(node_counter_proteins, node_array_len_proteins, 1250);
+      coordinates[d.id + "-all"] = new_coordinates;
+      d.fx = undefined;
+      d.fy = undefined;
+      d.fx = new_coordinates[0] + 950;
+      d.fy = new_coordinates[1] + 1600;
+      d.radians = (new_coordinates[2] * Math.PI / 180);
+      d.degrees = new_coordinates[2];
+      node_counter_proteins += 1;
     } else if (d.type === "protein" ||
-      d.type === "other_protein") {
+        d.type === "other_protein") {
       d.fx = coordinates[d.id][0] + 1005;
       d.fy = coordinates[d.id][1] - 960;
     } else {
-      let new_positions = circleCoord(node_counter, node_array_len, distance)
+      let new_positions = circleCoord(node_counter, node_array_len, distance);
       d.fx = undefined;
       d.fy = undefined;
       d.fx = new_positions[0] + 950;
@@ -571,10 +596,11 @@ function make_text(node, coordinates, selection, data) {
         selection in data.pathway_dictionary)) {
         if (show_intra_pathway === true
             && selection in data.pathway_dictionary
+            && !selection.includes("All proteins")
             && d.isomers !== "") {
-          return handle_intra_isomers(d);
+          return handle_intra_isomers(d, selection);
         } else {
-          return handle_metabolite_side(d);
+          return handle_metabolite_side(d, selection);
         }
       } else {
         if (show_labels === true) {
@@ -763,21 +789,26 @@ function transform(d) {
 }
 
 function transform_text(d) {
-
-  if (d.type !== "metabolite"
+  if ((d.type !== "metabolite" && show_all_proteins === false)
       || (show_intra_pathway === true
       && selection_in_pathway === true)) {
     return "translate(" + d.x + "," + d.y + ")";
   } else {
     let angle;
     let x_offset;
+
+    let x_mod = "45";
+    if (show_all_proteins === true && d.type !== "metabolite") {
+      x_mod = "135";
+    }
+
     if (d.degrees >= -90 && d.degrees <= 89) {
       x_offset = d.x;
       y_offset = d.y;
       angle = (d.degrees);
       d3.select("text#" + parsed_string(d.id))
         .attr("text-anchor", "start")
-        .attr("dx", "45")
+        .attr("dx", x_mod)
         .attr("y", ".35em")
     } else {
       d3.select("text#" + parsed_string(d.id))
@@ -823,7 +854,7 @@ function highlight_interacting_proteins(d, e) {
   }
 }
 
-function handle_intra_isomers(d) {
+function handle_intra_isomers(d, selection) {
   if (d.display_name === "Citrate") {
     return (
       "<tspan id='" + parsed_string(d.id) + "' dx='-56px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Citrate</tspan><tspan dx='200px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>Isocitrate</tspan>"
@@ -837,29 +868,43 @@ function handle_intra_isomers(d) {
       "<tspan id='" + parsed_string(d.id) + "' dx='-56px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>G6P</tspan><tspan dx='100px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>F6P</tspan>"
     );
   } else {
-    return handle_metabolite_side(d);
+    return handle_metabolite_side(d, selection);
   }
 }
 
-function handle_metabolite_side(d) {
-  if (coordinates[d.id][2] === 1) {
+function handle_metabolite_side(d, selection) {
+
+  let this_id = d.id;
+  if (selection.includes("All proteins")) {
+    this_id = d.id + "-all";
+  }
+
+  if (coordinates[this_id][2] === 1) {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' x='46px' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
+      "<tspan id='" + parsed_string(this_id) + "' x='46px' y='.31em' style='font-size: 64px; font-weight: bold;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
-  } else if (coordinates[d.id][2] === 2) {
+  } else if (coordinates[this_id][2] === 2) {
     return (
-      "<tspan id='" + parsed_string(d.id) + "' x='15px' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
+      "<tspan id='" + parsed_string(this_id) + "' x='15px' y='1.5em' style='font-size: 64px; font-weight: bold;'>" +
       d.display_name.split("_")[0] +
       "</tspan>"
     );
   } else {
-    return (
-      "<tspan id='" + parsed_string(d.id) + "' x='-46px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
-      d.display_name.split("_")[0] +
-      "</tspan>"
-    );
+    if (selection.includes("All proteins") && d.degrees >= -90 && d.degrees <= 89) {
+      return (
+        "<tspan id='" + parsed_string(this_id) + "' x='-46px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: start;'>" +
+        d.display_name.split("_")[0] +
+        "</tspan>"
+      );
+    } else {
+      return (
+        "<tspan id='" + parsed_string(this_id) + "' x='-46px' y='.31em' style='font-size: 64px; font-weight: bold; text-anchor: end;'>" +
+        d.display_name.split("_")[0] +
+        "</tspan>"
+      );
+    }
   }
 }
 

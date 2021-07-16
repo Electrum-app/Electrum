@@ -25,6 +25,7 @@ var timer = 0;
 var delay = 200;
 var prevent = false;
 var selection_in_pathway = false;
+var show_all_proteins = false;
 
 function draw_graph(data) {
 
@@ -47,6 +48,12 @@ function draw_graph(data) {
     selection_in_pathway = true;
   } else {
     selection_in_pathway = false;
+  }
+
+  if (selection.includes("All proteins")) {
+    show_all_proteins = true;
+  } else {
+    show_all_proteins = false;
   }
 
   if (show_intra_pathway === true
@@ -121,12 +128,12 @@ function draw_graph(data) {
 
   showNodes();
 
-  if (!(selection in that.pathway_dictionary)) {
+  if (!(selection in that.pathway_dictionary) && !selection.includes("All proteins")) {
     simulation.tick(50);
     circle.attr("transform", transform);
     link.attr("d", linkFlat);
     text.attr("transform", transform_text);
-  } else if (show_intra_pathway === true) {
+  } else if (show_intra_pathway === true && !selection.includes("All proteins")) {
     simulation.tick(50);
     circle.attr("transform", transform);
     link.attr("d", linkArc);
