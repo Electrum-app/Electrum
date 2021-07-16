@@ -250,7 +250,8 @@ def write_output(
     output_table[tax_term_key] = [
         try_join(l) for l in output_table[tax_term_key]]
     output_table.to_csv(
-        str(output_location) + 'Substructures-DB-latest.txt',
+        os.path.join(
+            str(output_location), 'Substructures-DB-latest.txt'),
         sep='\t')
 
 

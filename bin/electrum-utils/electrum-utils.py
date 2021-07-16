@@ -59,6 +59,8 @@ def parse_args(
         +-----------------------+-------------------------------------------------------------+
         |   buildSubstructureReference    |   Build metabolite substructure reference files   |
         +---------------------------------+---------------------------------------------------+
+        |   buildRadialGuide              |   Build radial position guide for metabolites     |
+        +---------------------------------+---------------------------------------------------+
     """
 
     license_info = """\
@@ -66,7 +68,7 @@ def parse_args(
     License Information:
     
     electrum-utils
-    
+
     Back-end utils tool for Electrum
     https://github.com/Electrum-app/Electrum/
     alias: electrum-utils
