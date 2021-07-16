@@ -1,334 +1,333 @@
-Metabolites
+Orotidine 5-monophosphate
+Propionyl coenzyme A
+N-Acetyl-D-glucosamine 1-phosphate
+Uridine 5-triphosphate
+Choline glycerophosphate
+Crotonoyl coenzyme A
+Deoxyuridine triphosphate
+Phosphatidic Acid
+Uridine 5-diphosphate
+Guanosine 5-diphosphate
+NAD
+Glutathione disulfide
+L-a-Aspartyl-L-phenylalanine
+3-Sulfopyruvic acid
+Acetyl coenzyme A
+5-Phospho-D-ribose 1-diphosphate
+D-Tagatose 6-phosphate
+D-myo-Inositol-1,4,5-triphosphate
+3-Hydroxy-3-methylglutaryl coenzyme A
+Malonyl coenzyme A
+Pyridoxal 5-phosphate
+PIP2
+3-Phosphoadenosine 5-phosphosulfate
+NADPH
+Isovaleryl coenzyme A
+2-Deoxycytidine
+Nicotinamide ribotide
+Inosine 5-monophosphate
+2-Deoxyadenosine 5-triphosphate
+Thymidine 5-triphosphate
+2-Deoxyribose-5-phosphate
+Cytidine 5-triphosphate
+Deoxycytidine triphosphate
+Xanthurenic acid
+3-Hydroxybutyryl coenzyme A
+5-Methyltetrahydrofolic acid
+Hippuric acid
+Xanthosine 5-monophosphate
+Deoxyadenosine monophosphate
+2-Deoxyadenosine
+Putrescine
+D-Fructose 6-phosphate;D-Galactose 1-phosphate;D-Glucose 1-phosphate;D-Glucose 6-phosphate;D-Mannose 1-phosphate;D-Mannose 6-phosphate
+D-Fructose 1,6-bisphosphate;D-Glucose 1,6-bisphosphate
+Citraconic acid
+D-Ribose 1-phosphate;D-Ribose 5-phosphate;D-Xylulose 5-phosphate
+D-Glyceraldehyde 3-phosphate;Dihydroxyacetone phosphate
+Hypoxanthine
+Phosphatidylserine
+Phosphatidylglycerol
+Phosphatidylethanolamine
+Glycerol 3-phosphate
+L-alpha-Glycerophosphorylcholine
+Inosine 5-triphosphate
+Guanosine 5-triphosphate
+Oxaloacetic acid
+S-Lactoylglutathione
+O-Phospho-L-serine
+Diadenosine triphosphate
+PIP3
+Adenosine monophosphate
+Cyclic AMP
+Flavin adenine dinucleotide
+Ketoglutaric acid
+2,3-Dihydroxypropyl hexopyranoside
+Uridine monophosphate
+2-Deoxyguanosine 5-monophosphate
+Octanoyl coenzyme A
+S-(5-Adenosyl)-L-homocysteine
+Phosphocholine
+O-Phosphorylethanolamine
+Thiamine monophosphate
+L-Cystine
+2-Deoxycytidine 5-diphosphate
+Cytidine 5-diphosphate
+L-Malic acid
+UDP-Glucuronate
+Xanthosine
+Guanosine
+5-Methoxytryptamine
+Riboflavin
+2-Deoxycytidine 5-monophosphate
+N-Acetyl-L-aspartate
 Cytidine
 Pyridoxal
-CDP-Glycerol
-Choline glycerophosphate
+Gamma-Glu-Cys
+Uridine
+L-Fucose 1-phosphate
+D-Glucosamine 6-phosphate
+Nicotinamide hypoxanthine dinucleotide
 Indole-3-acetic acid
 5-Methoxy-3-indoleacetic acid
 Thiamine
 Dimethylaminopurine
 Uric acid
-Dihydrouracil
-Nicotinic acid
-N-2-Furoylglycine
-Nicotinamide
-Flavin adenine dinucleotide
-Cyclic AMP
-Glycerol 3-phosphate
-Pyridoxamine
-Pyridoxine;Norepinephrine
-Dephosphocoenzyme A
-Coenzyme A
-Xanthosine 5-monophosphate
-Uridine monophosphate
-D-Glucosamine 6-phosphate
-4-Imidazoleacetic acid
-5-Methyluridine
-Xanthosine
-S-Lactoylglutathione
-Oxaloacetic acid
-Inosine 5-triphosphate
-Guanosine 5-triphosphate
 3-Furoic acid
 Citric acid;Isocitric acid
 Dehydroascorbic acid;cis-Aconitic acid
 Glutaconic acid
+N-Acetyl-Asp-Glu
 Orotic acid
+2,3-Pyridinedicarboxylic acid
+D-Saccharic acid
+N-Acetyl-L-glutamic acid
+2,3-Dihydroxypropanoic acid
+Adenosine 3,5-diphosphate
+O-Acetyl-L-carnitine
+Thymine
+D-Ribose;D-Xylulose
+Urea
+Phosphocreatine
+Sarcosine
+(4R)-4-Hydroxy-L-glutamic acid
+2-Amino-3-methoxybenzoic acid
+D-Arabitol;Adonitol;D-Xylitol
+N-Acetyl-D-mannosamine
+Sucrose;Isomaltose
+D-Fructose;D-Galactose;Myoinositol
+Dulcitol
+L-Fucose
+Uracil
+D-Sorbitol
+3,5-Diiodo-L-tyrosine
+Guanine
+L-Tyrosine
+N-Acetyl-D-galactosamine;N-Acetyl-D-glucosamine
+L-Carnosine
+L-Arabinose;L-Ribulose;D-Xylose
+Glucono delta-lactone
+3-Methylglutaconic acid
+L-Ornithine;D-Ornithine
+Phenylpyruvate
+L-Cysteine
+L-Cystathionine
+L-Saccharopine
+N-Acetylneuraminic acid
+N-Glycolylneuraminic acid
+2-Oxoadipic acid
+D-Gluconic acid
+D-Arabinonic acid
+D-Galactaric acid
+Hydroxypyruvate
+Uridine 5-diphosphoglucose;Uridine 5-diphosphogalactose
+DL-2-Amino-3-phosphonopropionic acid
+L-Aspartic acid;D-Aspartic acid
+4-Hydroxyphenylpyruvic acid
+DL-3,4-Dihydroxymandelic acid
+N-Acetylmuramic acid
+D-Lactaldehyde
+Glutaric acid;Ethylmalonic acid
+Succinic acid;Methylmalonic acid
+D-Lactose;D-Maltose;Melibiose
+3,3-Dimethylacrylic acid
+6-Deoxy-L-galactonic acid
+L-Gulonic acid gamma-lactone
+3,4-Dihydroxyphenylacetic acid
+Prostaglandin E2;Prostaglandin I2;Prostaglandin D2
+4-Phenylbutanoic acid
+Octanoic acid
+3-Hydroxyanthranilic acid
+Dodecanedioic acid
+2,5-Dihydroxybenzoic acid
+DL-Mandelic acid
+N-Formylanthranilic acid
+Decanoic acid
+Acetylamino-acetic acid
+N-Acetyl-L-alanine;Propionylglycine
 D-Glutamic acid
 Thymidine monophosphate
-N-Acetyl-Asp-Glu
-D-Saccharic acid
-2,3-Pyridinedicarboxylic acid
-L-Malic acid
 Maleic acid
-Inosine 5-monophosphate
-D-Glyceraldehyde 3-phosphate;Dihydroxyacetone phosphate
-Hypoxanthine
-Pyridoxamine-5-phosphate
-3-Iodo-L-tyrosine
-Cyclic GMP
-L-a-Aspartyl-L-phenylalanine
-3-Sulfopyruvic acid
-D-Tagatose 6-phosphate
-D-Fructose 1,6-bisphosphate;D-Glucose 1,6-bisphosphate
-D-Fructose 6-phosphate;D-Galactose 1-phosphate;D-Glucose 1-phosphate;D-Glucose 6-phosphate;D-Mannose 1-phosphate;D-Mannose 6-phosphate
-Phosphocholine
-S-(5-Adenosyl)-L-homocysteine
-O-Phosphorylethanolamine
-L-Asparagine;Ureidopropionic acid
-Thiamine monophosphate
-DL-Homocystine
-NAD
-Nicotinamide hypoxanthine dinucleotide
-NADP
-N,N-Diacetylchitobiose
-Thiamine pyrophosphate
-4-Imidazoleacrylic acid
-Anthranilate
-L-Glutamic acid
-Ketoglutaric acid
-Pyridoxal 5-phosphate
-Inosine
-5-Methoxytryptamine
-Riboflavin
+2-Ethylhydracrylic acid
+2-Hydroxybutyric acid;(S)-3-Hydroxybutyric acid;(R)-3-Hydroxybutyric acid;(R)-3-Hydroxyisobutyric acid;(S)-3-Hydroxyisobutyric acid
+Galactinol;Trehalose
+Cytidine 5-diphosphocholine
+L-Arabitol;2-Deoxy-D-ribonic acid
+L-Methionine
+3-Hydroxy-3-methylglutaric acid
+2-Deoxyuridine 5-monophosphate
+Folinic acid
+AICAR
+Citramalic acid;D-2-Hydroxyglutaric acid;L-2-Hydroxyglutaric acid;3-Hydroxyglutaric acid
+Agmatine
+Cadaverine
+1,3-Diaminopropane
+Epinephrine
+Betaine
+2-Oxo-4-methylthiobutanoic acid
+4-Pyridoxic acid
+D-Glucose;D-Mannose
+2-Deoxyuridine
+Thymidine
+2-Deoxyinosine
+D-Raffinose
+Phenethylamine
+Tyramine
+3-Methoxytyramine
 3-Hydroxy-DL-kynurenine
-NADH
 4-Guanidinobutyric acid
-Isovaleryl coenzyme A
-Guanosine 5-monophosphate
-Cytidine monophosphate
-Adenosine 5-phosphosulfate
-N-Acetyl-L-aspartate
-2-Deoxycytidine 5-monophosphate
-2-Deoxyguanosine 5-monophosphate
+Pyridoxamine
+Pyridoxine;Norepinephrine
+cis-4-Hydroxy-D-proline;trans-4-Hydroxy-L-proline
+2-Aminoadipic acid
+L-Proline;D-Proline
+L-Pipecolic acid
+Taurine
+L-Leucine;L-Isoleucine;L-Alloisoleucine
+Trans-beta-Hydromuconic acid
+L-Glutamic acid
 L-Histidine
 Guanidineacetic acid
 Creatine
-cis-4-Hydroxy-D-proline;trans-4-Hydroxy-L-proline
-2-Aminoadipic acid
 L-Glutamine;D-Glutamine;Ureidoisobutyric acid
 Homocitrulline
 D-Glucosamine
 L-Kynurenine
 Biotin
 Pantothenic acid
-Cysteamine
 Hypotaurine
 L-Alanine;Beta-alanine
-L-Cystine
-O-Phospho-L-serine
-2-Deoxycytidine 5-diphosphate
-Cytidine 5-diphosphate
-Cytidine-5-monophospho-N-acetylneuraminic acid
-UDP-GlcNAc;UDP-GalNAc
-Guanosine
-UDP-Glucuronate
-Guanosine diphosphate mannose
-6-Phosphogluconic acid
-Glutathione disulfide
-2,3-Diphosphoglyceric acid
-D-3-Phosphoglyceric acid
-Phosphoenolpyruvic acid
-3-Hydroxy-3-methylglutaryl coenzyme A
-D-myo-Inositol-1,4,5-triphosphate
-Malonyl coenzyme A
-N-Acetyl-D-glucosamine 1-phosphate
-Orotidine 5-monophosphate
-L-Fucose 1-phosphate
-Uracil
-D-Sorbitol
-2-Deoxyuridine
-Thymidine
-Nicotinamide ribotide
-Uridine
-2-Deoxycytidine
-2-Deoxyinosine
-D-Raffinose
-5-Methyltetrahydrofolic acid
-Phosphatidylserine
-2-Deoxyadenosine 5-triphosphate
-Phosphatidylglycerol
-Phosphatidylethanolamine
-D-Fructose;D-Galactose;Myoinositol
-N-Acetyl-D-mannosamine
-Dulcitol
-Sucrose;Isomaltose
-2-Deoxyadenosine
-Epinephrine
-Betaine
-2-Deoxyuridine 5-monophosphate
-Gamma-Glu-Cys
-2,5-Dihydroxybenzoic acid
-N-Formylanthranilic acid
-DL-Mandelic acid
-Deoxyadenosine monophosphate
-N-Acetyl-5-hydroxytryptamine
-Decanoic acid
-Prostaglandin E2;Prostaglandin I2;Prostaglandin D2
-Putrescine
-Cadaverine
-1,3-Diaminopropane
-AICAR
-Cytidine 5-diphosphocholine
-Galactinol;Trehalose
-2-Ethylhydracrylic acid
-2-Hydroxybutyric acid;(S)-3-Hydroxybutyric acid;(R)-3-Hydroxybutyric acid;(R)-3-Hydroxyisobutyric acid;(S)-3-Hydroxyisobutyric acid
-L-Arabitol;2-Deoxy-D-ribonic acid
-L-Methionine
-Acetylamino-acetic acid
-N-Acetyl-L-alanine;Propionylglycine
-3-Hydroxyanthranilic acid
-Dodecanedioic acid
-4-Phenylbutanoic acid
-Octanoic acid
-4-Pyridoxic acid
-L-Tryptophan
-Folic acid
-Citramalic acid;D-2-Hydroxyglutaric acid;L-2-Hydroxyglutaric acid;3-Hydroxyglutaric acid
-2-Oxo-4-methylthiobutanoic acid
-Folinic acid
-Adenosine monophosphate
-3-Hydroxy-3-methylglutaric acid
-3,3-Dimethylacrylic acid
-3,4-Dihydroxyphenylacetic acid
-D-Lactose;D-Maltose;Melibiose
-L-Gulonic acid gamma-lactone
-6-Deoxy-L-galactonic acid
-N-Acetyl-L-glutamic acid
-Indole-3-pyruvic acid
-Phosphatidic Acid
-Uridine 5-diphosphate
-Guanosine 5-diphosphate
-L-Dihydroorotic acid
-Flavin Mononucleotide
-Agmatine
-Benzoate
-S-(5-Adenosyl)-L-methionine
-L-Ornithine;D-Ornithine
-3,5-Diiodo-L-tyrosine
-4-Hydroxyphenylacetylglycine
-Histamine
-Biocytin
-L-Leucine;L-Isoleucine;L-Alloisoleucine
-Phenethylamine
-Tyramine
-3-Methoxytyramine
-NADPH
-3-Hydroxybutyryl coenzyme A
-2,3-Dihydroxypropanoic acid
-3-Phosphoadenosine 5-phosphosulfate
-Adenosine 3,5-diphosphate
-PIP2
 2,5-Dihydroxybenzaldehyde;4-Hydroxybenzoic acid
-D-Glucurono-6,3-lactone
-Trans-beta-Hydromuconic acid
-L-Cysteine
-Glycolic acid
-L-Aspartic acid;D-Aspartic acid
-Glyoxylate
-3-Methylglutaconic acid
-Acetyl coenzyme A
-Butyryl coenzyme A
-Uridine 5-diphosphoglucose;Uridine 5-diphosphogalactose
-D-Galactaric acid
-Adenosine
-D-Gluconic acid
-D-Arabinonic acid
-DL-2-Amino-3-phosphonopropionic acid
-L-alpha-Glycerophosphorylcholine
-L-Cysteic acid
-2-Oxoadipic acid
-N-Acetylmuramic acid
-N-Acetylneuraminic acid
-N-Glycolylneuraminic acid
-L-Saccharopine
-L-Cystathionine
-D-Lactaldehyde
-Glutaric acid;Ethylmalonic acid
-Succinic acid;Methylmalonic acid
-Glucono delta-lactone
-L-Arabinose;L-Ribulose;D-Xylose
-4-Hydroxyphenylpyruvic acid
-N-Acetyl-D-galactosamine;N-Acetyl-D-glucosamine
-Metanephrine
-N-Acetylputrescine
-L-Carnosine
-1-Methyl-L-histidine
-N-a-Acetyl-L-ornithine
-Adenosine diphosphate;Deoxyguanosine 5-diphosphate
-Deoxyadenosine diphosphate
-2-Deoxyguanosine
-DL-Homocysteine
-Guanine
-D-Erythrono-1,4-lactone
-Adenine
-Phenylpyruvate
-Deoxyuridine triphosphate
+Inosine
+4-Imidazoleacetic acid
+5-Methyluridine
+Cysteamine
+L-Asparagine;Ureidopropionic acid
+Adenosine 5-phosphosulfate
+DL-Homocystine
+Pyridoxamine-5-phosphate
+CDP-Glycerol
+Nicotinamide
+N-Acetyl-D-glucosamine 6-phosphate
+Histamine
+Dimethylglycine;Gamma-Aminobutyric acid
+3-Aminopiperidin-2-one
+N-methyl-4-pyridone-3-carboxamide
 Pyruvate
-N2-Acetyl-L-lysine;N6-Acetyl-lysine
-Anserine
-L-Threonine
-L-Valine
 D-Glyceraldehyde;L-Lactic acid;3-Hydroxypropionic acid
+Glycolic acid
+Acetoacetate;2-Ketobutyric acid
 L-Citrulline
-Homovanillic acid
+N2-Acetyl-L-lysine;N6-Acetyl-lysine
+Leucinic acid;D-Leucic acid;2-Hydroxy-3-methylpentanoic acid
+3-Methyl-2-oxovaleric acid;4-Methyl-2-oxovaleric acid
 3-methyl-2-oxobutyrate
-D-Glucuronic acid
-L-Pyroglutamic acid;D-Pyroglutamic Acid
-2-Methylglutaric acid;3-Methylglutaric acid;Adipic acid
-Isovaleric acid
-DL-4-Hydroxy-3-methoxymandelic acid
 N-Hexanoyl-glycine
 Isobutyrylglycine
 2-Methylbutyrylglycine;Isovalerylglycine
+DL-4-Hydroxy-3-methoxymandelic acid
+D-Glucuronic acid
+L-Pyroglutamic acid;D-Pyroglutamic Acid
+Isovaleric acid
+2-Methylglutaric acid;3-Methylglutaric acid;Adipic acid
+D-Glucurono-6,3-lactone
+4,6-Dioxoheptanoic acid
+L-Serine;D-Serine
+L-Threonine
+L-Valine
 DL-3,4-Dihydroxyphenyl glycol
 2-Hydroxyphenylacetic acid;4-Hydroxyphenylacetic acid
-Leucinic acid;D-Leucic acid;2-Hydroxy-3-methylpentanoic acid
-3-Methyl-2-oxovaleric acid;4-Methyl-2-oxovaleric acid
-Hydroxypyruvate
-Acetoacetate;2-Ketobutyric acid
-1-Methylhistamine
-N-methyl-4-pyridone-3-carboxamide
-Choline
-Betaine aldehyde hydrate
-Betaine aldehyde
-Acetylcholine
-Succinyl coenzyme A
-CDP-ethanolamine
-3-Aminoisobutyric acid;L-2-Aminobutyric acid
-(R)-3-Hydroxybutyric acid
-L-Phenylalanine
-D-Glucose;D-Mannose
-Propionyl coenzyme A
-L-Fucose
-D-Ribose;D-Xylulose
-DL-3,4-Dihydroxymandelic acid
-2-Deoxyribose-5-phosphate
-5-Phospho-D-ribose 1-diphosphate
-1-Methylnicotinamide
-Ascorbate
-Xanthurenic acid
-Octanoyl coenzyme A
-Adenosine triphosphate;Deoxyguanosine triphosphate
-Thymine
-Xanthine
-Phosphocreatine
-Urea
-L-Tyrosine
-2-Amino-3-methoxybenzoic acid
-(4R)-4-Hydroxy-L-glutamic acid
-Sarcosine
-Dihydrothymine
-D-Arabitol;Adonitol;D-Xylitol
-2-Deoxy-D-ribose
-5-Hydroxy-L-tryptophan
-O-Acetyl-L-carnitine
-Carnitine
-4,6-Dioxoheptanoic acid
-Adenylosuccinic acid
-L-Arginine
 Phosphatidylcholine
-Porphobilinogen
+Biocytin
 D-Cellobiose
 Stachyose
-Serine
+L-Cysteic acid
+Porphobilinogen
+L-Arginine
 DL-5-Hydroxylysine
+DL-Homocysteine
+Homovanillic acid
+Anserine
 L-Lysine
-Crotonoyl coenzyme A
-Hippuric acid
-PIP3
+N-2-Furoylglycine
+4-Imidazoleacrylic acid
+Anthranilate
+Dihydrouracil
+CDP-ethanolamine
+1-Methylnicotinamide
+Carnitine
+L-Phenylalanine
+L-Tryptophan
+3-Iodo-L-tyrosine
+N-Acetyl-5-hydroxytryptamine
+4-Hydroxyphenylacetylglycine
+Benzoate
+Cyclic GMP
+Nicotinic acid
+L-Dihydroorotic acid
+N,N-Diacetylchitobiose
+Thiamine pyrophosphate
+Guanosine diphosphate mannose
+UDP-GlcNAc;UDP-GalNAc
+Cytidine-5-monophospho-N-acetylneuraminic acid
+Indole-3-pyruvic acid
+Flavin Mononucleotide
+S-(5-Adenosyl)-L-methionine
+Adenylosuccinic acid
+Butyryl coenzyme A
+Ascorbate
+Adenosine triphosphate;Deoxyguanosine triphosphate
+Folic acid
+D-Erythrono-1,4-lactone
+Adenine
+Succinyl coenzyme A
+(R)-3-Hydroxybutyric acid
+3-Aminoisobutyric acid;L-2-Aminobutyric acid
+Xanthine
+Dihydrothymine
+2-Deoxy-D-ribose
+Adenosine diphosphate;Deoxyguanosine 5-diphosphate
+2-Deoxyguanosine
+5-Hydroxy-L-tryptophan
+Betaine aldehyde hydrate
+Choline
+Betaine aldehyde
+Acetylcholine
+1-Methylhistamine
+1-Methyl-L-histidine
+N-a-Acetyl-L-ornithine
+Metanephrine
+N-Acetylputrescine
+Glyoxylate
+Adenosine
+D-3-Phosphoglyceric acid
+Phosphoenolpyruvic acid
 D-Sedoheptulose 7-phosphate
-Citraconic acid
-D-Ribose 1-phosphate;D-Ribose 5-phosphate;D-Xylulose 5-phosphate
-3-Aminopiperidin-2-one
-L-Proline;D-Proline
-Dimethylglycine;Gamma-Aminobutyric acid
-2,3-Dihydroxypropyl hexopyranoside
-L-Pipecolic acid
-Taurine
-Diadenosine triphosphate
-Uridine 5-triphosphate
-N-Acetyl-D-glucosamine 6-phosphate
-Thymidine 5-triphosphate
-Deoxycytidine triphosphate
-Cytidine 5-triphosphate
+NADP
+Deoxyadenosine diphosphate
+Dephosphocoenzyme A
+Coenzyme A
+2,3-Diphosphoglyceric acid
+6-Phosphogluconic acid
+NADH
+Cytidine monophosphate
+Guanosine 5-monophosphate
