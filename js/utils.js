@@ -333,7 +333,7 @@ function draw_background(svg_viewer, data, selection) {
 }
 
 function init_nodes(
-  svg_viewer, data, link, _nodes, selection,
+  svg_viewer, data, link, _nodes, _links, selection,
   coordinates, current_protein, current_metabolite,
   distance, timer, prevent) {
 
@@ -361,17 +361,9 @@ function init_nodes(
       timer = setTimeout(function() {
         if (!prevent) {
           if (d.type === "protein") {
+            console.log("Substructure enrichment results for: " + d.id)
             current_protein = d.id;
-            // hide all links and metabolite nodes
-            //hide_nodes(node)
-            //hide_links(link)
-            // get all interacting links and nodes
-            //let these_metabolites = show_links(link, current_protein);
-            //show_nodes(node, these_metabolites)
-
-
-            /* Add sub-structure pop-out here */
-
+            display_substructure_results(d, data, _links);
           } else if (d.type === "metabolite") {
             current_metabolite = d.id;
             display_metabolite_metadata(d, data);
@@ -669,6 +661,38 @@ function show_links(link, this_id) {
   return get_metabolites;
 }
 
+function display_substructure_results(this_protein, data, links) {
+
+  /* 
+    Add sub-structure pop-out here 
+    Use modal elements for display space
+    If it takes a bit, use spinner
+  */
+  let d = this_protein;
+  console.log(links)
+
+  let modal_title = document.getElementById('modal-title');
+  modal_title.innerHTML = '<h3>Metabolite Substructure Enrichment Results</h3>';
+
+  let modal_body = document.getElementById('modal-fill');
+  modal_body.innerHTML = '<br><br><br><br>';
+  modal_body.innerHTML += '<b>Selected Protein: ';
+  modal_body.innerHTML += '<span class="metabolite-name"><i>';
+  modal_body.innerHTML += d.display_name;
+  modal_body.innerHTML += '</i></span></b><br>';
+
+  // Print results
+  let _items;
+  
+
+
+  modal_body.innerHTML += "<br><br><br>"
+
+  // display div
+  modal_body.style.height = (_items * 12) + 120;
+  modal.style.display = "block";
+}
+
 function display_metabolite_metadata(this_metabolite, data) {
 
   let d = this_metabolite;
@@ -687,6 +711,9 @@ function display_metabolite_metadata(this_metabolite, data) {
     _pathway_names.push(_this_name);
     _pathway_dict[_this_name] = _this_pathway;
   }
+
+  let modal_title = document.getElementById('modal-title');
+  modal_title.innerHTML = '<h3>Biological Pathways & Reactions</h3>';
 
   let modal_body = document.getElementById('modal-fill');
   modal_body.innerHTML = '<br><br><br><br>';

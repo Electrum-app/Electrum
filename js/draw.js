@@ -107,7 +107,7 @@ function draw_graph(data) {
 
   // Draw nodes (must happen after links are initialized)
   let node_outputs = init_nodes(
-    svg_viewer, that, link, _nodes, selection,
+    svg_viewer, that, link, _nodes, _links, selection,
     coordinates, current_protein, current_metabolite,
     _distances, timer, prevent);
   node = node_outputs[0];
