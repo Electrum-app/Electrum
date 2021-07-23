@@ -20,6 +20,32 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 
+    'self'; 
+  img-src 
+    'self'; 
+  style-src 
+    'unsafe-inline'
+    'self';
+  script-src 
+    'sha256-Ea1vV9cZMUnZmrWC3kAjSTVEnJHFf+f5lgynB36R6BY='
+    'sha256-oByu3isyoualNW0NX6KCfG52kLL6eFagsUSOlk5jiUM='
+    https://www.googletagmanager.com
+    https://googletagmanager.com
+    'unsafe-eval'
+    'self'; 
+  frame-src
+    www.googletagmanager.com;
+  child-src
+    www.googletagmanager.com;
+  connect-src 
+    https://www.uniprot.org/ 
+    https://hmdb.ca/ 
+    www.googletagmanager.com
+    'self';
+">
+
 <title>Electrum</title>
 
 <html>
@@ -31,12 +57,11 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 <link rel="stylesheet" href="css/buttons.css">
 <link rel="stylesheet" href="css/visualize.css">
 
-<script src="https://cdn.jsdelivr.net/npm/web-streams-polyfill@2.0.2/dist/ponyfill.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/eligrey/Blob.js/Blob.js"></script>
-
+<script src="js/web-streams-polyfill/ponyfill.min.js"></script>
+<script src="js/Blob/Blob.js"></script>
 <script src="js/streamsaver/StreamSaver.js"></script>
 <script src="js/jquery/jquery.min.js"></script>
-<script src="js/d3/d3.min.js"></script>
+<script src="js/d3/d3.js"></script>
 <script src="js/d3-ForceEdgeBundling/d3-ForceEdgeBundling.js"></script>
 <script src="js/coordinates.js"></script>
 <script src="js/backgrounds.js"></script>
@@ -49,29 +74,33 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 
 <head>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-PBN44H9');</script>
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
+    n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PBN44H9');
+  </script>
   <!-- End Google Tag Manager -->
 
   <!-- menu -->
   <menu>
     <font size=3px>
-      <menuItem style="float:right"><a href="https://github.com/Electrum-app/Electrum/issues" target="_blank">Contact Us</a></menuItem>
-      <menuItem style="float:right"><a href="cite.html">Cite</a></menuItem>
-      <menuItem style="float:right"><a href="faqs.html">FAQs</a></menuItem>
-      <menuItem style="float:right"><a href="about.html">About</a></menuItem>
-      <menuItem style="float:left"><a href="index.html">Electrum</a></menuItem>
+      <menuItem class="menu-style-right"><a href="https://github.com/Electrum-app/Electrum/issues" target="_blank">Contact Us</a></menuItem>
+      <menuItem class="menu-style-right"><a href="cite.html">Cite</a></menuItem>
+      <menuItem class="menu-style-right"><a href="faqs.html">FAQs</a></menuItem>
+      <menuItem class="menu-style-right"><a href="about.html">About</a></menuItem>
+      <menuItem class="menu-style-left"><a href="index.html">Electrum</a></menuItem>
     </font>
   </menu>
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBN44H9"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript nonce='{SERVER-GENERATED-NONCE}'>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBN44H9" height="0" width="0" class="google-settings"></iframe>
+  </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
   <div id="menu_panel" class="margin-t-50 fix-position">
@@ -116,8 +145,8 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
     <br>
     <div title="Click to save the current graph view as an SVG.">
       <form id="saveSVGForm" enctype="multipart/form-data" action="#" onsubmit="return download_svg(this);" method="get">
-        <button id="upfile0" class="btn"><i class="fa fa-download" id="upfile1" style="cursor:pointer"></i> Export SVG</button>
-        <input id="saveSVG" type="file" value="Export SVG" style="display:none" />
+        <button id="upfile0" class="btn"><i class="fa fa-download set-cursor-pointer" id="upfile1"></i> Export SVG</button>
+        <input id="saveSVG" type="file" value="Export SVG" class="set-display-none" />
       </form>
     </div>
   </div>

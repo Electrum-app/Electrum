@@ -465,3 +465,24 @@ img {
 .fix-position {
   position: fixed;
 }
+
+.menu-style-left {
+  float: left;
+}
+
+.menu-style-right {
+  float: right;
+}
+
+.google-settings {
+  display: none;
+  visibility: hidden;
+}
+
+.set-cursor-pointer {
+  cursor: pointer;
+}
+
+.set-display-none {
+  display: none;
+}

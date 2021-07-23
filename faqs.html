@@ -20,6 +20,31 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 
+    'self'; 
+  img-src 
+    'self'; 
+  style-src 
+    'unsafe-inline'
+    'self';
+  script-src 
+    'sha256-Ea1vV9cZMUnZmrWC3kAjSTVEnJHFf+f5lgynB36R6BY='
+    'sha256-oByu3isyoualNW0NX6KCfG52kLL6eFagsUSOlk5jiUM='
+    https://www.googletagmanager.com
+    https://googletagmanager.com
+    'unsafe-eval'
+    'self'; 
+  frame-src
+    www.googletagmanager.com;
+  child-src
+    www.googletagmanager.com;
+  connect-src 
+    https://www.uniprot.org/ 
+    https://hmdb.ca/ 
+    www.googletagmanager.com
+    'self';
+">
 <title>FAQs - Electrum</title>
 
 <html>
