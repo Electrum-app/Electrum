@@ -31,6 +31,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   script-src 
     'sha256-Ea1vV9cZMUnZmrWC3kAjSTVEnJHFf+f5lgynB36R6BY='
     'sha256-oByu3isyoualNW0NX6KCfG52kLL6eFagsUSOlk5jiUM='
+    'sha256-ZGgONoijbD2RbBn1ijoyLJxsPb3hRIheaGR98iCO/Kw='
     https://www.googletagmanager.com
     https://googletagmanager.com
     'unsafe-eval'
@@ -42,9 +43,11 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
   connect-src 
     https://www.uniprot.org/ 
     https://hmdb.ca/ 
-    www.googletagmanager.com
+    https://www.googletagmanager.com/
+    https://www.google-analytics.com/
     'self';
 ">
+
 <title>FAQs - Electrum</title>
 
 <html>
@@ -55,13 +58,26 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 <link rel="stylesheet" href="css/visualize.css">
 
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-PBN44H9');</script>
-  <!-- End Google Tag Manager -->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QG2TZS458"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-1QG2TZS458');
+  </script>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Electrum">
+  <meta name="keywords" content="Jordan, Berg, Biochemistry, Utah, Computational, Biology, Metabolism">
+  <meta name="author" content="Jordan Berg">
+  <meta name="google-site-verification" content="7R5dCQpyVk7BtHBQhqaXIUbCffeulxE92qqUJDMj7nM" />
 
   <!-- menu -->
   <menu>
@@ -76,10 +92,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 </head>
 
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBN44H9"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
 
   <center>
     <div class="pad-tb-200 pad-lr-400">
