@@ -1,24 +1,15 @@
 """Import dependencies
 """
-from collections import Counter
-from fisher import pvalue_npy
-import statsmodels.api as sm
-import pandas as pd
-import numpy as np
-import json
-import re
 import os
-
+import re
+import json
+import numpy as np
+import pandas as pd
 
 """Set global variables
 """
-THRESHOLD = 0.1
-TARGET = "CS"
-
-MIDAS_PATH = "C:\\Users\\jorda\\Google Drive\\Electrum"
-MIDAS_DATA = "20210629_CCM-MIDAS_combined.txt"
-SUBSTRUCTURE_DATA = "Substructures-DB-latest.txt"
-CHEMONTID_DICTIONARY = "CHEMONTID-mapper.json"
+MIDAS_DATA = "MIDAS-latest.txt"
+SUBSTRUCTURE_DATA = "Substructures-DB-latest.tsv"
 METABOLITE_DICTIONARY = "metabolites.json"
 DATA_PATH = os.path.join(
     os.path.dirname(__file__),
@@ -27,11 +18,6 @@ DATA_PATH = os.path.join(
     "..",
     "data"
 )
-def test_path():
-    DATA_PATH = os.path.join(
-        os.getcwd(),
-        "data"
-    )
 
 def import_table(
         _path,
@@ -130,7 +116,7 @@ def __main__():
 
     # Import MIDAS database
     midas_table = import_table(
-        _path=MIDAS_PATH,
+        _path=DATA_PATH,
         _file=MIDAS_DATA)
 
     # Import parsed ClassyFire sub-structure database
@@ -145,69 +131,35 @@ def __main__():
     metabolite_reference = import_json(
         _path=DATA_PATH,
         _file=METABOLITE_DICTIONARY)
-    chemontid_reference = import_json(
-        _path=DATA_PATH,
-        _file=CHEMONTID_DICTIONARY)
 
     unified_table = crossref_databases(
         midas_table=midas_table,
         substructure_dictionary=substructure_dictionary,
         metabolite_reference=metabolite_reference)
-    
-    
-    """Perform enrichment analysis
+
+    # Perform enrichment analysis
+    #unified_table.head()
+
+
+    # Output enrichment table
+    """
+    ALDOA   CHEMONTID:0003457   observed#   expected#   p-val   fdr
+    ALDOA   CHEMONTID:0003458   observed#   expected#   p-val   fdr
+    ALDOA   CHEMONTID:0003459   observed#   expected#   p-val   fdr
+
+
+
     """
 
-    # Target selection table 
-    unified_table_target = unified_table.loc[unified_table['query_protein'] == TARGET]
 
-    # Init results table 
-    results_table = pd.DataFrame()
-    results_table["CHEMONTID"] = unified_table_target["taxonomy_ids"].str.split(';').explode('taxonomy_ids').unique().tolist()
-    results_table.index = results_table["CHEMONTID"]
-    results_table.index.name = None
-
-    # Generate EXPECTED CHEMONTID distributions
-    ### (D) Total number of metabolites in library
-    LIBRARY_SIZE = len(unified_table["metabolite"].unique().tolist()) 
-    results_table["D"] = LIBRARY_SIZE
-
-    ### (C) Get expected 
-    expected_counter = Counter(unified_table_target["taxonomy_ids"].str.split(';').explode('taxonomy_ids').tolist())
-    results_table["C"] = 0
-    results_table["C"] = results_table["CHEMONTID"].map(expected_counter).fillna(results_table["C"])
-
-    # Generate OBSERVED CHEMONTID distributions
-    unified_table_threshold = unified_table_target.loc[unified_table_target['q_value'] < THRESHOLD]
-
-    ### (B) Total number of observed metabolites
-    OBSERVED_COUNT = len(unified_table_threshold["metabolite"].unique().tolist()) 
-    results_table["B"] = OBSERVED_COUNT
-
-    ### (A) Get observed 
-    observed_counter = Counter(unified_table_threshold["taxonomy_ids"].str.split(';').explode('taxonomy_ids').tolist())
-    results_table["A"] = 0
-    results_table["A"] = results_table["CHEMONTID"].map(observed_counter).fillna(results_table["A"])
-
-    #Fisher Exact Test. For each row, runs Fisher Exact on 4 columns and outputs final result to new column.
-    #Vectorizing the below could speed it up if we still want live p-value updates:
-    #https://stackoverflow.com/questions/34947578/how-to-vectorize-fishers-exact-test
-    _arr = results_table[['A', 'B', 'C', 'D']].to_numpy(dtype=np.uint, copy=True)
-    _, _, twosided = pvalue_npy(_arr[:, 0], _arr[:, 1], _arr[:, 2], _arr[:, 3])
-    results_table["Enrichment_pvalue"] = twosided
-    results_table = results_table.sort_values(by="Enrichment_pvalue")
-
-    _, results_table["FDR"], _, _ = sm.stats.multipletests(
-        results_table["Enrichment_pvalue"].values,
-        alpha=THRESHOLD,
-        method="fdr_bh",
-        is_sorted=True
-    )
-
-    # Add common substructure names to results table 
-    results_table["Term"] = results_table["CHEMONTID"].map(chemontid_reference).fillna(results_table["CHEMONTID"])
-
-    
 
 if __name__ == '__main__':
     __main__()
+
+
+
+def __test__():
+    """
+    """
+    output = 'C:\\Users\\jorda\\Desktop\\'
+    __file__ = 'C:\\Users\\jorda\\Desktop\\projects\\Electrum\\bin\\python\\get_enrichment_sets\\__main__.py'

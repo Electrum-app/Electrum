@@ -23,6 +23,7 @@ import pandas as pd
 import itertools
 import requests
 import zipfile
+import json
 import sys
 import io
 import re
@@ -255,6 +256,15 @@ def write_output(
         sep='\t')
 
 
+def write_dictionary(
+        output_dictionary,
+        output_location):
+    """
+    """
+    with open(os.path.join(output_location, 'CHEMONTID-mapper.json'), 'w') as fp:
+        json.dump(output_dictionary, fp)
+
+
 def clean_downloads(
         output_files):
     """
@@ -304,6 +314,10 @@ def __main__(args_dict):
     ontology_dictionary = make_ontology_dictionary(
         hmdb_source=hmdb_records,
         chebi_source=chebi_records)
+
+    write_dictionary(
+        output_dictionary=ontology_dictionary,
+        output_location=args_dict["output"])
 
     # Add ontology IDs and terms to each SDF record
     output_substructures = retrieve_substructures(
