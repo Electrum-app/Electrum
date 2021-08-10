@@ -146,6 +146,12 @@ def parse_args(
     # buildSubstructureReference required arguments
     substructure_reqs = substructure_parser.add_argument_group('required arguments')
     substructure_reqs.add_argument(
+        '-d', '--database',
+        help='Path and filename of MIDAS interaction database (must be tab-delimited)',
+        metavar='<path/filename.txt>',
+        type=str,
+        required=True)
+    substructure_reqs.add_argument(
         '-o', '--output',
         help='Path to output directory (default: current working directory)',
         metavar='<path>',
@@ -205,7 +211,10 @@ def main(
         args,
         __version__)
 
-    print(args_dict)
+    print("\nArguments:")
+    for k, v in args_dict.items():
+        print(k + ": ", v)
+
     if args_dict['cmd'] == 'buildEntityReference':
         print("\n-> Running buildEntityReference sub-module\n")
         makeEntityDictionary(args_dict)

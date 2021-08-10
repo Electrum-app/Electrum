@@ -4,3 +4,8 @@
 .DS_Store
 node_modules
 **__pycache__
+
+# remove for final distribution
+**20210629_CCM-MIDAS_combined.txt
+**MIDAS_unified-latest.txt
+**results.csv

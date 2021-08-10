@@ -29,6 +29,13 @@ import io
 import re
 import os
 
+SUBSTRUCTURE_DATA = "Substructures-DB-latest.txt"
+CHEMONTID_DICTIONARY = "CHEMONTID-mapper.json"
+METABOLITE_DICTIONARY = "metabolites.json"
+
+ONT_URL = 'http://classyfire.wishartlab.com/system/downloads/1_0/chemont/ChemOnt_2_1.obo.zip'
+ONT_FILE = 'ChemOnt_2_1.obo'
+ONT_DELIMITER = '[Term]'
 
 SDF_URL = 'https://hmdb.ca/system/downloads/current/structures.zip'
 SDF_FILE = 'structures.sdf'
@@ -252,16 +259,17 @@ def write_output(
         try_join(l) for l in output_table[tax_term_key]]
     output_table.to_csv(
         os.path.join(
-            str(output_location), 'Substructures-DB-latest.txt'),
+            str(output_location), SUBSTRUCTURE_DATA),
         sep='\t')
 
 
 def write_dictionary(
         output_dictionary,
-        output_location):
+        output_location,
+        output_name='CHEMONTID-mapper.json'):
     """
     """
-    with open(os.path.join(output_location, 'CHEMONTID-mapper.json'), 'w') as fp:
+    with open(os.path.join(output_location, output_name), 'w') as fp:
         json.dump(output_dictionary, fp)
 
 
@@ -275,6 +283,138 @@ def clean_downloads(
         except:
             print('Unable to remove file ' + o)
 
+
+def import_table(
+        _path,
+        _file,
+        index_col=None):
+    """Import URL as tab-delimited table
+    """
+
+    return pd.read_csv(
+        os.path.join(_path, _file),
+        sep='\t',
+        index_col=index_col,
+        low_memory=False
+    )
+
+
+def import_json(
+        _path,
+        _file):
+    """Import URL as JSON-formatted dictionary
+    """
+    with open(os.path.join(_path, _file)) as json_file:
+        data = json.load(json_file)
+
+    return data
+
+
+
+def crossref_databases(
+        midas_table,
+        substructure_dictionary,
+        metabolite_reference):
+    """Crossreference MIDAS data with the substructure database using the Electrum metabolite mapping reference
+    """
+    # Use to prevent excessive warning messages
+    non_mappers = set()
+    non_matchers = set()
+    non_hmdb = set()
+
+    midas_table_c = midas_table.copy()
+
+    # Add HMDB ID to MIDAS table
+    # Add substructure annotations to MIDAS table
+    for index, row in midas_table_c.iterrows():
+
+        if ';' in row['metabolite']:
+            metabolite = row['metabolite'].split(';')[0]
+        else:
+            metabolite = row['metabolite']
+
+        metabolite_simplified = re.sub(r'\W+', '', metabolite).lower()
+
+        if metabolite_simplified in metabolite_reference:
+            hmdb_id = metabolite_reference[metabolite_simplified]['hmdb_id']
+
+            if 'hmdb' in str(hmdb_id).lower():
+
+                # Add HMDB ID
+                midas_table_c.at[index, 'HMDB_ID'] = str(hmdb_id)
+
+                # Add sub-structure IDs and names
+                i = 0
+                while i < 12:
+                    hmdb_id = 'HMDB' + hmdb_id.replace('HMDB', '').zfill(i)
+                    if hmdb_id in substructure_dictionary:
+                        midas_table_c.at[index, 'taxonomy_ids'] = (
+                            substructure_dictionary[hmdb_id]['taxonomy_ids']
+                        )
+                        midas_table_c.at[index, 'taxonomy_terms'] = (
+                            substructure_dictionary[hmdb_id]['taxonomy_terms']
+                        )
+                        break
+                    else:
+                        i += 1
+                else:
+                    if metabolite not in non_hmdb:
+                        print(
+                            'Unable to find', hmdb_id,
+                            '(', metabolite, ') in substructure database')
+                        non_hmdb.add(metabolite)
+
+            else:
+                if metabolite not in non_mappers:
+                    print("HMDB ID not available for", metabolite)
+                    non_mappers.add(metabolite)
+        else:
+            if metabolite not in non_matchers:
+                print('Unable to match', metabolite)
+                non_matchers.add(metabolite)
+
+    return midas_table_c
+
+def parse_ont_as_list(
+        ont_file,
+        _delimiter=ONT_DELIMITER,
+        _encoding=ENCODING):
+    """
+    """
+    output_records = []
+    with open(ont_file, "r", encoding=_encoding) as _f:
+        for key, group in itertools.groupby(_f, lambda _l: _delimiter in _l):
+            if not key:
+                group = [x for x in list(group) if x != '\n']
+                output_records.append(group)
+    return output_records
+
+def parse_dict_from_records(
+        ont_data):
+
+    ont_dict = {}
+    for x in ont_data:
+        id = ""
+        name = ""
+        is_a = ""
+        
+        _x = [i for i in x if "is_a"]
+        if len(_x) > 0:
+            for i in x:
+                if "id: " in i:
+                    id = i.split("id: ")[1].split("\n")[0]
+                if "name: " in i:
+                    name = i.split("name: ")[1].split("\n")[0]
+                if "is_a: " in i:
+                    is_a = i.split("is_a: ")[1].split(" ! ")[0]
+        
+        ont_dict[id] = {
+            "id": id,
+            "name": name,
+            "is_a": is_a
+        }
+    
+    return ont_dict
 
 def __main__(args_dict):
     """
@@ -330,8 +470,61 @@ def __main__(args_dict):
     write_output(
         output_database=output_substructures,
         output_location=args_dict["output"])
+
+    # Prepare unified table for downstream usage
+
+    # Import MIDAS database
+    midas_table = pd.read_csv(
+        args_dict["database"],
+        sep='\t',
+        index_col=None,
+        low_memory=False
+    )
+
+    # Import parsed ClassyFire sub-structure database
+    substructure_table = import_table(
+        _path=args_dict["output"],
+        _file=SUBSTRUCTURE_DATA,
+        index_col=0)
+    substructure_table.index = substructure_table['hmdb_id']
+    substructure_dictionary = substructure_table.T.to_dict()
+
+    # Import metabolite reference for HMDB ID mapping between databases
+    metabolite_reference = import_json(
+        _path=args_dict["output"],
+        _file=METABOLITE_DICTIONARY)
+
+    unified_table = crossref_databases(
+        midas_table=midas_table,
+        substructure_dictionary=substructure_dictionary,
+        metabolite_reference=metabolite_reference)
+
+    unified_table.to_csv(
+        os.path.join(
+            args_dict["output"],
+            "MIDAS_unified-latest.txt"
+        ),
+        sep="\t"
+    )
+
+    # Generate CHEMONTID hierarchal structure reference 
+    ont_file = download_zip_archive(
+        output=args_dict["output"],
+        zip_url=ONT_URL,
+        file_name=ONT_FILE)
+    ont_data = parse_ont_as_list(
+        ont_file=ont_file)
+    ont_dict = parse_dict_from_records(
+        ont_data=ont_data)
+    write_dictionary(
+        output_dictionary=ont_dict,
+        output_location=args_dict["output"],
+        output_name='CHEMONTID-hierarchy-dictionary.json')
+
     clean_downloads(
         output_files=[
             sdf_file,
             cf_hmdb_file,
-            cf_chebi_file])
+            cf_chebi_file,
+            ont_file])
+
