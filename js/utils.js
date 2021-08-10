@@ -363,7 +363,7 @@ function init_nodes(
           if (d.type === "protein") {
             console.log("Substructure enrichment results for: " + d.id)
             current_protein = d.id;
-            display_substructure_results(d, data, _links);
+            display_substructure_results(d);
           } else if (d.type === "metabolite") {
             current_metabolite = d.id;
             display_metabolite_metadata(d, data);
@@ -661,7 +661,33 @@ function show_links(link, this_id) {
   return get_metabolites;
 }
 
-function display_substructure_results(this_protein, data, links) {
+function postData(input) {
+  $.ajax({
+      type: "POST",
+      url: input,
+      datatype: "json",
+      success: function (response) {
+        // do something with the response
+        alert("111")
+        console.log("hello")
+        console.log(response);
+      },
+      error: function(xhr, status, error) {
+        console.log(error)
+        console.log(xhr)
+        console.log(status)
+      }
+  });
+}
+
+function callbackFunc(response) {
+  // do something with the response
+  console.log("hello")
+  console.log(response);
+}
+
+
+function display_substructure_results(this_protein) {
 
   /* 
     Add sub-structure pop-out here 
@@ -669,7 +695,6 @@ function display_substructure_results(this_protein, data, links) {
     If it takes a bit, use spinner
   */
   let d = this_protein;
-  console.log(links)
 
   let modal_title = document.getElementById('modal-title');
   modal_title.innerHTML = '<h3>Metabolite Substructure Enrichment Results</h3>';
@@ -681,6 +706,20 @@ function display_substructure_results(this_protein, data, links) {
   modal_body.innerHTML += d.display_name;
   modal_body.innerHTML += '</i></span></b><br>';
 
+  // Run substructure
+  let command = ("C:/Users/jorda/Desktop/projects/Electrum/bin/substructure-enrich/substructure-enrich.py\ " 
+    + d.display_name + "\ " 
+    + q_threshold);
+
+  $.post('backend.php', {
+    var1: d.display_name, 
+    var2: q_threshold
+  }, function(response) {
+    console.log(response)
+    //$('#TestDiv').html(response)
+  });
+
+  
   // Print results
   let _items;
   

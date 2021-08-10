@@ -32,9 +32,6 @@ import re
 import sys
 import os
 
-
-"""Set global variables
-"""
 MIDAS_DATA = "MIDAS_unified-latest.txt"
 CHEMONTID_DICTIONARY = "CHEMONTID-mapper.json"
 DATA_PATH = os.path.join(
@@ -43,6 +40,10 @@ DATA_PATH = os.path.join(
     "..",
     "data"
 )
+
+
+"""Set global variables
+"""
 def test_path():
     DATA_PATH = os.path.join(
         os.getcwd(),
