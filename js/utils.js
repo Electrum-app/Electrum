@@ -711,13 +711,29 @@ function display_substructure_results(this_protein) {
     + d.display_name + "\ " 
     + q_threshold);
 
-  $.post('backend.php', {
-    var1: d.display_name, 
-    var2: q_threshold
-  }, function(response) {
-    console.log(response)
-    //$('#TestDiv').html(response)
-  });
+  $.ajax(
+    {
+        type: "POST",
+        url: "/bin/substructure-enrich/substructure-enrich.py " + d.display_name + "\ " + q_threshold,
+        dataType: "html",
+        success: function (html)
+        {
+            var params = $(html).filter(function(){ return $(this).is('p') });
+            params.each(
+                function()
+                {
+                    var value = "<li>" + $(this).html() + "</li>";
+                    $("#paramsList").append( value );
+                }
+            );
+        },
+        error: function(request, ajaxOptions, thrownError)
+        {
+            $("#debug").html(request.responseText);
+            $("#debug").html("5566");
+        }
+
+    });
 
   
   // Print results
