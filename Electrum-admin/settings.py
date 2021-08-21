@@ -14,18 +14,22 @@ from pathlib import Path
 import json
 import os
 
-#with open('/etc/config.json') as config_file:
-#	config = json.load(config_file)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+with open(
+    os.path.join(BASE_DIR, "config.json")
+) as config_file:
+	config = json.load(config_file)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w^h=h^c7+ukoory9y)$8(98#dcu=z(u8pjv6ugew(njm7+#9^a' # config["SECRET_KEY"]
+SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
