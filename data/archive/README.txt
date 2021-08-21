@@ -1,1 +1,0 @@
-Archived MIDAS databases are stored here.

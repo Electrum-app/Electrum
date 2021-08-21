@@ -1,0 +1,108 @@
+/*
+Electrum
+Dynamic exploration of MIDAS protein-metabolite interaction data
+https://github.com/j-berg/Electrum/
+alias: electrum
+
+Copyright (C) 2020-2021 Jordan A. Berg
+Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+div_edge.tooltip, div_protein.tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 7px;
+  font: 12px sans-serif;
+  border: 2px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.link {
+  fill: none;
+  stroke: var(--link_color);
+}
+
+.node circle {
+  fill: #343d46;
+  stroke: black;
+  stroke-width: 3px;
+  r: 24px;
+}
+
+.node rect {
+  fill: grey;
+  stroke: black;
+  stroke-width: 5px;
+  width: 70px;
+  height: 70px;
+  x: -35;
+  y: -35;
+  border-top-right-radius: 25px;
+}
+
+.node:hover circle {
+  fill: black;
+}
+
+.node text {
+  display: inline;
+  font: 32px sans-serif;
+  text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
+}
+
+.node:hover text {
+  display: inline;
+  font: 32px sans-serif;
+  text-shadow: 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white, -1px 0 0 white;
+}
+
+tspan {
+  z-index: 100;
+}
+
+.cell {
+  fill: none;
+  pointer-events: all;
+}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  border-style: solid;
+  border-width: thin;
+  background-color: var(--dot_color);
+  stroke: black;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.square {
+  height: 12px;
+  width: 12px;
+  border-style: solid;
+  border-width: thin;
+  background-color: var(--dot_color);
+  stroke: black;
+  display: inline-block;
+}
+
+.point {
+  margin-top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 10px solid var(--arrow_color);
+  float: right;
+}

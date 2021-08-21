@@ -1,1 +1,0 @@
-metabolite	query_protein	log2_abundance	log2_abundance_corrected	met_mean	met_sd	p_value	q_value

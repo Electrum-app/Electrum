@@ -1,0 +1,325 @@
+<!--
+Electrum
+Dynamic exploration of MIDAS protein-metabolite interaction data
+https://github.com/j-berg/Electrum/
+alias: electrum
+
+Copyright (C) 2020-2021 Jordan A. Berg
+Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 
+    'self'; 
+  img-src 
+    'self'; 
+  style-src 
+    'unsafe-inline'
+    'self';
+  script-src 
+    'sha256-Ea1vV9cZMUnZmrWC3kAjSTVEnJHFf+f5lgynB36R6BY='
+    'sha256-oByu3isyoualNW0NX6KCfG52kLL6eFagsUSOlk5jiUM='
+    'sha256-ZGgONoijbD2RbBn1ijoyLJxsPb3hRIheaGR98iCO/Kw='
+    https://www.googletagmanager.com
+    https://googletagmanager.com
+    'unsafe-eval'
+    'self'; 
+  frame-src
+    www.googletagmanager.com;
+  child-src
+    www.googletagmanager.com;
+  connect-src 
+    https://www.uniprot.org/ 
+    https://hmdb.ca/ 
+    https://www.googletagmanager.com/
+    https://www.google-analytics.com/
+    'self';
+">
+
+<title>About - Electrum</title>
+
+<html>
+
+{% load static %}
+
+<link rel="shortcut icon" href="{% static 'Electrum/data/img/electrum-logo.png' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/buttons.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/visualize.css' %}">
+
+<script src="{% static 'Electrum/js/web-streams-polyfill/ponyfill.min.js' %}"></script>
+<script src="{% static 'Electrum/js/Blob/Blob.js' %}"></script>
+<script src="{% static 'Electrum/js/streamsaver/StreamSaver.js' %}"></script>
+<script src="{% static 'Electrum/js/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'Electrum/js/d3/d3.js' %}"></script>
+<script src="{% static 'Electrum/js/d3-ForceEdgeBundling/d3-ForceEdgeBundling.js' %}"></script>
+<script src="{% static 'Electrum/js/coordinates.js' %}"></script>
+<script src="{% static 'Electrum/js/backgrounds.js' %}"></script>
+<script src="{% static 'Electrum/js/js-colormaps.js' %}"></script>
+<script src="{% static 'Electrum/js/display.js' %}"></script>
+<script src="{% static 'Electrum/js/graph.js' %}"></script>
+<script src="{% static 'Electrum/js/draw.js' %}"></script>
+<script src="{% static 'Electrum/js/export.js' %}"></script>
+<script src="{% static 'Electrum/js/utils.js' %}"></script>
+
+
+
+{% load tags %}
+
+{% url 'home_name' as home %}
+{% url 'about_name' as about %}
+{% url 'faqs_name' as faqs %}
+{% url 'cite_name' as cite %}
+
+
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QG2TZS458"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-1QG2TZS458');
+  </script>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Electrum">
+  <meta name="keywords" content="Jordan, Berg, Biochemistry, Utah, Computational, Biology, Metabolism">
+  <meta name="author" content="Jordan Berg">
+  <meta name="google-site-verification" content="7R5dCQpyVk7BtHBQhqaXIUbCffeulxE92qqUJDMj7nM" />
+
+  <!-- menu -->
+  <menu>
+    <font size=3.25px>
+      <menuItem class="menu-style-right"><a href="https://github.com/Electrum-app/Electrum/issues" target="_blank">Contact Us</a></menuItem>
+      <menuItem class="menu-style-right"><a class="{% active request cite %}" href="cite">Cite</a></menuItem>
+      <menuItem class="menu-style-right"><a class="{% active request faqs %}" href="faqs">FAQs</a></menuItem>
+      <menuItem class="menu-style-right"><a class="{% active request about %}" href="about">About</a></menuItem>
+      <menuItem class="menu-style-left"><a class="{% active request home %}" href="home">Electrum</a></menuItem>
+    </font>
+  </menu>
+</head>
+
+<body>
+
+  <div class="pad-t-100 pad-lr-300">
+
+    <h1>Contents</h1>
+    <a href="#sec-basics"><b><u>1 Basics</u></b></a><br>
+    <a href="#sec-menu"><b><i>&emsp;1.1 Drop-down menu</i></b></a><br>
+    <a href="#sec-buttons"><b><i>&emsp;1.2 Buttons</i></b></a><br>
+    <a href="#sec-colors"><b><i>&emsp;1.3 Colors</i></b></a><br><br>
+
+    <a href="#sec-data"><b><u>2 Data</u></b></a><br>
+    <a href="#sec-upload"><b><i>&emsp;2.1 Uploading protein-metabolite interaction data</i></b></a><br>
+    <a href="#sec-format"><b><i>&emsp;2.2 Required input data formatting</i></b></a><br><br>
+
+    <a href="#sec-analysis"><b><u>3 Analysis Features</u></b></a><br>
+    <a href="#sec-enrichment"><b><i>&emsp;3.1 Sub-structure enrichment analysis</i></b></a><br>
+    <a href="#sec-reactions"><b><i>&emsp;3.2 Metabolite reaction metadata</i></b></a><br>
+    <a href="#sec-metadata"><b><i>&emsp;3.3 Accessing other metadata</i></b></a>
+
+  </div>
+
+  <div class="pad-t-50 pad-lr-300">
+
+    <br>
+
+    <a id="sec-basics"><br></a>
+    <h2>1 Basics</h2>
+
+
+    <a id="sec-menu"><br></a>
+    <h3>1.1 Drop-down menu</h3>
+
+    Select either a curated metabolic pathway with its assayed set of proteins or select an individual protein to view the relevant protein-metabolite interactions.
+    <br>
+    <div id="menu_panel" class="pad-t-05">
+      <select id="pathway_menu"></select>
+        </div>
+    <br>
+    <br>
+    <br>
+
+
+    <a id="sec-buttons"><br></a>
+    <h3>1.2 Buttons</h3>
+
+    Toggle between intra-pathway-only metabolites for the selected pathway or all assayed metabolites in the MIDAS database. This only applies when a pathway has been selected.
+    <br>
+    <div>
+      <label class="switch">
+        <input type="checkbox" id="toggle_intra_pathway">
+        <div class="slider round intra"></div>
+      </label>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Toggle between 1-D scaling (where edge colors are scaled by q-value only and all edge widths are identical) and 2-D scaling (where edge widths are scaled according to the interaction's q-value and edge colors are scaled by the interaction's log2 fold change).
+    <br>
+    <div>
+      <label class="switch">
+        <input type="checkbox" id="toggle_scaling">
+        <div class="slider round scaling"></div>
+      </label>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Change the q-value threshold to determine which protein-metabolite interactions are displayed. The default value is set at 0.1. Hovering over an edge will display the q-value of the protein-metabolite interaction.
+    <br>
+    <div id="qval_box">
+      q-value cut-off:
+      <input type="number" name="qval_button" id="qval_button" min="0" max="1" value="0.1" step="0.01" />
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to toggle on or off absolute values for fold changes. By default, absolute fold changes for protein-metabolite interactios are displayed. Hovering over an edge will display the fold change of the protein-metabolite interaction.
+    <br>
+    <div>
+      <button id="toggle_absolute_values">Toggle Absolute Values</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to toggle on or off metabolite labels. By default, metabolite labels are displayed.
+    <br>
+    <div>
+      <button id="toggle_labels">Toggle Metabolite Labels</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to toggle background pathway image on top or behind edges. By default, the pathway image is layered on top of the protein/metabolite nodes and edges. However, this can block certain edges' metadata from being displayed. However, toggling the pathway image back will allow for these edges' metadata to be displayed when hovering over a given edge.
+    <br>
+    <div>
+      <button id="toggle_background">Toggle Pathway Forward/Back</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    Click to save the current graph view as an SVG.
+    <br>
+    <div>
+      <button id="saveSVG">Export SVG</button>
+    </div>
+    <br>
+    <br>
+    <br>
+
+
+    <a id="sec-colors"><br></a>
+    <h3>1.3 Colors</h3>
+
+    <b>1-D Scaling</b>
+    <br>
+    Edge colors are scaled by q-value only and all edge widths are identical.
+    <br>
+    <div class="test_q_slider_1">
+      &emsp;&emsp;<i>q-value</i>:&nbsp;&nbsp;0.1<input id="q_slider_1" type="range" min="0" max="1" value="0.05" step="0.01" onchange="updateSliderQ1(this.value)">0
+    </div>
+    <br>
+    <div id="line-1D" class="test_line_1 margin-t-15 margin-b-25 margin-l-100">
+    </div>
+
+    <br>
+    <br>
+    <b>2-D Scaling</b>
+    <br>
+    Edge widths are scaled according to the interaction's q-value and edge colors are scaled by the interaction's log2 fold change.
+    <br>
+    <div id="test_q_slider_2">
+      &emsp;&emsp;<i>q-value</i>:&nbsp;&nbsp;0.1<input id="q_slider_2" type="range" min="0" max="1" value="0.05" step="0.01" onchange="updateSliderQ2(this.value)">0
+    </div>
+    <br>
+    <div id="test_fc_slider_2">
+      <i>fold change</i>: &ensp;&nbsp;-5<input id="fc_slider_2" type="range" min="-5" max="5" value="0" step="0.5" onchange="updateSliderFC2(this.value)">5
+    </div>
+    <br>
+    <div id="line-2D" class="test_line_2 margin-t-15 margin-l-100">
+    </div>
+
+    <br>
+    <br>
+    <br>
+
+
+    <a id="sec-data"><br></a>
+    <h2>2 Data</h2>
+
+    <a id="sec-upload"><br></a>
+    <h3>2.1 Uploading protein-metabolite interaction data</h3>
+
+    Input protein-metabolite tables can be uploaded by clicking the appropriate button (as shown below) and selecting the file corresponding to protein-metabolite interaction data.
+    <br>
+    <form id="uploadTableForm" enctype="multipart/form-data" action="/upload/file" method="post">
+        <input id="uploadTable" type="file" />
+    </form>
+    <br>
+    <br>
+    <br>
+
+    <a id="sec-format"><br></a>
+    <h3>2.2 Required input data formatting</h3>
+
+    Any protein-metabolite interaction data to be visualized and explored using Electrum must follow the following format style and must be exported as a tab-delimited data table with the file suffix ".txt"
+
+    <img id="example_data_image" src="data/img/example_data.png" alt="Example MIDAS protein-metabolite interaction table" >
+    <br>
+    <br>
+    <br>
+
+
+    <br>
+    <br>
+    <br>
+    <a id="sec-analysis"><br></a>
+    <h2>3 Analysis Features</h2>
+
+    <a id="sec-enrichment"><br></a>
+    <h3>3.1 Sub-structure enrichment analysis</h3>
+
+    <a id="sec-reactions"><br></a>
+    <h3>3.2 Metabolite reaction metadata</h3>
+
+    <a id="sec-metadata"><br></a>
+    <h3>3.3 Accessing other metadata</h3>
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+</body>
+
+<script src="js/range_sliders.js"></script>
+
+</html>

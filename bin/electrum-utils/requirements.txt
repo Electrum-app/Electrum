@@ -1,6 +1,0 @@
-requests
-pandas 
-numpy 
-matplotlib
-plotly
-scikit-learn

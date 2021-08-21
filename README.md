@@ -2,16 +2,16 @@
 Visualization platform for exploring MIDAS data
 
 Testing:
-`python -m http.server 5050`
+`python manage.py runserver`
 
 In Chrome:
-`http://localhost:5050/`
+`http://127.0.0.1:8000/`
 `Ctrl+F5` to clear cache
 
-OR 
 
-`npm install`
-`npm start`
+### Deploy instructions
+- `python electrum-utils.py buildSubstructureReference --output ..\..\data`
+- `buildEntityDatabase` is a util for name mapping metabolites from MIDAS datasets 
 
 
 ### Licensing

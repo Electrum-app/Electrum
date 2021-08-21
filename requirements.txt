@@ -1,0 +1,11 @@
+pandas 
+numpy 
+fisher
+statsmodels
+requests
+requests-toolbelt
+Django
+matplotlib
+scipy
+scikit-learn
+plotly

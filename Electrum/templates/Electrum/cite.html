@@ -1,0 +1,129 @@
+<!--
+Electrum
+Dynamic exploration of MIDAS protein-metabolite interaction data
+https://github.com/j-berg/Electrum/
+alias: electrum
+
+Copyright (C) 2020-2021 Jordan A. Berg
+Email: jordan<dot>berg<at>biochem<dot>utah<dot>edu
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 
+    'self'; 
+  img-src 
+    'self'; 
+  style-src 
+    'unsafe-inline'
+    'self';
+  script-src 
+    'sha256-Ea1vV9cZMUnZmrWC3kAjSTVEnJHFf+f5lgynB36R6BY='
+    'sha256-oByu3isyoualNW0NX6KCfG52kLL6eFagsUSOlk5jiUM='
+    'sha256-ZGgONoijbD2RbBn1ijoyLJxsPb3hRIheaGR98iCO/Kw='
+    https://www.googletagmanager.com
+    https://googletagmanager.com
+    'unsafe-eval'
+    'self'; 
+  frame-src
+    www.googletagmanager.com;
+  child-src
+    www.googletagmanager.com;
+  connect-src 
+    https://www.uniprot.org/ 
+    https://hmdb.ca/ 
+    https://www.googletagmanager.com/
+    https://www.google-analytics.com/
+    'self';
+">
+
+<title>Citing Electrum</title>
+
+<html>
+
+{% load static %}
+
+<link rel="shortcut icon" href="{% static 'Electrum/data/img/electrum-logo.png' %}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/buttons.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'Electrum/css/visualize.css' %}">
+
+
+{% load tags %}
+
+{% url 'home_name' as home %}
+{% url 'about_name' as about %}
+{% url 'faqs_name' as faqs %}
+{% url 'cite_name' as cite %}
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QG2TZS458"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-1QG2TZS458');
+  </script>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Electrum">
+  <meta name="keywords" content="Jordan, Berg, Biochemistry, Utah, Computational, Biology, Metabolism">
+  <meta name="author" content="Jordan Berg">
+  <meta name="google-site-verification" content="7R5dCQpyVk7BtHBQhqaXIUbCffeulxE92qqUJDMj7nM" />
+
+  <!-- menu -->
+  <menu>
+    <font size=3px>
+      <menuItem class="menu-style-right"><a href="https://github.com/Electrum-app/Electrum/issues" target="_blank">Contact Us</a></menuItem>
+      <menuItem class="menu-style-right"><a class="{% active request cite %}" href="cite">Cite</a></menuItem>
+      <menuItem class="menu-style-right"><a class="{% active request faqs %}" href="faqs">FAQs</a></menuItem>
+      <menuItem class="menu-style-right"><a class="{% active request about %}" href="about">About</a></menuItem>
+      <menuItem class="menu-style-left"><a class="{% active request home %}" href="home">Electrum</a></menuItem>
+    </font>
+  </menu>
+</head>
+
+<body>
+
+  <center>
+    <div class="pad-tb-200 pad-lr-300">
+      Nothing to see here yet...
+      <br>
+      <br>
+      <br>
+      <br>
+      We are currently in the process of writing the manuscripts describing the updated MIDAS platform (Hicks, et al.) and the Electrum web portal (Berg, et al.) and will update this page with the pre-prints or publications as they are available.
+      <br>
+      <br>
+      <br>
+      <br>
+      The MIDAS platform was first described by:
+      <br>
+      <br>
+      <a href="https://pubs.acs.org/doi/10.1021/bi201313s" target="_blank">Orsak T, Smith TL, Eckert D, Lindsley JE, Borges CR, Rutter J. Revealing the allosterome: systematic identification of metabolite-protein interactions. Biochemistry. 2012 Jan 10;51(1):225-32. doi: 10.1021/bi201313s.</a>
+    </div>
+  </center>
+
+</body>
+
+</html>
