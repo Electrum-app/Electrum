@@ -1,18 +1,20 @@
-# Electrum
-Visualization platform for exploring MIDAS data
+# ![Metaboverse](https://raw.githubusercontent.com/Electrum-app/Electrum/main/Electrum/static/Electrum/images/electrum_banner.png)
 
-Testing:
-`python manage.py runserver`
+[![Electrum preprint](https://img.shields.io/badge/bioRxiv-10.1101%2F2020.06.25.171850-BF2636)](https://www.overleaf.com/read/vkwhsfxfgqnd)
+[![MIDAS bioRxiv preprint](https://img.shields.io/badge/bioRxiv-10.1101%2F2020.06.25.171850-BF2636)](https://www.biorxiv.org/content/10.1101/2021.08.28.458030)
 
-In Chrome:
-`http://127.0.0.1:8000/`
-`Ctrl+F5` to clear cache
+## What does Electrum do?
+Electrum is a visualization platform for exploring MIDAS protein-metabolite interaction data.
 
+### Testing
+- `python manage.py runserver`    
+- In Chrome:    
+- Navigate to: `http://127.0.0.1:8000/`    
+- `Ctrl+F5` to clear cache    
 
 ### Deploy instructions
 - `python electrum-utils.py buildSubstructureReference --output ..\..\data`
 - `buildEntityDatabase` is a util for name mapping metabolites from MIDAS datasets 
-
 
 ### Licensing
 - `Electrum` is available via a GPL-3.0 License
