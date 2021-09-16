@@ -1,7 +1,4 @@
-<!--# ![Metaboverse](https://raw.githubusercontent.com/Electrum-app/Electrum/main/Electrum/static/Electrum/images/electrum_banner.png)-->
-
-<img align="right" src="https://raw.githubusercontent.com/Electrum-app/Electrum/main/Electrum/static/Electrum/images/electrum_banner.png">     
-    
+![Metaboverse](https://raw.githubusercontent.com/Electrum-app/Electrum/main/Electrum/static/Electrum/images/electrum_banner.png)
 
 [![Electrum preprint](https://img.shields.io/badge/Electrum%20preprint-https%3A%2F%2Fwww.overleaf.com%2Fread%2Fvkwhsfxfgqnd-%230273b3)](https://www.overleaf.com/read/vkwhsfxfgqnd)    
 [![MIDAS bioRxiv preprint](https://img.shields.io/badge/MIDAS%20bioRxiv%20preprint-10.1101%2F2021.08.28.458030-%23ac2331)](https://www.biorxiv.org/content/10.1101/2021.08.28.458030)
