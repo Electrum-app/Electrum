@@ -16,6 +16,11 @@ Electrum is a visualization platform for exploring MIDAS protein-metabolite inte
 - `python electrum-utils.py buildSubstructureReference --output ..\..\data`
 - `buildEntityDatabase` is a util for name mapping metabolites from MIDAS datasets 
 
+- In virtual environment with Python installed and activated: 
+- `conda create --name electron-deploy` 
+- `pip install -r requirements.txt`
+
+
 ### Licensing
 - `Electrum` is available via a GPL-3.0 License
 - `D3` is provided under an ISC License
