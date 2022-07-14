@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 with open(
     os.path.join(BASE_DIR, "config.json")
 ) as config_file:
-	config = json.load(config_file)
-
+    config = json.load(config_file)
+    print(config)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -32,7 +32,10 @@ with open(
 SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True # set to False for deploy
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True 
+SECURE_SSL_REDIRECT = False # set to True for deploy
 
 ALLOWED_HOSTS = config["ALLOWED_HOSTS"]
 

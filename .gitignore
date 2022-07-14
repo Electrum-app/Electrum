@@ -3,10 +3,16 @@
 **.exe
 .DS_Store
 node_modules
-**__pycache__
+**/__pycache__
 
 # remove for final distribution
 **20210629_CCM-MIDAS_combined.txt
 **MIDAS_unified-latest.txt
 **results.csv
 config.json
+
+Electrum/static/Electrum/python/electrum-utils/make_structure_dictionary/CHEMONTID-substructure-dictionary.json
+Electrum/static/Electrum/python/electrum-utils/make_structure_dictionary/HMDB_36_classyfire_21_annotations.csv
+Electrum/static/Electrum/python/electrum-utils/make_structure_dictionary/ChEBI_126_classyfire_21_annotations.csv
+Electrum/static/Electrum/python/electrum-utils/make_structure_dictionary/CHEMONTID-hierarchy-dictionary.json
+Electrum/static/Electrum/python/electrum-utils/make_structure_dictionary/structures.sdf

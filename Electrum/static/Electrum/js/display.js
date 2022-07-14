@@ -21,7 +21,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 const selector = "#graph";
 
 // MAIN --> Change URL to HTTPS URL when data is public
-let data_url = "https://raw.githubusercontent.com/Electrum-app/MIDAS-data-archive/main/MIDAS-latest.txt";
+let data_url = "static/Electrum/data/MIDAS-latest.txt";
 let mapper_url = "static/Electrum/data/HSA-latest.eldb";
 let metabolite_url = "static/Electrum/data/metabolites.json";
 let protein_url = "static/Electrum/data/proteins.json";

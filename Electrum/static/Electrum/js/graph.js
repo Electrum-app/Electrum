@@ -36,7 +36,13 @@ class MIDASgraph {
     this.metabolites_reference = graph_data[2];
     this.protein_reference = graph_data[3];
     this.radial_order = graph_data[4].map(({Metabolites}) => Metabolites);
-    this.dataURL = graph_data[5];
+
+    fetch(graph_data[5])
+      .then(res => res.blob())
+      .then(blob => {
+        console.log(blob)
+        this.dataURL = blob;
+      });
 
     // create drop-down menu
     this.pathways = Object.keys(pathway_dictionary);
@@ -55,7 +61,6 @@ class MIDASgraph {
     d3.select("#uploadTable").on("change", function() {
 
       var file = document.querySelector('input[type=file]').files[0];
-      console.log(file)
       reader.onload = function(event) {
         var arrayBuffer = event.target.result;
         var data = d3.tsvParse(arrayBuffer, function(d){

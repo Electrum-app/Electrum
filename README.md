@@ -13,11 +13,15 @@ Electrum is a visualization platform for exploring MIDAS protein-metabolite inte
 - `Ctrl+F5` to clear cache    
 
 ### Deploy instructions
+- Update latest MIDAS database and store at: `static/Electrum/data/MIDAS-latest.txt`
 - `python electrum-utils.py buildSubstructureReference --output ..\..\data`
 - `buildEntityDatabase` is a util for name mapping metabolites from MIDAS datasets 
+- In `settings.py`, set `DEBUG = False` and `SECURE_SSL_REDIRECT = True`
 
 - In virtual environment with Python installed and activated: 
 - `conda create --name electron-deploy` 
+- `conda activate electron-deploy` 
+- `conda install python=3.8` 
 - `pip install -r requirements.txt`
 
 
@@ -28,3 +32,10 @@ Electrum is a visualization platform for exploring MIDAS protein-metabolite inte
 - `jQuery` is provided under an MIT License
 - `saveSvgAsPng` is provided under an MIT License
 - `streamsaver` is provided under an MIT License
+
+
+
+### Notes
+- Copy `settings.py` to Electrum directory
+- Change path to find config
+- Run `/uufs/chpc.utah.edu/common/home/rutter-website/html/Electrum-django/electrum-deploy-env/bin/gunicorn Electrum-admin.wsgi:application`

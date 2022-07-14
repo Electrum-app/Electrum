@@ -752,6 +752,8 @@ function display_substructure_results(this_protein, this_data) {
   formData.append('this_data', '>>>this_data<<<');
   formData.append('protein', d.display_name);
   formData.append('threshold', q_threshold);
+
+  console.log(this_data)
   formData.append('file', this_data.dataURL, this_data.dataURL.name);
 
   // Run substructure
@@ -767,7 +769,9 @@ function display_substructure_results(this_protein, this_data) {
       // Parse results that pass the q-value threshold
       let results = {};
       for (let ID in d["CHEMONTID"]) {
-        if (d["FDR"][ID] < q_threshold) {
+        //let criteria = "FDR";
+        let criteria = "P_value";
+        if (d[criteria][ID] < q_threshold) {
           results[ID] = {
             ID: ID,
             NAME: d["Term"][ID],

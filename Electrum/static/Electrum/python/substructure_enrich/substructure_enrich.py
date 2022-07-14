@@ -170,7 +170,10 @@ def substructure_enrichment(
     unified_table_target = unified_table.loc[unified_table['query_protein'] == TARGET]
 
     print("----")
-    print(unified_table_target.head())
+    print("Input table:")
+    print("----")
+    print(unified_table_target)
+    print("----")
 
     # Init results table 
     results_table = pd.DataFrame()
@@ -269,7 +272,13 @@ def __main__(TARGET, THRESHOLD, DATABASE):
         chemontid_reference=chemontid_reference,
         TARGET=TARGET,
         THRESHOLD=THRESHOLD)
-    
+
+    print("----")
+    print("Results table:")
+    print("----")
+    print(results)
+    print("----")
+
     return HttpResponse(results.to_json(), content_type="application/json")
 
 if __name__ == '__main__':

@@ -40,6 +40,9 @@ class CiteView(generic.ListView):
     def get_queryset(self):
         return ""
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt 
 def substructure(
         request,
         _start="Content-Disposition: form-data;",
