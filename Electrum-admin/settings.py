@@ -32,7 +32,8 @@ with open(
 SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # set to False for deploy
+# DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True 
 SECURE_SSL_REDIRECT = False # set to True for deploy
