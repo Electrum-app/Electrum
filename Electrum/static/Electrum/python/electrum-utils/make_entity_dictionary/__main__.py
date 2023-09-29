@@ -30,7 +30,7 @@ HMDB_URL = "https://hmdb.ca/system/downloads/current/hmdb_metabolites.zip"
 
 METABOLITE_HEADER="metabolite"
 PROTEIN_HEADER="query_protein"
-METABOANALYST_URL = "http://api.xialab.ca/mapcompounds"
+METABOANALYST_URL = "https://www.xialab.ca/api/mapcompounds"
 HEADERS = {
     'Content-Type': "application/json",
     'cache-control': "no-cache",
