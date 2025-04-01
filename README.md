@@ -1,7 +1,6 @@
-![Metaboverse](https://raw.githubusercontent.com/Electrum-app/Electrum/main/Electrum/static/Electrum/images/electrum_banner.png)
+![Electrum](https://raw.githubusercontent.com/Electrum-app/Electrum/main/Electrum/static/Electrum/images/electrum_banner.png)
 
-[![Electrum preprint](https://img.shields.io/badge/Electrum%20preprint-https%3A%2F%2Fwww.overleaf.com%2Fread%2Fvkwhsfxfgqnd-%230273b3)](https://www.overleaf.com/read/vkwhsfxfgqnd)    
-[![MIDAS bioRxiv preprint](https://img.shields.io/badge/MIDAS%20bioRxiv%20preprint-10.1101%2F2021.08.28.458030-%23ac2331)](https://www.biorxiv.org/content/10.1101/2021.08.28.458030)
+[![MIDAS publication](https://img.shields.io/badge/MIDAS%20publication-https%3A%2F%2Fwww.science.org%2Fdoi%2F10.1126%2Fscience.abm3452-informational)](https://www.science.org/doi/10.1126/science.abm3452)
 
 ## What does Electrum do?
 Electrum is a visualization platform for exploring MIDAS protein-metabolite interaction data.
